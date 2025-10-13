@@ -1,0 +1,56 @@
+#game-holder {
+    #timer {
+        span {
+            color: $background-color_18;
+            font-weight: 700;
+        }
+    }
+
+    .memory-game {
+        height: 60vh;
+
+        .memory-card {
+            position: relative;
+            transform: scale(1);
+            transform-style: preserve-3d;
+            transition: transform .5s;
+
+            &:active {
+                transform: scale(0.97);
+                transition: transform .2s;
+            }
+
+            &.flip {
+                transform: rotateY(180deg);
+            }
+
+            .front-face,
+            .back-face {
+                width: 140px;
+                height: 140px;
+                position: absolute;
+                border-radius: 5px;
+                backface-visibility: hidden;
+            }
+
+            .front-face {
+                transform: rotateY(180deg);
+            }
+        }
+    }
+}
+
+@media screen and (max-width:767px) {
+    .memory-game {
+        height: 40vh!important;
+
+        .memory-card {
+            .front-face,
+            .back-face {
+                width: 80px!important;
+                height: 80px!important;
+            }
+        }
+        
+    }
+}
