@@ -108,128 +108,179 @@
         <script src="/games/puzzle.js"></script>
 
         <script>
-            let gameStarted = false;
-            document.getElementById("startPuzzleBtn").addEventListener("click", () => {
-                events.push({ event: "nbpieces", nbpieces: {{ $puzzle->pieces }} });
+            (function() {
+                'use strict';
+                
+                // All variables scoped within IIFE - not accessible from console
+                const maxSeconds = {{$puzzle->seconds}};
+                const puzzleId = '{{$puzzle->id}}';
+                const puzzleImageSrc = "{{ $puzzle->puzzle_image }}";
+                const nbPieces = {{ $puzzle->pieces }};
+                
+                let gameStarted = false;
+                let timer = null;
+                let activePiece = null;
+                let startX = 0;
+                let startY = 0;
+                let currentX = 0;
+                let currentY = 0;
 
-                gameStarted = true;
-                let count = {{$puzzle->seconds}};
-                let timerCont = document.querySelector('#timer');
-                let timerObj = document.querySelector('#timer span');
-                let buttonInit = document.querySelector('#startPuzzleBtn');
-                buttonInit.remove();
-                timerCont.classList.remove('hidden');
+                const canvas = document.getElementById('forPuzzle');
+                const pieces = document.querySelectorAll('.polypiece');
 
-                window.scrollTo({
-                    top: document.body.scrollHeight,
-                    behavior: 'smooth'
-                });
+                function initPuzzle() {
+                    loadInitialFile();
+                    setupStartButton();
+                    setupDragListeners();
+                }
 
-                const timer = setInterval(function() {
-                    count--;
-                    timerObj.innerHTML = count;
-                    if (count === 0) {
-                        clearInterval(timer);
-                        let puzzleGame = document.querySelector('.puzzle-game');
-                        let timerEl = document.querySelector('#timer');
-                        let tryAgain = document.querySelector('#try-again');
+                function setupStartButton() {
+                    const startBtn = document.getElementById("startPuzzleBtn");
+                    
+                    startBtn.addEventListener("click", () => {
+                        events.push({ event: "nbpieces", nbpieces: nbPieces });
+                        startGame();
+                    });
+                }
 
-                        puzzleGame.remove();
-                        timerEl.remove();
-                        tryAgain.classList.remove('hidden');
-                    }
-                }, 1000);
+                function startGame() {
+                    gameStarted = true;
+                    
+                    let count = maxSeconds;
+                    const timerCont = document.querySelector('#timer');
+                    const timerObj = document.querySelector('#timer span');
+                    const buttonInit = document.querySelector('#startPuzzleBtn');
+                    
+                    if (buttonInit) buttonInit.remove();
+                    if (timerCont) timerCont.classList.remove('hidden');
 
-                axios.post('{{ route('game.start', ['tenant' => tenant('id')]) }}')
-                    .then(({ data }) => {
-                        //console.log('Game started at', data.game_start);
+                    window.scrollTo({
+                        top: document.body.scrollHeight,
+                        behavior: 'smooth'
                     });
 
-            });
+                    // Start countdown
+                    timer = setInterval(function() {
+                        count--;
+                        if (timerObj) timerObj.innerHTML = count;
+                        
+                        if (count === 0) {
+                            clearInterval(timer);
+                            handleTimeout();
+                        }
+                    }, 1000);
 
-            loadInitialFile();
+                    // Initialize game session on backend
+                    axios.post('{{ route('game.start', ['tenant' => tenant('id')]) }}')
+                        .then(({ data }) => {
+                            // Game session started
+                        })
+                        .catch(error => {
+                            // Handle error silently
+                        });
+                }
 
-            function loadInitialFile() {
-                puzzle.srcImage.src = "{{ $puzzle->puzzle_image }}";
-            }
+                function handleTimeout() {
+                    const puzzleGame = document.querySelector('.puzzle-game');
+                    const timerEl = document.querySelector('#timer');
+                    const tryAgain = document.querySelector('#try-again');
 
+                    if (puzzleGame) puzzleGame.remove();
+                    if (timerEl) timerEl.remove();
+                    if (tryAgain) tryAgain.classList.remove('hidden');
+                }
 
-            function isFinishedGame(){
-                clearInterval(timer); // Stop the timer
-                axios.post('{{route('puzzle.complete', ['tenant' => tenant('id')])}}', {data: '{{$puzzle->id}}'}, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
+                function loadInitialFile() {
+                    if (puzzle && puzzle.srcImage) {
+                        puzzle.srcImage.src = puzzleImageSrc;
                     }
-                })
-                .then(function (response)
-                {
-                    window.location = '{{route('dashboard.awards.show', ['tenant' => tenant('id'), 'award' => $puzzle->award])}}';
-                })
-                .catch(function (error)
-                {
-                    //console.log(error);
-                });
-            }
+                }
 
-            const canvas = document.getElementById('forPuzzle');
-            const pieces = document.querySelectorAll('.polypiece');
-            let activePiece = null;
-            let startX = 0, startY = 0;
-            let currentX = 0, currentY = 0;
+                function isFinishedGame() {
+                    if (timer) clearInterval(timer);
+                    
+                    axios.post('{{route('puzzle.complete', ['tenant' => tenant('id')])}}', {
+                        data: puzzleId
+                    }, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    })
+                    .then(function (response) {
+                        window.location = '{{route('dashboard.awards.show', ['tenant' => tenant('id'), 'award' => $puzzle->award])}}';
+                    })
+                    .catch(function (error) {
+                        // Handle error appropriately
+                    });
+                }
 
-            pieces.forEach(piece => {
-                piece.dataset.x = 0;
-                piece.dataset.y = 0;
+                function setupDragListeners() {
+                    pieces.forEach(piece => {
+                        piece.dataset.x = 0;
+                        piece.dataset.y = 0;
 
-                piece.addEventListener('touchstart', startDrag, { passive: false });
-                piece.addEventListener('mousedown', startDrag);
-            });
+                        piece.addEventListener('touchstart', startDrag, { passive: false });
+                        piece.addEventListener('mousedown', startDrag);
+                    });
 
-            document.addEventListener('touchmove', moveDrag, { passive: false });
-            document.addEventListener('mousemove', moveDrag);
-            document.addEventListener('touchend', stopDrag);
-            document.addEventListener('mouseup', stopDrag);
+                    document.addEventListener('touchmove', moveDrag, { passive: false });
+                    document.addEventListener('mousemove', moveDrag);
+                    document.addEventListener('touchend', stopDrag);
+                    document.addEventListener('mouseup', stopDrag);
+                }
 
-            function startDrag(e) {
-                if (gameStarted) e.preventDefault();
+                function startDrag(e) {
+                    if (gameStarted) e.preventDefault();
 
-                activePiece = e.target.closest('.polypiece');
-                const touch = e.touches ? e.touches[0] : e;
+                    activePiece = e.target.closest('.polypiece');
+                    if (!activePiece) return;
 
-                startX = touch.clientX;
-                startY = touch.clientY;
-                currentX = parseFloat(activePiece.dataset.x) || 0;
-                currentY = parseFloat(activePiece.dataset.y) || 0;
-            }
+                    const touch = e.touches ? e.touches[0] : e;
 
-            function moveDrag(e) {
-                if (!activePiece) return;
+                    startX = touch.clientX;
+                    startY = touch.clientY;
+                    currentX = parseFloat(activePiece.dataset.x) || 0;
+                    currentY = parseFloat(activePiece.dataset.y) || 0;
+                }
 
-                if (gameStarted) e.preventDefault();
+                function moveDrag(e) {
+                    if (!activePiece) return;
+                    if (gameStarted) e.preventDefault();
 
-                const touch = e.touches ? e.touches[0] : e;
-                const dx = touch.clientX - startX;
-                const dy = touch.clientY - startY;
+                    const touch = e.touches ? e.touches[0] : e;
+                    const dx = touch.clientX - startX;
+                    const dy = touch.clientY - startY;
 
-                let newX = currentX + dx;
-                let newY = currentY + dy;
+                    let newX = currentX + dx;
+                    let newY = currentY + dy;
 
-                const canvasRect = canvas.getBoundingClientRect();
-                const pieceRect = activePiece.getBoundingClientRect();
+                    const canvasRect = canvas.getBoundingClientRect();
+                    const pieceRect = activePiece.getBoundingClientRect();
 
-                // Boundaries
-                newX = Math.max(0, Math.min(newX, canvas.clientWidth - pieceRect.width));
-                newY = Math.max(0, Math.min(newY, canvas.clientHeight - pieceRect.height));
+                    // Apply boundaries
+                    newX = Math.max(0, Math.min(newX, canvas.clientWidth - pieceRect.width));
+                    newY = Math.max(0, Math.min(newY, canvas.clientHeight - pieceRect.height));
 
-                activePiece.style.transform = `translate(${newX}px, ${newY}px)`;
-                activePiece.dataset.x = newX;
-                activePiece.dataset.y = newY;
-            }
+                    activePiece.style.transform = `translate(${newX}px, ${newY}px)`;
+                    activePiece.dataset.x = newX;
+                    activePiece.dataset.y = newY;
+                }
 
-            function stopDrag() {
-                activePiece = null;
-            }
-            
+                function stopDrag() {
+                    activePiece = null;
+                }
+
+                // Expose only the function that needs to be called externally
+                // If isFinishedGame needs to be called from outside, expose it:
+                window.isFinishedGame = isFinishedGame;
+
+                // Initialize when DOM is ready
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', initPuzzle);
+                } else {
+                    initPuzzle();
+                }
+            })();
         </script>
     @endsection
 </x-app-layout>

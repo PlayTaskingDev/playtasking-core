@@ -68,6 +68,12 @@ class MemoryQuizController extends Controller
 
         $memory_quiz = MemoryQuiz::with('award')->findOrFail($data['data']);
 
+        // Check if user is out of time
+        $is_out_of_time = $this->out_of_time_validation(session('game_start'), $memory_quiz->seconds);
+        if ($is_out_of_time) {
+            return redirect()->route('campaign.splash', ['tenant' => tenant('id')]);
+        }
+
         // Check if user has been participated and won
         $has_paticipated = $this->check_participation($model_id = $memory_quiz->id,$model_type = 'App\Models\MemoryQuiz',$user_id = Auth::user()->id,$hit = true);
         if (!is_null($has_paticipated)) {

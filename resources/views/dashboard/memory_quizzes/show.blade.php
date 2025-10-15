@@ -69,117 +69,140 @@
 
     @section('scripts')
         <script>
-
-            document.addEventListener('DOMContentLoaded', function() {
-                axios.post('{{ route('game.start', ['tenant' => tenant('id')]) }}')
-                    .then(({ data }) => {
-                        //console.log('Game started at', data.game_start);
-                    });
-            });
-
-            let count = {{$memory_quiz->seconds}};
-            let timerObj = document.querySelector('#timer span');
-
-            const timer = setInterval(function() {
-                count--;
-                timerObj.innerHTML = count;
-                if (count === 0) {
-                    clearInterval(timer);
-                    let memoryGame = document.querySelector('.memory-game');
-                    let timerEl = document.querySelector('#timer');
-                    let tryAgain = document.querySelector('#try-again');
-
-                    memoryGame.remove();
-                    timerEl.remove();
-                    tryAgain.classList.remove('hidden');
-                }
-            }, 1000);
-
-            const cards = document.querySelectorAll('.memory-card');
-            const totalCards = {{$memory_quiz->memory_cards->count() * 2}};
-
-            let hasFlippedCard = false;
-            let lockBoard = false;
-            let firstCard, secondCard;
-
-            function flipCard() {
-                if (lockBoard) return;
-                if (this === firstCard) return;
-
-                this.classList.add('flip');
-
-                if (!hasFlippedCard) {
-                    hasFlippedCard = true;
-                    firstCard = this;
-
-                    return;
-                }
-
-                secondCard = this;
-                checkForMatch();
-            }
-
-            function checkForMatch() {
-                let isMatch = firstCard.dataset.framework === secondCard.dataset.framework;
-
-                isMatch ? disableCards() : unflipCards();
-            }
-
-            function disableCards() {
-                firstCard.removeEventListener('click', flipCard);
-                secondCard.removeEventListener('click', flipCard);
-
-                resetBoard();
-
-                isFinished();
-            }
-
-            function unflipCards() {
-                lockBoard = true;
-
-                setTimeout(() => {
-                    firstCard.classList.remove('flip');
-                    secondCard.classList.remove('flip');
-
-                    resetBoard();
-                }, 1500);
-            }
-
-            function resetBoard() {
-                [hasFlippedCard, lockBoard] = [false, false];
-                [firstCard, secondCard] = [null, null];
-            }
-
-            function isFinished(){
-                let cardsGuessed = document.querySelectorAll('.memory-card.flip');
-                let cardsLeft = totalCards - cardsGuessed.length;
+            (function() {
+                'use strict';
                 
-                if (cardsLeft == 0) {
-                    clearInterval(timer); // Stop the timer
-                    axios.post('{{route('memory_quiz.complete', ['tenant' => tenant('id')])}}', {data: '{{$memory_quiz->id}}'}, {
-                        headers: {
-                            'Content-Type': 'multipart/form-data'
+                const maxSeconds = {{$memory_quiz->seconds}};
+                const totalCards = {{$memory_quiz->memory_cards->count() * 2}};
+                const cards = document.querySelectorAll('.memory-card');
+                
+                let count = maxSeconds;
+                let timerObj = null;
+                let timer = null;
+                let hasFlippedCard = false;
+                let lockBoard = false;
+                let firstCard = null;
+                let secondCard = null;
+
+                function initGame() {
+                    timerObj = document.querySelector('#timer span');
+                    
+                    // Start game session on backend
+                    axios.post('{{ route('game.start', ['tenant' => tenant('id')]) }}')
+                        .then(({ data }) => {
+                            // Game session initialized
+                        });
+
+                    // Start countdown timer
+                    timer = setInterval(function() {
+                        count--;
+                        timerObj.innerHTML = count;
+                        
+                        if (count === 0) {
+                            clearInterval(timer);
+                            handleTimeout();
                         }
-                    })
-                    .then(function (response)
-                    {
-                        window.location = '{{route('dashboard.awards.show', ['tenant' => tenant('id'), 'award' => $memory_quiz->award])}}';
-                    })
-                    .catch(function (error)
-                    {
-                        //console.log(error);
+                    }, 1000);
+
+                    // Shuffle cards
+                    shuffleCards();
+                    
+                    // Attach event listeners
+                    cards.forEach(card => card.addEventListener('click', flipCard));
+                }
+
+                function handleTimeout() {
+                    const memoryGame = document.querySelector('.memory-game');
+                    const timerEl = document.querySelector('#timer');
+                    const tryAgain = document.querySelector('#try-again');
+
+                    if (memoryGame) memoryGame.remove();
+                    if (timerEl) timerEl.remove();
+                    if (tryAgain) tryAgain.classList.remove('hidden');
+                }
+
+                function flipCard() {
+                    if (lockBoard) return;
+                    if (this === firstCard) return;
+
+                    this.classList.add('flip');
+
+                    if (!hasFlippedCard) {
+                        hasFlippedCard = true;
+                        firstCard = this;
+                        return;
+                    }
+
+                    secondCard = this;
+                    checkForMatch();
+                }
+
+                function checkForMatch() {
+                    const isMatch = firstCard.dataset.framework === secondCard.dataset.framework;
+                    isMatch ? disableCards() : unflipCards();
+                }
+
+                function disableCards() {
+                    firstCard.removeEventListener('click', flipCard);
+                    secondCard.removeEventListener('click', flipCard);
+                    resetBoard();
+                    isFinished();
+                }
+
+                function unflipCards() {
+                    lockBoard = true;
+
+                    setTimeout(() => {
+                        firstCard.classList.remove('flip');
+                        secondCard.classList.remove('flip');
+                        resetBoard();
+                    }, 1500);
+                }
+
+                function resetBoard() {
+                    hasFlippedCard = false;
+                    lockBoard = false;
+                    firstCard = null;
+                    secondCard = null;
+                }
+
+                function isFinished() {
+                    const cardsGuessed = document.querySelectorAll('.memory-card.flip');
+                    const cardsLeft = totalCards - cardsGuessed.length;
+                    
+                    if (cardsLeft === 0) {
+                        clearInterval(timer);
+                        
+                        axios.post('{{route('memory_quiz.complete', ['tenant' => tenant('id')])}}', {
+                            data: '{{$memory_quiz->id}}'
+                        }, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        })
+                        .then(function (response) {
+                            window.location = '{{route('dashboard.awards.show', ['tenant' => tenant('id'), 'award' => $memory_quiz->award])}}';
+                        })
+                        .catch(function (error) {
+                            // Handle error silently or show user-friendly message
+                        });
+                    }
+                }
+
+                function shuffleCards() {
+                    cards.forEach(card => {
+                        const randomPos = Math.floor(Math.random() * totalCards);
+                        card.style.order = randomPos;
                     });
                 }
-            }
 
-            (function shuffle() {
-                cards.forEach(card => {
-                    let randomPos = Math.floor(Math.random() * totalCards);
-                    card.style.order = randomPos;
-                });
+                // Initialize game when DOM is ready
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', initGame);
+                } else {
+                    initGame();
+                }
             })();
-
-            cards.forEach(card => card.addEventListener('click', flipCard));
-        </script>
+            </script>
     @endsection
 </x-app-layout>

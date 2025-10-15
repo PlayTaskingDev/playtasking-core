@@ -11,12 +11,12 @@
             {{ __('Hi') }}, {{auth()->user()->name}}
         </h2>
 
-        <p class="my-3 dark:text-gray-400 font-bold">
+        {{-- <p class="my-3 dark:text-gray-400 font-bold">
             {{__('Your ranking')}}: {{auth()->user()->ranking}}
         </p>
         <p class="my-3 dark:text-gray-400 font-bold">
             {{__('Your points')}}: {{auth()->user()->points}}
-        </p>
+        </p> --}}
 
         <div class="my-3 dark:text-gray-400 font-bold p-4 rounded-lg border border-gray-200 dark:border-gray-700">
             <a href="{{ route('dashboard.awards.index', ['tenant' => tenant('id')]) }}" class="flex items-center justify-between text-gray-900 dark:text-gray-100 hover:text-gray-700 dark:hover:text-gray-300">

@@ -113,4 +113,11 @@ trait CampaignsTrait
             return false;
         }
     }
+
+    public function out_of_time_validation($game_start, $max_time_seconds)
+    {
+        $game_start_time = Carbon::createFromFormat('Y-m-d H:i:s.u', $game_start);
+        
+        return $game_start_time->diffInSeconds(Carbon::now()) > $max_time_seconds;
+    }
 }
