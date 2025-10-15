@@ -103,6 +103,14 @@
 
         const fbButton = document.getElementById('fb_share');
         fbButton.addEventListener('click', function(e){
+            if (/Mobi|Android/i.test(navigator.userAgent)) {
+            // Móvil
+            window.open(
+                'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent('{{$share_quiz->share_url}}') +
+                '&hashtag=' + encodeURIComponent('{{$share_quiz->share_text}}'),
+                '_blank'
+            );
+            } else {
             FB.ui(
                 {
                     display: 'popup',
@@ -114,6 +122,7 @@
                 // callback
                 function(response) {}
             );
+        }
         });
     </script>
     @endsection
