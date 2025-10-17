@@ -109,29 +109,50 @@
             });
         };
 
-        //const fbButton = document.getElementById('fb_share');
+        const fbButton = document.getElementById('fb_share');
+        fbButton.addEventListener('click', function(e){
+            if (/Mobi|Android/i.test(navigator.userAgent)) {
+            // Móvil
+            window.open(
+                'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent('{{$share_quiz->share_url}}') +
+                '&hashtag=' + encodeURIComponent('{{$share_quiz->share_text}}'),
+                '_blank'
+            );
+            } else {
+            FB.ui(
+                {
+                    display: 'popup',
+                    method: 'share',
+                    hashtag: '{{$share_quiz->share_text}}',
+                    quote: '{{$share_quiz->share_text}}',
+                    href: '{{$share_quiz->share_url}}',
+                },
+                // callback
+                function(response) {}
+            );
+        }
+        });
+        // function shareLink(url, hashtag) {
+        //     if (/Mobi|Android/i.test(navigator.userAgent) && esSafari()){
+        //             navigator.share({
+        //                 title: '{{ $share_quiz->title }}',
+        //                 text: hashtag,
+        //                 url: url
+        //             });
+        //     }else{
+        //         shareOnFacebook(url, hashtag);
+        //     }
+        // }
 
-        function shareLink(url, hashtag) {
-            if (/Mobi|Android/i.test(navigator.userAgent) && esSafari()){
-                    navigator.share({
-                        title: '{{ $share_quiz->title }}',
-                        text: hashtag,
-                        url: url
-                    });
-            }else{
-                shareOnFacebook(url, hashtag);
-            }
-        }
-
-        function shareOnFacebook(url, hashtag) {
-            const shareUrl = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url) +
-                            (hashtag ? '&hashtag=' + encodeURIComponent(hashtag) : '');
-            window.open(shareUrl, '_blank', 'noopener,noreferrer');
-        }
-        function esSafari() {
-            const agenteUsuario = navigator.userAgent;
-            return agenteUsuario.includes('Safari') && !agenteUsuario.includes('Chrome');
-        }
+        // function shareOnFacebook(url, hashtag) {
+        //     const shareUrl = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url) +
+        //                     (hashtag ? '&hashtag=' + encodeURIComponent(hashtag) : '');
+        //     window.open(shareUrl, '_blank', 'noopener,noreferrer');
+        // }
+        // function esSafari() {
+        //     const agenteUsuario = navigator.userAgent;
+        //     return agenteUsuario.includes('Safari') && !agenteUsuario.includes('Chrome');
+        // }
 
     </script>
     @endsection
