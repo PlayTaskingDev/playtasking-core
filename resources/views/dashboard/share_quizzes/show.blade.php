@@ -112,12 +112,12 @@
         //const fbButton = document.getElementById('fb_share');
 
         function shareLink(url, hashtag) {
-            if (/Mobi|Android/i.test(navigator.userAgent)){
-                navigator.share({
-                title: '¡Entra al Más Allá!',
-                text: 'Del 2 de octubre al 19 de noviembre. ¡No te lo pierdas!',
-                url: url
-                });
+            if (/Mobi|Android/i.test(navigator.userAgent) && esSafari()){
+                    navigator.share({
+                        title: '{{ $share_quiz->title }}',
+                        text: hashtag,
+                        url: url
+                    });
             }else{
                 shareOnFacebook(url, hashtag);
             }
@@ -128,6 +128,11 @@
                             (hashtag ? '&hashtag=' + encodeURIComponent(hashtag) : '');
             window.open(shareUrl, '_blank', 'noopener,noreferrer');
         }
+        function esSafari() {
+            const agenteUsuario = navigator.userAgent;
+            return agenteUsuario.includes('Safari') && !agenteUsuario.includes('Chrome');
+        }
+
     </script>
     @endsection
 </x-app-layout>
