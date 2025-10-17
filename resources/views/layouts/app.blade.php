@@ -11,6 +11,10 @@
 
     <link rel="icon" type="image/png" href="{{get_app_setting('favicon')}}">
 
+    @if(isset($ogShare))
+        {{ $ogShare }}
+    @endif
+    
     @if (get_app_setting('ga4_id'))
         <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id={{get_app_setting('ga4_id')}}"></script>
