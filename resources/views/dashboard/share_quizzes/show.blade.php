@@ -112,15 +112,15 @@
         //const fbButton = document.getElementById('fb_share');
 
         function shareLink(url, hashtag) {
-        if (navigator.share) {
-            navigator.share({
-            title: '¡Entra al Más Allá!',
-            text: 'Del 2 de octubre al 19 de noviembre. ¡No te lo pierdas!',
-            url: url
-            });
-        } else {
-            shareOnFacebook(url, hashtag);
-        }
+            if (/Mobi|Android/i.test(navigator.userAgent)){
+                navigator.share({
+                title: '¡Entra al Más Allá!',
+                text: 'Del 2 de octubre al 19 de noviembre. ¡No te lo pierdas!',
+                url: url
+                });
+            }else{
+                shareOnFacebook(url, hashtag);
+            }
         }
 
         function shareOnFacebook(url, hashtag) {
