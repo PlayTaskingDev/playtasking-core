@@ -128,29 +128,6 @@
                             (hashtag ? '&hashtag=' + encodeURIComponent(hashtag) : '');
             window.open(shareUrl, '_blank', 'noopener,noreferrer');
         }
-
-        // fbButton.addEventListener('click', function(e){
-        //     if (/Mobi|Android/i.test(navigator.userAgent)) {
-        //     // Móvil
-        //     window.open(
-        //         'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent('{{$share_quiz->share_url}}') +
-        //         '&hashtag=' + encodeURIComponent('{{$share_quiz->share_text}}'),
-        //         '_blank'
-        //     );
-        //     } else {
-        //     FB.ui(
-        //         {
-        //             display: 'popup',
-        //             method: 'share',
-        //             hashtag: '{{$share_quiz->share_text}}',
-        //             quote: '{{$share_quiz->share_text}}',
-        //             href: '{{$share_quiz->share_url}}',
-        //         },
-        //         // callback
-        //         function(response) {}
-        //     );
-        // }
-        // });
     </script>
     @endsection
 </x-app-layout>
