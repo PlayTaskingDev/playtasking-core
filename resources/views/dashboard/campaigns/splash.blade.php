@@ -32,22 +32,24 @@
                             {{ __('Start') }}
                         </x-primary-link>
                     </div>
-                    @foreach ($active_campaign->content_types as $content_type)
-                        <div class="border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 p-3 mb-5 {{get_app_setting('cards_shadow') ? 'cards-shadow' : ''}}"
-                        style="{{'background:' . $content_type->gradient_1 . '; background: linear-gradient(135deg, ' . $content_type->gradient_1 . ' 0%, ' . $content_type->gradient_2 . ' 85%);'}}">
-                            <div class="flex flex-row items-center">
-                                <div class="basis-2/3">
-                                    <p class="pb-5 -mt-3.5 text-white font-bold sm:text-base">{{$content_type->description}}</p>
-                                    <x-primary-link href="{{ route('campaign.show', ['tenant' => tenant('id'), 'slug' => $active_campaign->slug]) }}" title="{{$active_campaign->name}}" class="font-bold">
-                                        {{__('Play now')}}
-                                    </x-primary-link>
-                                </div>
-                                <div class="basis-1/3">
-                                    <img src="{{$content_type->icon_active}}" alt="{{$content_type->description}}">
+                    @if (false) {{-- Disabled for now AlbertoPaz--}}
+                        @foreach ($active_campaign->content_types as $content_type)
+                            <div class="border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 p-3 mb-5 {{get_app_setting('cards_shadow') ? 'cards-shadow' : ''}}"
+                            style="{{'background:' . $content_type->gradient_1 . '; background: linear-gradient(135deg, ' . $content_type->gradient_1 . ' 0%, ' . $content_type->gradient_2 . ' 85%);'}}">
+                                <div class="flex flex-row items-center">
+                                    <div class="basis-2/3">
+                                        <p class="pb-5 -mt-3.5 text-white font-bold sm:text-base">{{$content_type->description}}</p>
+                                        <x-primary-link href="{{ route('campaign.show', ['tenant' => tenant('id'), 'slug' => $active_campaign->slug]) }}" title="{{$active_campaign->name}}" class="font-bold">
+                                            {{__('Play now')}}
+                                        </x-primary-link>
+                                    </div>
+                                    <div class="basis-1/3">
+                                        <img src="{{$content_type->icon_active}}" alt="{{$content_type->description}}">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    @endforeach
+                        @endforeach
+                    @endif
                 </div>
             </div>
         </div>

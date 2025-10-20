@@ -58,7 +58,6 @@ class ShareQuizController extends Controller
         $data = $request->validated();
 
         $share_quiz = ShareQuiz::with('award')->findOrFail($data['share_quiz']);
-
         // Check if user has been participated and won
         $has_paticipated = $this->check_participation($model_id = $share_quiz->id,$model_type = 'App\Models\ShareQuiz',$user_id = Auth::user()->id,$hit = true);
         if (!is_null($has_paticipated)) {

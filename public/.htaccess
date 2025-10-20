@@ -22,4 +22,3 @@ php_value post_max_size 12M
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
-
