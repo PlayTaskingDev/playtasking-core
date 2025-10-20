@@ -37,7 +37,6 @@
                         <p class="font-bold mb-5">
                             {{ $memory_quiz->description }}
                         </p>
-                        <hr style="color: {{get_app_setting('header_background_color')}};">
                         <div id="timer" class="rounded p-3 mb-5 text-2xl text-center font-bold">
                             {{ __('Remaining')}} <span></span> {{ __('seconds')}}
                         </div>

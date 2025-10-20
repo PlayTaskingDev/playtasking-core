@@ -21,8 +21,7 @@ return [
         'localhost',
         'cinepolisentraalmasalla.com',
         'tskg.app',
-        'cinepolisgaming.com',
-        'beneficioscalimax.com'
+        'cinepolisgaming.com'
     ],
 
     /**

@@ -49,5 +49,15 @@ class Handler extends ExceptionHandler
                 app('sentry')->captureException($e);
             }
         });
+
+        $this->reportable(function (\Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedException $e) {
+        //11-10-25 AP
+        if (request()->is(['dns-query', 'apple-touch-icon*', 'favicon.ico', 'robots.txt','dashboard'])) {
+            return false;
+        }
+	if (filter_var(request()->getHost(), FILTER_VALIDATE_IP)) {
+            return false;
+        }
+	});
     }
 }
