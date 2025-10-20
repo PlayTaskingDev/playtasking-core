@@ -108,9 +108,6 @@
                 version: 'v24.0'
             });
         };
-
-        //const fbButton = document.getElementById('fb_share');
-
         function shareLink(url, hashtag) {
             if (/Mobi|Android/i.test(navigator.userAgent) && esSafari()){
                     navigator.share({
