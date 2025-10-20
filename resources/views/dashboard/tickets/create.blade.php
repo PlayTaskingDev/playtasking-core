@@ -47,6 +47,7 @@
                             <x-input-label for="amount" :value="__('Amount')" />
                             <x-text-input id="amount" class="block mt-1 w-full text-black" type="text" name="amount"
                                 :value="old('amount')" required autofocus autocomplete="amount" />
+                                <small>{{__('Enter the total amount without commas or points.')}}</small>
                             <x-input-error :messages="$errors->get('amount')" class="mt-2" />
                         </div>
                         <div class="mt-3">

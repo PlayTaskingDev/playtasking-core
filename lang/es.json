@@ -186,6 +186,7 @@
     "Transaction date": "Fecha del ticket",
     "Store": "#Ticket",
     "Amount": "Monto total del ticket",
+    "Enter the total amount without commas or points.": "Ingresa el monto total sin comas ni puntos.",
     "Add image or photo": "Sube una imagen o foto",
     "Ticket image": "Imagen del ticket",
     "Enter more tickets": "Ingresa más tickets",
