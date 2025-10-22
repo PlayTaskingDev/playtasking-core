@@ -8,6 +8,8 @@ export default defineConfig({
             input: [
                 'resources/scss/app.scss',
                 'resources/js/app.js',
+                'resources/js/glgc/gcgpzl.js',
+                'resources/js/glgc/gpzl.js'
             ],
             refresh: true,
         }),
