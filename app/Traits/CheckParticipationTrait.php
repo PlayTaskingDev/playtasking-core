@@ -8,12 +8,11 @@ trait CheckParticipationTrait {
 
     public function check_participation($model_id, $model_type, $user_id, $hit = null)
     {
-        if (is_null($hit)) {
-            $query = DB::table('award_user')->where([['model_id',$model_id],['model_type',$model_type],['user_id',$user_id]])->first();
-        } else {
-            $query = DB::table('award_user')->where([['model_id',$model_id],['model_type',$model_type],['user_id',$user_id],['hit',$hit]])->first();
-        }
-
-        return $query;
+        return DB::table('award_user')
+            ->where('model_id', $model_id)
+            ->where('model_type', $model_type)
+            ->where('user_id', $user_id)
+            ->when(!is_null($hit), fn($q) => $q->where('hit', $hit))
+            ->first(['award_id', 'hit']);
     }
 }
