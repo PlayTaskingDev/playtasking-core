@@ -14,8 +14,6 @@ trait CheckParticipationTrait {
         ->where('user_id', $user_id)
         ->when(!is_null($hit), fn($q) => $q->where('hit', $hit))
         ->first(['id', 'award_id']); 
-
-        return $query;
     }
 
 }
