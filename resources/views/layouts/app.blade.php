@@ -14,6 +14,9 @@
     @if(isset($ogShare))
         {{ $ogShare }}
     @endif
+    @if(isset($settingspzl))
+        <meta id="settingspzl" content="{{ $settingspzl }}">
+    @endif
     
     @if (get_app_setting('ga4_id'))
         <!-- Google tag (gtag.js) -->

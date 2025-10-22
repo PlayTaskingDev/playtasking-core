@@ -11,6 +11,8 @@ use Carbon\Carbon;
 use App\Models\AwardCode;
 use App\Models\Puzzle;
 use App\Models\UserInteraction;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class PuzzleController extends Controller
 {
@@ -40,12 +42,27 @@ class PuzzleController extends Controller
             return redirect(route('dashboard.awards.show', ['tenant' => tenant('id'), 'award' => $puzzle->award]));
         }
 
+        $puzzle_settings = [
+            'a' => $puzzle->seconds,
+            'b' => $puzzle->id,
+            'c' => $puzzle->puzzle_image,
+            'd' => $puzzle->pieces,
+            'e' => route('game.start', ['tenant' => tenant('id')]),
+            'f' => route('puzzle.complete', ['tenant' => tenant('id')]),
+            'g' => route('dashboard.awards.show', ['tenant' => tenant('id'), 'award' => $puzzle->award]),
+            'h' => $slug
+        ];
+        
+    
+
         $campaign_games = $this->has_content_type($puzzle->campaign->id, 'games');
         $campaign_tickets = $this->has_content_type($puzzle->campaign->id, 'tickets');
         $campaign_coupons = $this->has_content_type($puzzle->campaign->id, 'coupons');
 
+
         return view('dashboard.puzzles.show', [
             'puzzle'            => $puzzle,
+            'puzzle_settings'   => json_encode($puzzle_settings),
             'campaign_games'    => $campaign_games,
             'campaign_tickets'  => $campaign_tickets,
             'campaign_coupons'  => $campaign_coupons,

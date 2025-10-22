@@ -120,4 +120,10 @@ trait CampaignsTrait
         
         return $game_start_time->diffInSeconds(Carbon::now()) > $max_time_seconds;
     }
+
+    
+     public function signature_hash($gameId){
+        $secretKey = ENV('APP_KEY');
+        return hash_hmac('sha256', $gameId, $secretKey);
+    }
 }

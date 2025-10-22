@@ -52,9 +52,7 @@ class User extends Authenticatable
         'password',
         'avatar',
         'phone',
-        'members_number',
-        'points',
-        'ranking'
+        'members_number'
     ];
 
     /**

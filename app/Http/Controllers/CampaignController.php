@@ -107,4 +107,5 @@ class CampaignController extends Controller
 
         return response()->json(['game_start' => $ts]);
     }
+
 }
