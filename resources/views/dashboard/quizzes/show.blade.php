@@ -42,7 +42,7 @@
                                 class="font-semibold text-2xl dark:text-gray-200 leading-tight pb-5 pt-5 uppercase game-heading">
                                 {{ __('Quiz') }}
                             </h2>
-                            <hr style="backgroud-color: {{get_app_setting('header_background_color')}}; height:2px;">
+                            <hr style="color: {{get_app_setting('header_background_color')}}; backgroud-color: {{get_app_setting('header_background_color')}}; height:2px;">
                             <p class="font-bold mb-5 mt-5">
                                 {{ $quiz->description }}
                             </p>
