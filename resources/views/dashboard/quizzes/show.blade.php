@@ -42,7 +42,7 @@
                                 class="font-semibold text-2xl dark:text-gray-200 leading-tight pb-5 uppercase game-heading">
                                 {{ __('Quiz') }}
                             </h2>
-                            
+                            <hr style="color: {{get_app_setting('header_background_color')}};">
                             <p class="font-bold mb-5">
                                 {{ $quiz->description }}
                             </p>
@@ -53,7 +53,7 @@
                             {{$question->title}}
                         </p>
                             <div id="question_{{ $loop->iteration }}"
-                                class="grid gap-4 sm:grid-cols-1 {{ $loop->first ? 'opacity-1' : 'opacity-0 hidden' }}">
+                                class="section-question grid gap-4 sm:grid-cols-1 {{ $loop->first ? 'opacity-1' : 'opacity-0 hidden' }}">
                                 <div>
                                     <ul
                                         class="w-auto text-sm font-medium text-white dark:bg-gray-700 dark:border-gray-600 dark:text-white quiz-answers">
