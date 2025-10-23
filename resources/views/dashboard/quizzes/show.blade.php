@@ -39,11 +39,11 @@
                         <img src="{{ $quiz->brief_image }}" alt="{{ $quiz->title }}" class="mx-auto w-full max-w-lg px-1">
                         @else
                             <h2
-                                class="font-semibold text-2xl dark:text-gray-200 leading-tight pb-5 uppercase game-heading">
+                                class="font-semibold text-2xl dark:text-gray-200 leading-tight pb-5 pt-5 uppercase game-heading">
                                 {{ __('Quiz') }}
                             </h2>
-                            <hr style="color: {{get_app_setting('header_background_color')}};">
-                            <p class="font-bold mb-5">
+                            <hr style="backgroud-color: {{get_app_setting('header_background_color')}}; height:2px;">
+                            <p class="font-bold mb-5 mt-5">
                                 {{ $quiz->description }}
                             </p>
                         @endif
