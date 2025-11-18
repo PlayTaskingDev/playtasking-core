@@ -66,7 +66,7 @@
             color: {{get_app_setting('cards_font_color')}}
         }
     </style>
-    <style>{{ get_app_setting('custom_css') }}</style>
+    <style>{!! html_entity_decode(get_app_setting('custom_css')) !!}</style>
 </head>
 
 <body class="font-sans antialiased background-app app">
