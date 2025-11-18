@@ -41,7 +41,7 @@
                 background-size: contain, cover;
             }
         </style>
-        <style>{!! get_app_setting('custom_css') !!}</style>
+        <style>{!!  html_entity_decode(get_app_setting('custom_css')) !!}</style>
         @yield('header_scripts')
         {!! RecaptchaV3::initJs() !!}
     </head>
