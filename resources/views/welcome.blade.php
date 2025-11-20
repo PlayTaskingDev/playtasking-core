@@ -75,7 +75,7 @@
                     <div class="mt-4">
                         <x-input-label for="members_number" :value="get_app_setting('members_placeholder')" />
                         <x-text-input id="members_number" class="block mt-1 w-full mb-3" type="text" name="members_number"
-                            :value="old('members_number')" required autocomplete="members_number" />
+                            :value="old('members_number')" required  />
                         <x-input-error :messages="$errors->get('members_number')" class="mt-2" />
                         <a class="members_number_url underline text-sm text-white font-bold dark:text-gray-400 hover:text-white dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
                             href="{{ get_app_setting('members_url') }}" target="_blank" rel="noopener noreferrer nofollow">

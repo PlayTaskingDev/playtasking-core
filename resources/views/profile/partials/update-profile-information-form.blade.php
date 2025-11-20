@@ -92,7 +92,7 @@
         <div class="mt-4">
             <x-input-label for="members_number" :value="get_app_setting('members_placeholder')" />
             <x-text-input id="members_number" class="block mt-1 w-full" type="text" name="members_number"
-                :value="old('members_number', $user->members_number)" autofocus autocomplete="members_number" />
+                :value="old('members_number', $user->members_number)" autofocus  />
             <x-input-error :messages="$errors->get('members_number')" class="mt-2" />
         </div>
         @endif
