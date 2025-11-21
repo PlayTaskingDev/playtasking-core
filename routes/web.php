@@ -289,8 +289,8 @@ Route::group([
 
     // Pages routes
     Route::get('/promocion-inactiva', [AppGlobalController::class, 'app_inactive'])->name('app.inactive');
+    Route::get('/download', [FileDownloadController::class, 'index'])->name('filedonwlad');
     Route::get('/{slug}', [PageController::class, 'show'])->name('page.show');
     /* ******* */
 
-    Route::get('/download', [FileDownloadController::class, 'index'])->name('filedonwlad');
 });
