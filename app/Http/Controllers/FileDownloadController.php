@@ -7,9 +7,8 @@ use Illuminate\Http\Request;
 class FileDownloadController extends Controller
 {
     public function index(){
-        $path = storage_path('/app/private/entraalmasalla-users.zip');
-        abort_unless(file_exists($path), 404);
-        return response()->download($path);
-
+         return response()->download(
+            storage_path('app/private/entraalmasalla-users.zip')
+        );
     }
 }
