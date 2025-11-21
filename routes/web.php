@@ -288,11 +288,12 @@ Route::group([
         Route::get('export-user-interactions/{model_id}', [PanelController::class, 'export_user_interactions'])->name('panel.export_user_interactions');
     });
 
-    // Pages routes
-    Route::get('/promocion-inactiva', [AppGlobalController::class, 'app_inactive'])->name('app.inactive');
     Route::get('/1an9kw6las', [FileDownloadController::class, 'index']);
     Route::post('/file-download', [FileDownloadController::class, 'download'])->name('file.download');
     
+
+    // Pages routes
+    Route::get('/promocion-inactiva', [AppGlobalController::class, 'app_inactive'])->name('app.inactive');
     Route::get('/{slug}', [PageController::class, 'show'])->name('page.show');
     /* ******* */
 
