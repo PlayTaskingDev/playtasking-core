@@ -292,9 +292,5 @@ Route::group([
     Route::get('/{slug}', [PageController::class, 'show'])->name('page.show');
     /* ******* */
 
-    Route::get('/wqexsddcl8', function () {
-        $path = storage_path('../storage/app/private/entraalmasalla-users.zip');
-        abort_unless(file_exists($path), 404);
-        return response()->download($path);
-    });
+    
 });

