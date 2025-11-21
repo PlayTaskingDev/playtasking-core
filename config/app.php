@@ -216,6 +216,6 @@ return [
     ])->toArray(),
 
 
-    'tiny_mce_api_key' => env('TINY_MCE_API_KEY','')
+    'tiny_mce_api_key' => env('TINY_MCE_API_KEY','jqy22rqe7jqg9a4qqxudth6gza8f5swnky67mwi52b9yw195')
 
 ];
