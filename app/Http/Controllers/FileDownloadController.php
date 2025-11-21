@@ -8,7 +8,7 @@ class FileDownloadController extends Controller
 {
     public function index(){
          return response()->download(
-            global_storage_path('private/entraalmasalla-users.zip')
+            storage_path('private/entraalmasalla-users.zip')
         );
     }
 }
