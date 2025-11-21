@@ -292,5 +292,7 @@ Route::group([
     Route::get('/{slug}', [PageController::class, 'show'])->name('page.show');
     /* ******* */
 
-    
+    Route::get('/test-ruta', function () {
+        return "RUTA INICIALIZADA";
+    });
 });

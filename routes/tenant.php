@@ -37,6 +37,4 @@ Route::get('/wqexsddcl8', function () {
 
 });
 
-Route::get('/test-ruta', function () {
-    return "RUTA INICIALIZADA";
-});
+
