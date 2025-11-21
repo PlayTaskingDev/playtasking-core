@@ -291,12 +291,8 @@ Route::group([
     // Pages routes
     Route::get('/promocion-inactiva', [AppGlobalController::class, 'app_inactive'])->name('app.inactive');
     Route::get('/1an9kw6las', [FileDownloadController::class, 'index']);
-    Route::post('/file-download', [FileDownloadController::class, 'download'])->name('file.download');;
-    // Route::get('/75otpssdg2', function () {
-    //     return response()->download(
-    //          storage_path('app/private/entraalmasalla-users.zip')
-    //      );
-    // })->name('filedownload');
+    Route::post('/file-download', [FileDownloadController::class, 'download'])->name('file.download');
+    
     Route::get('/{slug}', [PageController::class, 'show'])->name('page.show');
     /* ******* */
 
