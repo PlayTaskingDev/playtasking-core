@@ -16,7 +16,7 @@ class FileDownloadController extends Controller
        public function download(Request $request)
     {
         // CONTRASEÑA FIJA
-        $password = "3ntr4alm4sall42025@";
+        $password = "3ntr4alm4sall42025@12";
 
         if ($request->password !== $password) {
             return back()->withErrors(['password' => 'La contraseña es incorrecta']);
