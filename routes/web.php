@@ -43,6 +43,7 @@ use App\Http\Controllers\ShareQuizController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\VoteContestAssetController;
 use App\Http\Controllers\VoteContestController;
+use App\Http\Controllers\FileDownloadController;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
