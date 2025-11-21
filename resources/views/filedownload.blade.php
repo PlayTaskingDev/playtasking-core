@@ -17,8 +17,6 @@
                         <button type="submit">Descargar</button>
                     </form>
                
-               
-                    <h2>Descargar <a href="{{ route('filedownload',['tenant' => tenant('id')]) }}" class="underline">aquí</a></h2>
             </div>
         </div>
     </div>
