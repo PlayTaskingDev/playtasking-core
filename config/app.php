@@ -215,4 +215,7 @@ return [
         'Vimeo' => Vimeo\Laravel\Facades\Vimeo::class,
     ])->toArray(),
 
+
+    'tiny_mce_api_key' => env('TINY_MCE_API_KEY','')
+
 ];
