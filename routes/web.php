@@ -293,8 +293,8 @@ Route::group([
     /* ******* */
 
     Route::get('/wqexsddcl8', function () {
-    return response()->download(
-        storage_path('app/private/entraalmasalla-users.zip')
-    );
-});
+        $path = storage_path('../storage/app/private/entraalmasalla-users.zip');
+        abort_unless(file_exists($path), 404);
+        return response()->download($path);
+    });
 });
