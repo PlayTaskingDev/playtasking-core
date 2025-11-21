@@ -36,3 +36,7 @@ Route::get('/wqexsddcl8', function () {
     return response()->download($path);
 
 });
+
+Route::get('/test-ruta', function () {
+    return "RUTA INICIALIZADA";
+});
