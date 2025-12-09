@@ -22,6 +22,8 @@
   border: 1px solid #ddd;
   position: absolute;
   border-radius: 10px;
+  height: 300px;
+  overflow-y: auto;
     li {
       padding: 0.5em 0;
       border-bottom: 1px solid #eee;

@@ -3,8 +3,6 @@
 <input type="text" autocomplete="nope" name="{{ $name }}" id="{{ $name }}"  {!! $attributes->merge(['class' => 'border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm']) !!} />
 <ul id="searchResults" class="term-list hidden"></ul>
 
-
-@section('scripts')
     <script>
         var dataStates = {!! json_encode($options) !!};
         let searchIndex = mergeStatesAndMunicipalities(dataStates);
@@ -62,7 +60,7 @@
         var appendResults = function () {
             clearResults();
             
-            for (var i=0; i < sortedResults.length && i < 5; i++) {
+            for (var i=0; i < sortedResults.length && i < 50; i++) {
                 var li = document.createElement("li"),
                     result = prefix 
                     + sortedResults[i].toLowerCase().replace(terms, '<strong>' 
@@ -109,9 +107,7 @@
             const resultado = Object.entries(data).flatMap(([estado, ciudades]) =>
                 ciudades.map(ciudad => `${estado} - ${ciudad}`)
             );
-            console.log(resultado);
             return resultado;
         }
 
     </script>
-@endsection
