@@ -282,5 +282,7 @@
     "The coupon is not valid.": "El cupón no es válido.",
     "Product": "Producto",
     "Game Time Ranking":"Mejores en Tiempo de Juego",
-    "Choose Game":"Elige un Juego"
+    "Choose Game":"Elige un Juego",
+    "Select City": "Ingresa Ciudad",
+    "There are no matches!": "No hay Coincidencias"
 }

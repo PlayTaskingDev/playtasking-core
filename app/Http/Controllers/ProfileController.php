@@ -18,8 +18,11 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        $user = $request->user();
+        $city = json_decode($request->user()['extra_info']);
+        $user['city'] = (($city == null) ? '': $city->city);
         return view('profile.edit', [
-            'user' => $request->user(),
+            'user' => $user,
         ]);
     }
 
@@ -30,6 +33,7 @@ class ProfileController extends Controller
     {
         //$data = $request->validated();
         $data = $request->all();
+        $extra_info = ["city" => $data['city']]; 
 
         if($request->file('avatar')){
             $data['avatar'] = $this->uploadImage('gcs','avatars',$request->file('avatar'));
@@ -40,7 +44,7 @@ class ProfileController extends Controller
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
         }
-
+        $request->user()['extra_info'] = json_encode($extra_info);
         $request->user()->save();
 
         return Redirect::route('profile.edit', ['tenant' => tenant('id')])->with('status', 'profile-updated');

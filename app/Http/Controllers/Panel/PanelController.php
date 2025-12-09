@@ -67,6 +67,7 @@ class PanelController extends Controller
             'out_of_coupons_title'          => ['required','regex:/^[A-Za-z0-9áéíóúÁÉÍÓÚÑñⓇ$,.;:!"¡?¿#\(\)\' \-]+$/'],
             'out_of_coupons_image'          => ['image:jpg,png,jpeg,svg','max:2024'],
             'members_number'                => ['boolean'],
+            'allow_city'                    => ['boolean'],
             'members_legend'                => ['required','regex:/^[A-Za-z0-9áéíóúÁÉÍÓÚÑñⓇ$,.;:!"¡?¿#\(\)\' \-]+$/'],
             'members_placeholder'           => ['required','regex:/^[A-Za-z0-9áéíóúÁÉÍÓÚÑñⓇ$,.;:!"¡?¿#\(\)\' \-]+$/'],
             'members_url'                   => ['required','url'],
@@ -111,6 +112,7 @@ class PanelController extends Controller
             'award_show_title'              => ['nullable','string'],
             'awards_section_title'          => ['nullable','string'],
         ];
+
 
         $validator = validator($request->all(), $rules);
 
@@ -225,6 +227,9 @@ class PanelController extends Controller
 
         if( !$request->has('members_number') ){
             $data['members_number'] = false;
+        }
+        if( !$request->has('allow_city') ){
+            $data['allow_city'] = false;
         }
 
         if( !$request->has('cards_shadow') ){

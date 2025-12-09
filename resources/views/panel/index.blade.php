@@ -198,6 +198,13 @@
                     <div id="accordion-collapse-body-2" class="hidden" aria-labelledby="accordion-collapse-heading-2">
                         <div class="p-5 border border-b-0 border-gray-200 dark:border-gray-700 dark:bg-gray-900">
                             <div class="my-5 flex items-center">
+                                <input id="allow_city" name="allow_city" type="checkbox" value="1" {{get_app_setting('allow_city') ? 'checked' : ''}}
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                <label for="allow_city"
+                                    class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ __('Allow City') }}</label>
+                                <x-input-error :messages="$errors->get('allow_city')" class="mt-2" />
+                            </div>
+                            <div class="my-5 flex items-center">
                                 <input id="social_login_active" name="social_login_active" type="checkbox" value="1" {{get_app_setting('social_login_active') ? 'checked' : ''}}
                                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                 <label for="social_login_active"
@@ -906,41 +913,43 @@
                     input.disabled = false;
                 });
             }
+            if(document.getElementById('picker-ranking1-color') !== null){
+                const rankingGradient1Picker = new ColorPicker({
+                    color: '{{$settings->ranking_color_1}}',
+                    background: '#fff',
+                    el: document.getElementById('picker-ranking1-color'),
+                    width: 250,
+                    height: 150,
+                });
 
-            const rankingGradient1Picker = new ColorPicker({
-                color: '{{$settings->ranking_color_1}}',
-                background: '#fff',
-                el: document.getElementById('picker-ranking1-color'),
-                width: 250,
-                height: 150,
-            });
+                rankingGradient1Picker.onChange(function(){
+                    currentColor = rankingGradient1Picker.getHexString();
+                    let inputColor = document.getElementById('ranking_color_1');
+                    inputColor.value = currentColor;
 
-            rankingGradient1Picker.onChange(function(){
-                currentColor = rankingGradient1Picker.getHexString();
-                let inputColor = document.getElementById('ranking_color_1');
-                inputColor.value = currentColor;
+                    let pickerViewer = document.getElementById('picker-ranking1-viewer');
+                    pickerViewer.style.backgroundColor = currentColor;
+                });
+            }
+            if(document.getElementById('picker-ranking2-color') !== null){
+                const rankingGradient2Picker = new ColorPicker({
+                    color: '{{$settings->ranking_color_2}}',
+                    background: '#fff',
+                    el: document.getElementById('picker-ranking2-color'),
+                    width: 250,
+                    height: 150,
+                });
 
-                let pickerViewer = document.getElementById('picker-ranking1-viewer');
-                pickerViewer.style.backgroundColor = currentColor;
-            });
+                rankingGradient2Picker.onChange(function(){
+                    currentColor = rankingGradient2Picker.getHexString();
+                    let inputColor = document.getElementById('ranking_color_2');
+                    inputColor.value = currentColor;
 
-            const rankingGradient2Picker = new ColorPicker({
-                color: '{{$settings->ranking_color_2}}',
-                background: '#fff',
-                el: document.getElementById('picker-ranking2-color'),
-                width: 250,
-                height: 150,
-            });
+                    let pickerViewer = document.getElementById('picker-ranking2-viewer');
+                    pickerViewer.style.backgroundColor = currentColor;
+                });
 
-            rankingGradient2Picker.onChange(function(){
-                currentColor = rankingGradient2Picker.getHexString();
-                let inputColor = document.getElementById('ranking_color_2');
-                inputColor.value = currentColor;
-
-                let pickerViewer = document.getElementById('picker-ranking2-viewer');
-                pickerViewer.style.backgroundColor = currentColor;
-            });
-
+            }
             const disabledGradient1Picker = new ColorPicker({
                 color: '{{$settings->disabled_gradient_1}}',
                 background: '#fff',

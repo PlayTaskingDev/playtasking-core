@@ -52,7 +52,8 @@ class User extends Authenticatable
         'password',
         'avatar',
         'phone',
-        'members_number'
+        'members_number',
+        'extra_info'
     ];
 
     /**

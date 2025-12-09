@@ -36,12 +36,15 @@ class RegisteredUserController extends Controller
             'email'                 => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
             'email_confirmation'    => ['required', 'string', 'email', 'max:255', 'same:email'],
             'phone'                 => ['nullable', 'digits:10'],
+            'city'                  => [Rule::requiredIf(get_app_setting('allow_city')), 'string', 'max:256'],
             'checkbox_terms'        => ['required'],
             'checkbox_privacy'      => ['required'],
             'password'              => ['required', Rules\Password::defaults()],
             'members_number'        => [Rule::requiredIf(get_app_setting('members_number')), 'string', 'max:16'],
             'g-recaptcha-response'  => 'required|recaptchav3:register,0.5'
         ]);
+        
+        $extra_info = ["city" => $request->city]; 
 
         $user = User::create([
             'name'              => $request->name,
@@ -49,8 +52,8 @@ class RegisteredUserController extends Controller
             'phone'             => $request->phone,
             'members_number'    => $request->members_number,
             'password'          => Hash::make($request->password),
+            'extra_info'        => json_encode($extra_info),
         ]);
-
         event(new Registered($user));
 
         Auth::login($user);
