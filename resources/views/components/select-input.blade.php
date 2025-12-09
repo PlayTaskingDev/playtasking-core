@@ -1,6 +1,6 @@
 
 <x-input-label for="{{ $name }}" :value="$label" />
-<input type="text" autocomplete="off" name="{{ $name }}" id="{{ $name }}"  {!! $attributes->merge(['class' => 'border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm']) !!} />
+<input type="text" autocomplete="nope" name="{{ $name }}" id="{{ $name }}"  {!! $attributes->merge(['class' => 'border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm']) !!} />
 <ul id="searchResults" class="term-list hidden"></ul>
 
 
