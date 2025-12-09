@@ -12,7 +12,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('settings', function (Blueprint $table) {
-            $table->boolean('ranking_enabled')->default(true)->after('app_active');
             $table->boolean('ranking_enabled_games')->default(true)->after('app_active');
             $table->boolean('ranking_enabled_tickets')->default(true)->after('app_active');
             $table->string('first_place_icon_games',250)->nullable();
@@ -27,7 +26,6 @@ return new class extends Migration
     public function down(): void
     {
          Schema::table('settings', function (Blueprint $table) {
-            $table->dropColumn('ranking_enabled');
             $table->dropColumn('ranking_enabled_games');
             $table->dropColumn('ranking_enabled_tickets');
             $table->dropColumn('first_place_icon_games');
