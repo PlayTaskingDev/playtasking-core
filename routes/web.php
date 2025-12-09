@@ -10,6 +10,7 @@ use App\Http\Controllers\MemoryQuizController;
 use App\Http\Controllers\AwardController;
 use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\CatchGameController;
+use App\Http\Controllers\SmashGameController;
 use App\Http\Controllers\ClickWinController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\OcrTicketController;
@@ -28,6 +29,8 @@ use App\Http\Controllers\Panel\PanelCampaignController;
 use App\Http\Controllers\Panel\PanelCampaignSplashPageController;
 use App\Http\Controllers\Panel\PanelCatchGameController;
 use App\Http\Controllers\Panel\PanelCatchObjectController;
+use App\Http\Controllers\Panel\PanelSmashGameController;
+use App\Http\Controllers\Panel\PanelSmashObjectController;
 use App\Http\Controllers\Panel\PanelClickWinController;
 use App\Http\Controllers\Panel\PanelCodeController;
 use App\Http\Controllers\Panel\PanelContentTypeController;
@@ -138,6 +141,13 @@ Route::group([
                 ->middleware('ajax_quiz.complete')->name('catch_game.complete');
         });
 
+        Route::prefix('aplastar-objetos')->group(function () {
+            Route::get('/', [SmashGameController::class, 'index'])->name('smash_game.index');
+            Route::get('/{slug}', [SmashGameController::class, 'show'])->name('smash_game.show');
+            Route::post('/smash-game-complete', [SmashGameController::class, 'smash_game_complete'])
+                ->middleware('ajax_quiz.complete')->name('smash_game.complete');
+        });
+
         Route::prefix('compartir')->group(function () {
             Route::get('/', [ShareQuizController::class, 'share_quiz_index'])->name('share_quiz.index');
             Route::get('/{slug}', [ShareQuizController::class, 'share_quiz_show'])->name('share_quiz.show');
@@ -240,6 +250,8 @@ Route::group([
         Route::resource('puzzles', PanelPuzzleController::class);
         Route::resource('catch_games', PanelCatchGameController::class);
         Route::resource('catch_objects', PanelCatchObjectController::class);
+        Route::resource('smash_games', PanelSmashGameController::class);
+        Route::resource('smash_objects', PanelSmashObjectController::class);
         Route::resource('media_elements', PanelMediaElementController::class);
         Route::get('ticketQuestion/get-codes-sample', [TicketQuestionController::class, 'download_sample'])->name('tickets.questions.sample');
         Route::get('ticketQuestion/import', [TicketQuestionController::class, 'import_show'])->name('tickets.questions.import_show');
