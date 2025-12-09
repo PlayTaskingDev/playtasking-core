@@ -91,6 +91,11 @@
                                 </x-nav-link>
                             </li>
                             <li>
+                                <x-nav-link :href="route('smash_games.index', ['tenant' => tenant('id')])" :active="request()->routeIs('smash_games.index')" class="py-2">
+                                    {{ __('Smash Games') }}
+                                </x-nav-link>
+                            </li>
+                            <li>
                                 <x-nav-link :href="route('code.index', ['tenant' => tenant('id')])" :active="request()->routeIs('code.index')" class="py-2">
                                     {{ __('Code Hunter') }}
                                 </x-nav-link>
@@ -235,6 +240,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('catch_games.index', ['tenant' => tenant('id')])" :active="request()->routeIs('catch_games.index')" class="flex items-center">
                 {{ __('Catch Games') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('smash_games.index', ['tenant' => tenant('id')])" :active="request()->routeIs('smash_games.index')" class="flex items-center">
+                {{ __('Smash Games') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('code.index', ['tenant' => tenant('id')])" :active="request()->routeIs('code.index')" class="flex items-center">
                 {{ __('Coupons') }}

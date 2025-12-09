@@ -24,25 +24,15 @@ class UsersTableSeeder extends Seeder
 
         User::create(
             [
-                'name'              => 'Cesar',
-                'email'             => 'cesar.arciniega@gmail.com',
-                'phone'             => '5519490799',
+                'name'              => 'Alberto',
+                'email'             => 'desarrollo@playtasking.com',
+                'phone'             => '5575012750',
                 'email_verified_at' => now(),
-                'password'          => Hash::make('YhwhNis1777'),
+                'password'          => Hash::make('D3sarr0llo2*'),
             ]
         )->assignRole('admin');
 
-        User::create(
-            [
-                'name'              => 'Jorge',
-                'email'             => 'jorge.valencia@hostland.com.mx',
-                'phone'             => '5519490799',
-                'email_verified_at' => now(),
-                'password'          => Hash::make('wQ6cU2lZ1lJ3sC4p'),
-            ]
-        )->assignRole('admin');
-
-        User::factory(10)->create();
+        User::factory(4)->create();
 
         Artisan::call('rankings:update');
 

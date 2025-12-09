@@ -32,7 +32,7 @@
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=montserrat:400,400i,700,700i,900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.bunny.net/css?family=montserrat:400,400i,700,700i,900&family=press-start-2p:400&display=swap" rel="stylesheet" />
 
     <!-- Scripts -->
     @vite(['resources/scss/app.scss','resources/js/app.js'])
