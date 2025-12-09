@@ -55,6 +55,8 @@ class PanelController extends Controller
             'social_login_active'           => ['boolean'],
             'app_active'                    => ['boolean'],
             'ranking_enabled'               => ['boolean'],
+            'ranking_enabled_games'         => ['boolean'],
+            'ranking_enabled_tickets'       => ['boolean'],
             'reg_form_name_label'           => ['required','regex:/^[A-Za-z0-9áéíóúÁÉÍÓÚÑñⓇ$,.;:!"¡?¿#\(\)\' \-]+$/'],
             'reg_form_email_label'          => ['required','regex:/^[A-Za-z0-9áéíóúÁÉÍÓÚÑñⓇ$,.;:!"¡?¿#\(\)\' \-]+$/'],
             'reg_form_email_conf_label'     => ['required','regex:/^[A-Za-z0-9áéíóúÁÉÍÓÚÑñⓇ$,.;:!"¡?¿#\(\)\' \-]+$/'],
@@ -72,13 +74,16 @@ class PanelController extends Controller
             'tickets_success_response'      => ['image:jpg,png,jpeg,svg','max:2024'],
             'tickets_failed_response'       => ['image:jpg,png,jpeg,svg','max:2024'],
             'tickets_duplicated_image'      => ['image:jpg,png,jpeg,svg','max:2024'],
-            'tickets_form_legend'           => ['required','regex:/^[A-Za-z0-9áéíóúÁÉÍÓÚÑñⓇ$,.;:!"¡?¿#\(\)\' \-]+$/'],
+            'tickets_form_legend'           => ['regex:/^[A-Za-z0-9áéíóúÁÉÍÓÚÑñⓇ$,.;:!"¡?¿#\(\)\' \-]+$/'],
             'tickets_points'                => ['nullable','numeric'],
-            'ranking_color_1'               => ['required','regex:/^[A-Za-z0-9#]+$/'],
-            'ranking_color_2'               => ['required','regex:/^[A-Za-z0-9#]+$/'],
+            'ranking_color_1'               => ['regex:/^[A-Za-z0-9#]+$/'],
+            'ranking_color_2'               => ['regex:/^[A-Za-z0-9#]+$/'],
             'first_place_icon'              => ['image:jpg,png,jpeg,svg','max:2024'],
             'second_place_icon'             => ['image:jpg,png,jpeg,svg','max:2024'],
             'third_place_icon'              => ['image:jpg,png,jpeg,svg','max:2024'],
+            'first_place_icon_games'        => ['image:jpg,png,jpeg,svg','max:2024'],
+            'second_place_icon_games'       => ['image:jpg,png,jpeg,svg','max:2024'],
+            'third_place_icon_games'        => ['image:jpg,png,jpeg,svg','max:2024'],
             'cards_background_color'        => ['regex:/^[A-Za-z0-9#]+$/'],
             'cards_font_color'              => ['regex:/^[A-Za-z0-9#]+$/'],
             'coupons_form_legend'           => ['required','regex:/^[A-Za-z0-9áéíóúÁÉÍÓÚÑñⓇ$,.;:!"¡?¿#\(\)\' \-]+$/'],
@@ -188,6 +193,18 @@ class PanelController extends Controller
 
         if($request->file('third_place_icon')){
             $data['third_place_icon'] = $this->uploadImage('gcs','settings',$request->file('third_place_icon'));
+        }
+        
+        if($request->file('first_place_icon_games')){
+            $data['first_place_icon_games'] = $this->uploadImage('gcs','settings',$request->file('first_place_icon_games'));
+        }
+
+        if($request->file('second_place_icon_games')){
+            $data['second_place_icon_games'] = $this->uploadImage('gcs','settings',$request->file('second_place_icon_games'));
+        }
+
+        if($request->file('third_place_icon_games')){
+            $data['third_place_icon_games'] = $this->uploadImage('gcs','settings',$request->file('third_place_icon_games'));
         }
 
         if( !$request->has('tickets_quiz_validation') ){

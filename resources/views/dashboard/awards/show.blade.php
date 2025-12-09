@@ -64,6 +64,14 @@
                     validity.innerHTML = '{{ $award_code->validity }}';
                     awardValidity.appendChild(validity);
                 }
+                const rankingTime = document.querySelector('#rankingTime');
+              
+                if(rankingTime) {
+                    const time = document.createElement('p');
+                    time.style.color = 'unset';
+                    time.innerHTML = '@if(isset($ranking_time) && !empty($ranking_time)){{$ranking_time}}@endif';
+                    rankingTime.appendChild(time);
+                }
             });
         </script>
     @endsection

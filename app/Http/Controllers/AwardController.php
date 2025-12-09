@@ -74,6 +74,7 @@ class AwardController extends Controller
      */
     public function show(Award $award, Request $request, $code_id = null)
     {
+        $interaction = UserInteraction::where('user_id',Auth::user()->id)->first();
         if ($request->session()->get('coupon_success') == true) {
             $award_code = DB::table('award_codes')->where('award_id', $award->id)->whereNull('user_id')->first();
         } elseif ($code_id) {
@@ -99,6 +100,7 @@ class AwardController extends Controller
                 'campaign_tickets'  => $campaign_tickets,
                 'campaign_coupons'  => $campaign_coupons,
                 'active_icon'       => $active_icon,
+                'ranking_time'      => $this->calculate_ranking_time($interaction->hit_created_at,$interaction->hit_updated_at)
             ]);
         } else {
             return redirect()->route('game.out_of_coupons', ['tenant' => tenant('id')]);

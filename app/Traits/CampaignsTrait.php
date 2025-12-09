@@ -126,4 +126,11 @@ trait CampaignsTrait
         $secretKey = ENV('APP_KEY');
         return hash_hmac('sha256', $gameId, $secretKey);
     }
+
+     public function calculate_ranking_time($hit_date_created,$hit_date_updated){
+        $fecha1 = Carbon::parse($hit_date_created);
+        $fecha2 = Carbon::parse($hit_date_updated);
+        $diferenciaEnSegundos = $fecha1->floatDiffInSeconds($fecha2);
+        return (float) number_format($diferenciaEnSegundos, 2, '.', '');
+    }
 }

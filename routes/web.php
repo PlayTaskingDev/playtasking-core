@@ -202,6 +202,8 @@ Route::group([
             Route::get('/', [RankingController::class, 'index'])->name('ranking.index');
         });
 
+        Route::get('get-ranking', [RankingController::class, 'get_ranking_by_model'])->name('get.ranking');
+
         Route::post('game-start', [CampaignController::class, 'record_game_start'])->name('game.start');
 
         Route::prefix('premios')->group(function () {

@@ -111,7 +111,81 @@
                             </div>
                         </div>
                     </div>
-
+                    {{-- Ranking Games settings --}}
+                    @if(get_app_setting('ranking_enabled'))
+                        <h2 id="accordion-collapse-heading-10">
+                            <button type="button" class="flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-b-0 border-gray-200 rounded-t-xl focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3" data-accordion-target="#accordion-collapse-body-10" aria-expanded="true" aria-controls="accordion-collapse-body-10">
+                            <span>{{__('Ranking Game Settings')}}</span>
+                            <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5"/>
+                            </svg>
+                            </button>
+                        </h2>
+                        <div id="accordion-collapse-body-10" class="hidden" aria-labelledby="accordion-collapse-heading-10">
+                            <div class="p-5 border border-b-0 border-gray-200 dark:border-gray-700 dark:bg-gray-900">
+                                <div class="my-5 flex items-center">
+                                    <input id="ranking_enabled_games" name="ranking_enabled_games" type="checkbox" value="1" {{get_app_setting('ranking_enabled_games') ? 'checked' : ''}}
+                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="ranking_enabled_games"
+                                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ __('Ranking Games Enabled') }}</label>
+                                    <x-input-error :messages="$errors->get('ranking_enabled_games')" class="mt-2" />
+                                </div>
+                                <div class="my-5 grid grid-cols-3 gap-4">
+                                    <div>
+                                        <x-input-label for="first_place_icon_games" :value="__('First place image')" />
+                                        @if ($settings->first_place_icon_games)
+                                        <img src="{{$settings->first_place_icon_games}}" alt="" class="w-full mb-3">
+                                        @else
+                                        <p class="my-3">
+                                            {{__('Not assigned')}}
+                                        </p>
+                                        @endif
+                                        <input
+                                            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                                            aria-describedby="first_place_icon_games_help" id="first_place_icon_games" name="first_place_icon_games" type="file">
+                                        <x-input-error class="mt-2" :messages="$errors->get('first_place_icon_games')" />
+                                        <div class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="first_place_icon_games_help">
+                                            {{__('Image must be less than 2MB and JPG or PNG format.')}} <br>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <x-input-label for="second_place_icon_games" :value="__('Second place image')" />
+                                        @if ($settings->second_place_icon_games)
+                                        <img src="{{$settings->second_place_icon_games}}" alt="" class="w-full mb-3">
+                                        @else
+                                        <p class="my-3">
+                                            {{__('Not assigned')}}
+                                        </p>
+                                        @endif
+                                        <input
+                                            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                                            aria-describedby="second_place_icon_games_help" id="second_place_icon_games" name="second_place_icon_games" type="file">
+                                        <x-input-error class="mt-2" :messages="$errors->get('second_place_icon_games')" />
+                                        <div class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="second_place_icon_games_help">
+                                            {{__('Image must be less than 2MB and JPG or PNG format.')}} <br>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <x-input-label for="third_place_icon_games" :value="__('Third place image')" />
+                                        @if ($settings->third_place_icon_games)
+                                        <img src="{{$settings->third_place_icon_games}}" alt="" class="w-full mb-3">
+                                        @else
+                                        <p class="my-3">
+                                            {{__('Not assigned')}}
+                                        </p>
+                                        @endif
+                                        <input
+                                            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                                            aria-describedby="third_place_icon_games_help" id="third_place_icon_games" name="third_place_icon_games" type="file">
+                                        <x-input-error class="mt-2" :messages="$errors->get('third_place_icon_games')" />
+                                        <div class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="third_place_icon_games_help">
+                                            {{__('Image must be less than 2MB and JPG or PNG format.')}} <br>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
                     {{-- Registration options --}}
                     <h2 id="accordion-collapse-heading-2">
                         <button type="button" class="flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-b-0 border-gray-200 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3" data-accordion-target="#accordion-collapse-body-2" aria-expanded="false" aria-controls="accordion-collapse-body-2">
@@ -346,10 +420,11 @@
                         </div>
                     </div>
 
-                    {{-- Tickets module --}}
+                    @if(get_app_setting('ranking_enabled'))
+                    {{-- Ranking Tickets module --}}
                     <h2 id="accordion-collapse-heading-6">
                         <button type="button" class="flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-b-0 border-gray-200 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3" data-accordion-target="#accordion-collapse-body-6" aria-expanded="false" aria-controls="accordion-collapse-body-6">
-                          <span>{{__('Tickets module settings')}}</span>
+                            <span>{{__('Ranking Tickets module settings')}}</span>
                           <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5"/>
                           </svg>
@@ -357,6 +432,13 @@
                     </h2>
                     <div id="accordion-collapse-body-6" class="hidden" aria-labelledby="accordion-collapse-heading-6">
                         <div class="p-5 border border-t-0 border-gray-200 dark:border-gray-700">
+                            <div class="my-5 flex items-center">
+                                    <input id="ranking_enabled_tickets" name="ranking_enabled_tickets" type="checkbox" value="1" {{get_app_setting('ranking_enabled_tickets') ? 'checked' : ''}}
+                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="ranking_enabled_tickets"
+                                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ __('Ranking Tickets Enabled') }}</label>
+                                    <x-input-error :messages="$errors->get('ranking_enabled_tickets')" class="mt-2" />
+                                </div>
                             <div class="my-5">
                                     <h6 class="mb-2 text-sm font-bold text-black dark:text-white">
                                         {{ __('Module type') }}
@@ -597,6 +679,7 @@
                             </div>
                         </div>
                     </div>
+                    @endif
 
                     {{-- Code hunter module --}}
                     <h2 id="accordion-collapse-heading-7">
