@@ -62,12 +62,6 @@
             color: {{get_app_setting('cards_font_color')}};
         }
 
-         .icon-tab-ranking {
-            color: {{get_app_setting('cards_font_color')}};
-            margin-right: 4px;
-        }
-
-
         .game-card p {
             color: {{get_app_setting('cards_font_color')}}
         }
