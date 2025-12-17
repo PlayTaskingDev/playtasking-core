@@ -224,6 +224,12 @@ class PanelController extends Controller
         if( !$request->has('ranking_enabled') ){
             $data['ranking_enabled'] = false;
         }
+        if( !$request->has('ranking_enabled_games') ){
+            $data['ranking_enabled_games'] = false;
+        }
+        if( !$request->has('ranking_enabled_tickets') ){
+            $data['ranking_enabled_tickets'] = false;
+        }
 
         if( !$request->has('members_number') ){
             $data['members_number'] = false;
