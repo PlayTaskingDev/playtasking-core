@@ -36,7 +36,6 @@ class PanelSmashGameController extends Controller
         $campaigns = Campaign::all();
         $content_type = ContentType::where('system_name','games')->first();
         $time_slots = get_time_slots();
-
         return view('panel.smash_games.edit', [
             'smash_game'   => $smash_game,
             'campaigns'    => $campaigns,
@@ -107,6 +106,7 @@ class PanelSmashGameController extends Controller
      */
     public function update(SaveSmashGameRequest $request, SmashGame $smash_game)
     {
+        dd($request);
         $data = $request->validated();
 
         if($request->file('featured_image')){

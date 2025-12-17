@@ -42,7 +42,6 @@ class SaveSmashGameRequest extends FormRequest
             'featured_image'    => [Rule::requiredIf(!$this->id),'image:jpg,png,jpeg','max:600'],
             'featured_image_disabled'   => [Rule::requiredIf(!$this->id),'image:jpg,png,jpeg','max:600'],
             'game_bg_image'     => [Rule::requiredIf(!$this->id),'image:jpg,png,jpeg','max:600'],
-            'basket_image'      => [Rule::requiredIf(!$this->id),'image:jpg,png,jpeg','max:600'],
             'failed_image'      => [Rule::requiredIf(!$this->id),'image:jpg,png,jpeg','max:600'],
             'delete_image_holder_hidden'    => ['nullable','boolean'],
             'game_banner'                   => ['nullable','image:jpg,png,jpeg','max:600'],
