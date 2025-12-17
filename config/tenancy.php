@@ -22,7 +22,8 @@ return [
         'cinepolisentraalmasalla.com',
         'tskg.app',
         'cinepolisgaming.com',
-        'beneficioscalimax.com'
+        'beneficioscalimax.com',
+        '34.68.206.75'
     ],
 
     /**
