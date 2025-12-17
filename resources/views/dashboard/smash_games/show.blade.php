@@ -221,9 +221,9 @@
                             </div>
                             <div id="containerGame" class="w-full rounded-lg">
                                 <div id="hud" class="text-center font-bold mb-5 text-normal flex justify-between px-7 mt-6">
-                                    <div class="bg-white rounded-full px-4">{{ __('Goal') }}: <span id="scoreToWin" class="text-black">20</span></div>
-                                    <div class="bg-white rounded-full px-4">{{ __('Score') }}: <span id="score" class="text-black">0</span></div>
-                                    <div class="bg-white rounded-full px-4">{{ __('Time') }}: <span id="time" class="text-black">30</span>s</div>
+                                    <div class="bg-white rounded-full px-4 text-black">{{ __('Goal') }}: <span id="scoreToWin" class="text-black">20</span></div>
+                                    <div class="bg-white rounded-full px-4 text-black">{{ __('Score') }}: <span id="score" class="text-black">0</span></div>
+                                    <div class="bg-white rounded-full px-4 text-black">{{ __('Time') }}: <span id="time" class="text-black">30</span>s</div>
                                 </div>
                                 <div class="w-full flex justify-center items-center">
                                     <span id="startButton"
