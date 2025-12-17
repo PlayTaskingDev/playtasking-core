@@ -275,8 +275,8 @@
                     table.forEach((user,indx) => {
                         rankingTableGame.innerHTML += 
                         `<div class="p-1 bg-white top-ten flex mb-3 rounded-2xl shadow-sm" style="${user.email == user.session_email ? 'background:{{get_app_setting('ranking_color_1')}}; background: linear-gradient(135deg, {{get_app_setting('ranking_color_1')}} 0%, {{get_app_setting('ranking_color_2')}} 85%); color:white;' : ''}">
-                            <div class="basis-5/6 p-2 border-r ${user.email == user.session_email ? 'border-white' : ''} border-solid">${indx+4}° <strong>${user.user}</strong></div>
-                            <div class="basis-1/6 p-2 text-center">${user.time} s</div>
+                            <div class="basis-5/6 p-2 border-r text-black ${user.email == user.session_email ? 'border-white' : ''} border-solid">${indx+4}° <strong>${user.user}</strong></div>
+                            <div class="basis-1/6 p-2 text-center text-black">${user.time} s</div>
                         </div>`;
                         if(user.email == user.session_email){
 
