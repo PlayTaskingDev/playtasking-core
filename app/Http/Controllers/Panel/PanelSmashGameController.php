@@ -72,10 +72,6 @@ class PanelSmashGameController extends Controller
             $data['game_banner'] = $this->uploadImage('gcs','smash_games',$request->file('game_banner'));
         }
 
-        if($request->file('basket_image')){
-            $data['basket_image'] = $this->uploadImage('gcs','smash_games',$request->file('basket_image'));
-        }
-
         SmashGame::create($data);
 
         return redirect(route('smash_games.index', ['tenant' => tenant('id')]))->with('status', trans('Smash Game saved successful'));
@@ -131,10 +127,6 @@ class PanelSmashGameController extends Controller
 
         if($request->file('game_banner')){
             $data['game_banner'] = $this->uploadImage('gcs','smash_games',$request->file('game_banner'));
-        }
-
-        if($request->file('basket_image')){
-            $data['basket_image'] = $this->uploadImage('gcs','smash_games',$request->file('basket_image'));
         }
 
         if (isset(($data['delete_image_holder_hidden'])) && $data['delete_image_holder_hidden'] == true) {
