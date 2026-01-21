@@ -478,7 +478,9 @@
                                 <div class="my-5">
                                     <x-input-label for="ocr_ticket_phrases" :value="__('Use breaklines to separate phrases')" />
                                     <textarea id="ocr_ticket_phrases" name="ocr_ticket_phrases" rows="10"
-                                        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">{{old('ocr_ticket_phrases') ? old('ocr_ticket_phrases') : implode("\n", $settings->ocr_ticket_phrases ?? [])}}</textarea>
+                                        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                        {{old('ocr_ticket_phrases') ? old('ocr_ticket_phrases') : $settings->ocr_ticket_phrases }}
+                                    </textarea>
                                     <x-input-error :messages="$errors->get('ocr_ticket_phrases')" class="mt-2" />
                                 </div>
                                 <h6 class="mb-2 text-sm font-bold text-black dark:text-white italic">
@@ -801,7 +803,7 @@
                             <div class="my-5 grid grid-cols-2 gap-4">
                                 <div>
                                     <x-input-label for="header_background_color" :value="__('Header background color')" class="mb-2" />
-                                    <x-text-input id="header_background_color" class="block mt-1 w-full" type="text" name="header_background_color"
+                                    <x-text-input id="header_background_color" class="block mt-1 w-full" type="text" name="header_background_color" type="color"
                                         :value="old('header_background_color', $settings->header_background_color)" required autofocus autocomplete="header_background_color" />
                                     <x-input-error :messages="$errors->get('header_background_color')" class="mt-2" />
                                     <div id="picker-header"></div>

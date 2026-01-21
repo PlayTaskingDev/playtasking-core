@@ -40,6 +40,11 @@ use App\Http\Controllers\Panel\PanelTicketAnswerController;
 use App\Http\Controllers\Panel\PanelTicketController;
 use App\Http\Controllers\Panel\PanelVoteContestController;
 use App\Http\Controllers\Panel\TicketQuestionController;
+
+//New Admin V2
+use App\Http\Controllers\Admin\DynamicsController;
+use App\Http\Controllers\Admin\CampaignsController;
+
 use App\Http\Controllers\PuzzleController;
 use App\Http\Controllers\RankingController;
 use App\Http\Controllers\ShareQuizController;
@@ -299,6 +304,127 @@ Route::group([
             Route::delete('/{model}/{id}', [PanelTicketController::class, 'destroy'])->name('panel.tickets.destroy');
         });
         Route::get('export-user-interactions/{model_id}', [PanelController::class, 'export_user_interactions'])->name('panel.export_user_interactions');
+
+    });
+
+     // Admin routes
+    Route::middleware(['auth', 'role:admin'])->prefix('v2')->group(function () {
+        // index
+        Route::get('/', [App\Http\Controllers\Admin\PanelController::class, 'index'])->name('v2.index');
+        Route::post('/', [App\Http\Controllers\Admin\PanelController::class, 'save'])->name('v2.save.index');
+        
+        // dynamics
+        Route::resource('dynamics',DynamicsController::class);
+        // campaigns
+        Route::resource('campaigns',CampaignsController::class);
+        // Game - A Plazo
+        Route::resource('aplazogames',App\Http\Controllers\Admin\Games\AplazoGameController::class);
+        // Game - Catch Game
+        Route::resource('catchgames',App\Http\Controllers\Admin\Games\CatchGameController::class);
+        // Game - Click Win
+        Route::resource('clickwingames',App\Http\Controllers\Admin\Games\ClickWinGameController::class);
+        // Game - Share
+        Route::resource('sharegames',App\Http\Controllers\Admin\Games\ShareGameController::class);
+        // Game - Memory
+        Route::resource('memorygames',App\Http\Controllers\Admin\Games\MemoryGameController::class);
+        // Game - Puzzle
+        Route::resource('puzzlegames',App\Http\Controllers\Admin\Games\PuzzleGameController::class);
+        // Game - Trivia
+        Route::resource('triviagames',App\Http\Controllers\Admin\Games\TriviaGameController::class);
+        // Game - Vote
+        Route::resource('votegames',App\Http\Controllers\Admin\Games\VoteGameController::class);
+        
+        // options
+        Route::get('/options', [App\Http\Controllers\Admin\OptionsController::class, 'index'])->name('v2.options');
+        Route::post('/save_options', [App\Http\Controllers\Admin\OptionsController::class, 'save'])->name('v2.save.options');
+        // branding
+        Route::get('/branding', [App\Http\Controllers\Admin\BrandingController::class, 'index'])->name('v2.branding');
+        Route::post('/save_branding', [App\Http\Controllers\Admin\BrandingController::class, 'save'])->name('v2.save.branding');
+        // integrations
+        Route::get('/integrations', [App\Http\Controllers\Admin\IntegrationsController::class, 'index'])->name('v2.integrations');
+        Route::post('/save_integrations', [App\Http\Controllers\Admin\IntegrationsController::class, 'save'])->name('v2.save.integrations');
+
+
+        // dashboard pages
+        Route::get('/dashboard', function () {
+            return view('pages.v2.dashboard.ecommerce', ['title' => 'E-commerce Dashboard']);
+        })->name('v2.dashboard');
+
+        // calender pages
+        Route::get('/calendar', function () {
+            return view('pages.v2.calender', ['title' => 'Calendar']);
+        })->name('v2.calendar');
+
+        // profile pages
+        Route::get('/profile', function () {
+            return view('pages.v2.profile', ['title' => 'Profile']);
+        })->name('v2.profile');
+
+        // form pages
+        Route::get('/form-elements', function () {
+            return view('pages.v2.form.form-elements', ['title' => 'Form Elements']);
+        })->name('v2.form-elements');
+
+        // tables pages
+        Route::get('/basic-tables', function () {
+            return view('pages.v2.tables.basic-tables', ['title' => 'Basic Tables']);
+        })->name('v2.basic-tables');
+
+        // pages
+
+        Route::get('/blank', function () {
+            return view('pages.v2.blank', ['title' => 'Blank']);
+        })->name('v2.blank');
+
+        // error pages
+        Route::get('/error-404', function () {
+            return view('pages.v2.errors.error-404', ['title' => 'Error 404']);
+        })->name('v2.error-404');
+
+        // chart pages
+        Route::get('/line-chart', function () {
+            return view('pages.v2.chart.line-chart', ['title' => 'Line Chart']);
+        })->name('v2.line-chart');
+
+        Route::get('/bar-chart', function () {
+            return view('pages.v2.chart.bar-chart', ['title' => 'Bar Chart']);
+        })->name('v2.bar-chart');
+
+
+        // authentication pages
+        Route::get('/signin', function () {
+            return view('pages.v2.auth.signin', ['title' => 'Sign In']);
+        })->name('v2.signin');
+
+        Route::get('/signup', function () {
+            return view('pages.v2.auth.signup', ['title' => 'Sign Up']);
+        })->name('v2.signup');
+
+        // ui elements pages
+        Route::get('/alerts', function () {
+            return view('pages.v2.ui-elements.alerts', ['title' => 'Alerts']);
+        })->name('v2.alerts');
+
+        Route::get('/avatars', function () {
+            return view('pages.v2.ui-elements.avatars', ['title' => 'Avatars']);
+        })->name('v2.avatars');
+
+        Route::get('/badge', function () {
+            return view('pages.v2.ui-elements.badges', ['title' => 'Badges']);
+        })->name('v2.badges');
+
+        Route::get('/buttons', function () {
+            return view('pages.v2.ui-elements.buttons', ['title' => 'Buttons']);
+        })->name('v2.buttons');
+
+        Route::get('/image', function () {
+            return view('pages.v2.ui-elements.images', ['title' => 'Images']);
+        })->name('v2.images');
+
+        Route::get('/videos', function () {
+            return view('pages.v2.ui-elements.videos', ['title' => 'Videos']);
+        })->name('v2.videos');
+
     });
 
     // Pages routes

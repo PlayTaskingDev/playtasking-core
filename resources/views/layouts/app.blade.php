@@ -35,8 +35,11 @@
     <link href="https://fonts.bunny.net/css?family=montserrat:400,400i,700,700i,900&family=press-start-2p:400&display=swap" rel="stylesheet" />
 
     <!-- Scripts -->
+    @vite('resources/css/app.css')
+    <!-- Scripts -->
     @vite(['resources/scss/app.scss','resources/js/app.js'])
     @yield('header_scripts')
+    
     <style>
         #main-nav {
             background-color:{{ get_app_setting('header_background_color') }};

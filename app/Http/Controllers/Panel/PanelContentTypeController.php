@@ -100,7 +100,8 @@ class PanelContentTypeController extends Controller
         if (isset(($data['delete_image_holder_hidden'])) && $data['delete_image_holder_hidden'] == true) {
             $contentType->section_banner = null;
         }
-
+        dd($data);exit;
+        dd($contentType->fill($data));exit;
         $contentType->fill($data);
         $contentType->save();
 

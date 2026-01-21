@@ -3,6 +3,7 @@
   tinymce.init({
     selector: 'textarea.tinymce-component',
     convert_urls: false,
+    height: 400,
     plugins: [
     'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
     'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
