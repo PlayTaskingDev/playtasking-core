@@ -69,7 +69,7 @@
             <section class="max-w-full w-[500px] space-y-6" id="registro" role="tabpanel" aria-labelledby="registro-tab">
                 <x-ui.forms.input-switch label="Agregar Campo Ciudad" name="social_login_active" switcher=""/>
                 <x-ui.forms.input-switch label="Permitir registro con redes sociales" name="social_login_active" switcher=""/>
-                <x-ui.forms.input-switch label="Solicitar ID de miembros" name="members_number" switcher="{{ $settings->members_number }}"/>
+                <x-ui.forms.input-switch label="Solicitar ID de miembros" name="members_number" switcher=""/>
                 <x-ui.forms.input-text label="Members legend" name="members_legend" value="{{$settings->members_legend}}"  placeholder="" />
                 <x-ui.forms.input-text label="Members placeholder" name="members_placeholder" value="{{$settings->members_placeholder}}"  placeholder="" />
                 <x-ui.forms.input-text label="Members URL" name="members_url" value="{{$settings->members_url}}"  placeholder="" />
