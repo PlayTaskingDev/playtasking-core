@@ -2,7 +2,6 @@ import './bootstrap';
 import './modal';
 import './datepicker';
 import './custom';
-import './crud-form';
 
 import Alpine from 'alpinejs';
 import ApexCharts from 'apexcharts';
@@ -50,82 +49,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
-class CrudForm {
-    constructor(selector) {
-        this.form = document.querySelector(selector);
-        this.fields = this.form.querySelectorAll('[data-field]');
-    }
 
-    fill(data) {
-        this.fields.forEach(el => {
-            //TODO funcion para rellenar formulario de manera automatica basado en respuesta
-            
-            const path = el.dataset.field.split('.');
-            let value = data;
-            path.forEach(p => value = value?.[p]);
-
-            if (el.type === 'checkbox') el.checked = !!value;
-            else if (el.tagName === 'IMG') el.src = value;
-            else el.value = value ?? '';
-        });
-    }
-
-    clear() {
-        this.fields.forEach(el => {
-            if (el.type === 'checkbox') el.checked = false;
-            else el.value = '';
-        });
-    }
-
-    setAction(url) {
-        this.form.action = url;
-    }
-}
-class CampaignModal {
-    constructor() {
-        this.modalEl = document.getElementById('campaign-modal');
-        this.modal = new Modal(this.modalEl);
-        this.form = new CrudForm('#form-campaign');
-
-        this.registerEvents();
-    }
-
-    registerEvents() {
-        document.querySelectorAll('[data-action]').forEach(btn => {
-            btn.addEventListener('click', e => this.open(e.currentTarget));
-        });
-    }
-
-    async open(button) {
-        const action = button.dataset.action;
-        const saveRoute = button.dataset.saveRoute;
-
-        this.form.setAction(saveRoute);
-
-        if (action === 'create') {
-            this.form.clear();
-            this.setMethod('POST');
-            this.setTitle('Nueva Campaña');
-        }
-
-        if (action === 'edit') {
-            this.setMethod('PATCH');
-            this.setTitle('Editar Campaña');
-
-            const response = await axios.get(button.dataset.editRoute);
-            this.form.fill(response.data.data);
-        }
-
-        this.modal.show();
-    }
-
-    setMethod(method) {
-        document.getElementById('method-field').value = method;
-    }
-
-    setTitle(text) {
-        document.getElementById('campaign-modal-title').innerText = text;
-    }
-}
-
-new CampaignModal();

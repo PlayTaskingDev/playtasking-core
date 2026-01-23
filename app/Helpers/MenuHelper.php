@@ -14,7 +14,7 @@ class MenuHelper
             [
                 'icon' => 'chart',
                 'name' => 'Estadisticas',
-                'path' => route('v2.options', ['tenant' => tenant('id')])
+                'path' => route('v2.index', ['tenant' => tenant('id')])
             ],
             [
                 'icon' => 'dashboard',

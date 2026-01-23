@@ -68,22 +68,32 @@
                             </div>
                         </td>
                         <td class="px-5 py-4 sm:px-6">
-                            <button 
-                            data-action="edit"
-                            data-modal-target="campaign-modal"
-                            data-modal-toggle="campaign-modal"
-                            data-edit-route="{{ route('campaigns.edit', [tenant('id'), $campaign]) }}"
-                            data-save-route="{{ route('campaigns.update', [tenant('id'), $campaign]) }}"
-                            class="edit-button inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 rounded-lg transition-colors" 
-                                aria-label="{{ __('Edit') }} {{ $campaign->name }}"
-                            >
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                    <path fill-rule="evenodd" clip-rule="evenodd"
-                                        d="M15.0911 2.78206C14.2125 1.90338 12.7878 1.90338 11.9092 2.78206L4.57524 10.116C4.26682 10.4244 4.0547 10.8158 3.96468 11.2426L3.31231 14.3352C3.25997 14.5833 3.33653 14.841 3.51583 15.0203C3.69512 15.1996 3.95286 15.2761 4.20096 15.2238L7.29355 14.5714C7.72031 14.4814 8.11172 14.2693 8.42013 13.9609L15.7541 6.62695C16.6327 5.74827 16.6327 4.32365 15.7541 3.44497L15.0911 2.78206ZM12.9698 3.84272C13.2627 3.54982 13.7376 3.54982 14.0305 3.84272L14.6934 4.50563C14.9863 4.79852 14.9863 5.2734 14.6934 5.56629L14.044 6.21573L12.3204 4.49215L12.9698 3.84272ZM11.2597 5.55281L5.6359 11.1766C5.53309 11.2794 5.46238 11.4099 5.43238 11.5522L5.01758 13.5185L6.98394 13.1037C7.1262 13.0737 7.25666 13.003 7.35947 12.9002L12.9833 7.27639L11.2597 5.55281Z"
-                                        fill="" />
-                                </svg>
-                                {{ __('Edit') }}
-                            </button>
+                            <div class="flex items-center justify-start space-x-3">
+                                <button 
+                                    data-action="edit"
+                                    data-modal-target="campaign-modal"
+                                    data-modal-toggle="campaign-modal"
+                                    data-edit-route="{{ route('campaigns.edit', [tenant('id'), $campaign]) }}"
+                                    data-save-route="{{ route('campaigns.update', [tenant('id'), $campaign]) }}"
+                                    class="edit-button inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 rounded-lg transition-colors" 
+                                    aria-label="{{ __('Edit') }} {{ $campaign->name }}"
+                                >
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M15.0911 2.78206C14.2125 1.90338 12.7878 1.90338 11.9092 2.78206L4.57524 10.116C4.26682 10.4244 4.0547 10.8158 3.96468 11.2426L3.31231 14.3352C3.25997 14.5833 3.33653 14.841 3.51583 15.0203C3.69512 15.1996 3.95286 15.2761 4.20096 15.2238L7.29355 14.5714C7.72031 14.4814 8.11172 14.2693 8.42013 13.9609L15.7541 6.62695C16.6327 5.74827 16.6327 4.32365 15.7541 3.44497L15.0911 2.78206ZM12.9698 3.84272C13.2627 3.54982 13.7376 3.54982 14.0305 3.84272L14.6934 4.50563C14.9863 4.79852 14.9863 5.2734 14.6934 5.56629L14.044 6.21573L12.3204 4.49215L12.9698 3.84272ZM11.2597 5.55281L5.6359 11.1766C5.53309 11.2794 5.46238 11.4099 5.43238 11.5522L5.01758 13.5185L6.98394 13.1037C7.1262 13.0737 7.25666 13.003 7.35947 12.9002L12.9833 7.27639L11.2597 5.55281Z"
+                                            fill="" />
+                                    </svg>
+                                    {{ __('Edit') }}
+                                </button>
+                                <form method="post" action="{{ route('campaigns.destroy', ['tenant' => tenant('id'), 'campaign' => $campaign]) }}">
+                                    @csrf
+                                    @method('delete')
+                                    <button type="submit" class="font-medium text-red-600 dark:text-red-500 hover:underline" onclick="return confirm('{{ __('Are you sure to delete this?') }}')">
+                                        <x-heroicon-o-trash class="w-5" />
+                                    </button>
+                                </form>
+                            </div>
+                            
                         </td>
                     </tr>
                 @endforeach
@@ -98,7 +108,7 @@
 
     <div class="relative w-full max-w-3xl rounded-3xl bg-white p-6">
         <div class="flex justify-between items-center mb-4">
-            <h3 id="campaign-modal-title"
+            <h3 id="modal-title"
                 class="text-2xl font-semibold text-gray-800">
                 Nueva Campaña
             </h3>
@@ -116,19 +126,19 @@
                         <x-ui.forms.input-text label="{{ __('Campaign Name') }}" name="name" placeholder="" value="" data-field="campaign.name" />
                         <x-ui.forms.input-text label="{{ __('Description') }}" name="description" placeholder="" value="" data-field="campaign.description" />
                         <x-ui.forms.input-text cols="2" label="{{ __('Resource') }}" name="slug" placeholder="Resource" value="" data-field="campaign.slug" />
-                        <x-ui.forms.input-switch label="{{ __('Active') }}" name="active" data-field="campaign.active" switcher="0"/>
-                        <x-ui.forms.input-switch label="{{ __('Games') }}" name="games" data-field="game_content_type.id" switcher="0"/>
-                        <x-ui.forms.input-switch label="{{ __('Tickets') }}" name="tickets" data-field="game_content_type.id" switcher="0"/>
-                        <x-ui.forms.input-switch label="{{ __('Coupons') }}" name="coupons" data-field="coupons_content_type.id" switcher="0"/>
+                        <x-ui.forms.input-switch label="{{ __('Active') }}" name="active" data-field="campaign.active" data-checkbox-type="boolean" />
+                        <x-ui.forms.input-switch label="{{ __('Games') }}" name="games" data-field="has_coupons" data-checkbox-type="relation" data-relation-field-id="coupons_content_type.id" />
+                        <x-ui.forms.input-switch label="{{ __('Tickets') }}" name="tickets" data-field="has_games" data-checkbox-type="relation" data-relation-field-id="game_content_type.id" />
+                        <x-ui.forms.input-switch label="{{ __('Coupons') }}" name="coupons" data-field="has_tickets" data-checkbox-type="relation" data-relation-field-id="tickets_content_type.id" />
                         <x-ui.forms.input-datetime label="{{ __('Select Start Date') }}" name="init_date" placeholder="{{ __('Start Date') }}" value="" data-field="campaign.init_date"/>
                         <x-ui.forms.input-datetime label="{{ __('Select End Date') }}" name="end_date" placeholder="{{ __('End Date') }}" value="" data-field="campaign.end_date"/>
-                        <x-ui.forms.input-area-tinymce cols="2" label="{{ __('Instrucciones') }}" name="instructions" value="" />
-                        <x-ui.forms.input-file label="{{ __('Image') }}" name="featured_image_url" value=""  placeholder="" />
-                        <x-ui.forms.input-text isvideo="true" label="{{ __('Video') }}" name="featured_video_url" placeholder="" value="" data-field="campaign.campaign_splash_page.featured_video_url" />
+                        <x-ui.forms.input-area-tinymce cols="2" label="{{ __('Instrucciones') }}" name="instructions" value="" data-field="campaign.campaign_splash_page.instructions" />
+                        <x-ui.forms.input-file isimg="true" data-is-img="true" label="{{ __('Image') }}" name="featured_image_url" value=""  placeholder="" data-field="campaign.campaign_splash_page.featured_image_url" />
+                        <x-ui.forms.input-text isvideo="true" data-is-video="true" label="{{ __('Video') }}" name="featured_video_url" placeholder="" value=""  data-field="campaign.campaign_splash_page.featured_video_url" />
                     </div>
                 </div>
                 <div class="flex items-center gap-3 mt-6 lg:justify-end">
-                    <button @click="open = false" type="button" aria-label="{{ __('Close modal') }}"
+                    <button type="button" aria-label="{{ __('Close modal') }}"
                         class="flex w-full justify-center rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] sm:w-auto">
                         {{ __('Close') }}
                     </button>
@@ -146,5 +156,7 @@
 </script>
 
 <x-footer.tinymce-config/>
+
+@vite(['resources/js/cruds/campaign.js'])
 
 @endsection
