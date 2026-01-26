@@ -75,11 +75,11 @@ class MenuHelper
     public static function getOthersItems()
     {
         return [
-            [
-                'icon' => 'brush',
-                'name' => 'Branding',
-                'path' => route('v2.branding', ['tenant' => tenant('id')])
-            ],
+            // [
+            //     'icon' => 'brush',
+            //     'name' => 'Branding',
+            //     'path' => route('v2.branding', ['tenant' => tenant('id')])
+            // ],
             [
                 'icon' => 'setting',
                 'name' => 'Options',

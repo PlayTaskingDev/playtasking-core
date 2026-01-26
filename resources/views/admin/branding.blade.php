@@ -21,7 +21,10 @@
       @endif
       @csrf
       <div class="flex max-w-full w-[700px] rounded-2xl border border-gray-200 bg-white p-6 mt-2">
-            <section class="max-w-full w-full space-y-6 " id="general" role="tabpanel" aria-labelledby="general-tab">
+            <section class="max-w-full w-full space-y-6 ">
+                <h3 class="text-base font-medium text-gray-800 dark:text-white/90">
+                    Branding
+                </h3>
                 <div class="grid grid-cols-2 space-x-6">
                     <x-ui.forms.input-file label="Site Logo" name="app_logo" value="{{$settings->app_logo}}"   />
                     <x-ui.forms.input-file label="Favicon" name="favicon" value="{{$settings->favicon}}"  />
