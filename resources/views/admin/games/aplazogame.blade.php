@@ -69,11 +69,11 @@
                         </td>
                         <td class="px-5 py-4 sm:px-6">
                             <div class="flex items-center justify-start space-x-3">
-                                <a 
+                                <button 
                                     data-action="edit"
                                     data-modal-target="aplazogame-modal"
                                     data-modal-toggle="aplazogame-modal"
-                                    href="{{ route('aplazogames.edit', [tenant('id'), $aplazo_game]) }}"
+                                    data-edit-route="{{ route('aplazogames.edit', [tenant('id'), $aplazo_game]) }}"
                                     data-save-route="{{ route('aplazogames.update', [tenant('id'), $aplazo_game]) }}"
                                     class="edit-button inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 rounded-lg transition-colors" 
                                     aria-label="{{ __('Edit') }} {{ $aplazo_game->name }}"
@@ -84,7 +84,7 @@
                                             fill="" />
                                     </svg>
                                     {{ __('Edit') }}
-                                </a>
+                                </button>
                                 <form method="post" action="{{ route('aplazogames.destroy', ['tenant' => tenant('id'), 'aplazogame' => $aplazo_game]) }}">
                                     @csrf
                                     @method('delete')
@@ -149,6 +149,11 @@
             </form>
     </div>
 </div>
+
+<script>
+
+</script>
+
 <x-footer.tinymce-config/>
 
 @vite(['resources/js/cruds/aplazogame.js'])
