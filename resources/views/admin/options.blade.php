@@ -12,6 +12,7 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 <div class="flex flex-col lg:flex-row lg:space-x-12">
   <aside class="rounded-2xl p-5 dark:border-gray-800 sm:p-6">
     <nav class="flex flex-row md:flex-col space-y-1 space-x-0" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist">
@@ -154,6 +155,8 @@
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 <div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] py-10 px-6">
   <div class="flex flex-col lg:flex-row lg:space-x-12">
     <aside class="rounded-2xl p-5 dark:border-gray-800 sm:p-6 w-60">
@@ -207,6 +210,9 @@
         @csrf
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
