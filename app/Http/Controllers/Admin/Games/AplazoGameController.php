@@ -20,7 +20,7 @@ class AplazoGameController extends Controller
     {
         $aplazo_games = AplazoGame::all();
 
-        return view('admin.games.aplazogame', [
+        return view('admin.games.aplazogame.list', [
             'title'             => 'Panel | ' . trans('Aplazo games'),
             'description'       => 'Admin Panel',
             'aplazo_games'      => $aplazo_games
@@ -90,7 +90,7 @@ class AplazoGameController extends Controller
         $content_type = ContentType::where('system_name','games')->first();
         $time_slots = get_time_slots();
 
-        return view('panel.aplazo_games.edit', [
+         return view('admin.games.aplazogame.edit', [
             'aplazo_game'   => $aplazo_game->load('award','campaign'),
             'campaigns'     => $campaigns,
             'content_type'  => $content_type,
