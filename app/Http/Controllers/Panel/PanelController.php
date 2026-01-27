@@ -13,6 +13,7 @@ use App\Traits\UploadImageTrait;
 use App\Models\AwardCode;
 use App\Models\Award;
 use App\Models\Setting;
+use App\Models\Option;
 use App\Models\User;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -22,7 +23,15 @@ class PanelController extends Controller
 
     public function index()
     {
-        $settings = Setting::first();
+        
+        $options  = Option::all();
+        $settings = [];
+        foreach ($options as $k => $o){
+            $settings[$o->option_name] = $o->option_value;
+        }
+        //dd(json_decode(json_encode($settings)));
+        // $settings = Setting::first();
+        // dd($settings);
 
         $quizzes = Quiz::select(['id','title'])->get()->append('model_name');
         $memory_quizzes = MemoryQuiz::select(['id','title'])->get()->append('model_name');
@@ -32,7 +41,7 @@ class PanelController extends Controller
         return view('panel.index', [
             'title'         => get_app_setting('app_name'),
             'description'   => get_app_setting('app_description'),
-            'settings'      => $settings,
+            'settings'      => json_decode(json_encode($settings)),
             'games'         => $games
         ]);
     }
@@ -246,10 +255,16 @@ class PanelController extends Controller
             $data['cards_background_color'] = NULL;
         }
 
-        $settings = Setting::first();
+        foreach($data as $k => $v){
+            Option::updateOrCreate(
+                ['option_name' => $k],
+                ['option_value' => $v]
+            );
+        }
+        // $settings = Setting::first();
 
-        $settings->fill($data);
-        $settings->save();
+        // $settings->fill($data);
+        //$settings->save();
 
         return redirect(route('panel.index', ['tenant' => tenant('id')]))->with('status', trans('Settings saved successful'));
     }

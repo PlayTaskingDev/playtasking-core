@@ -59,6 +59,7 @@ class PanelCampaignController extends Controller
      */
     public function store(SaveCampaignRequest $request)
     {
+        
         $data = $request->validated();
 
         $campaign = Campaign::create($data);
@@ -127,6 +128,8 @@ class PanelCampaignController extends Controller
      */
     public function update(SaveCampaignRequest $request, Campaign $campaign)
     {
+        
+        dd($request);
         $data = $request->validated();
 
         if( !$request->has('active') ){

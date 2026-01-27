@@ -1,12 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\DB;
+use App\Models\Option;
 
 if(!function_exists('get_app_setting')){
     function get_app_setting($param){
         try {
-            $value = DB::table('settings')->value($param);
-            return $value;
+            $option = Option::where('option_name',$param)->first();
+            return $option->option_value;
         } catch (\Throwable $th) {
             return null;
         }
