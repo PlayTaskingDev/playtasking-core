@@ -70,7 +70,7 @@ class AplazoGameController extends Controller
 
         AplazoGame::create($data);
 
-        return redirect(route('aplazo_games.index', ['tenant' => tenant('id')]))->with('status', trans('Aplazo game saved successful'));
+        return redirect(route('admin.games.aplazogame.list', ['tenant' => tenant('id')]))->with('status', trans('Aplazo game saved successful'));
     }
 
     /**
@@ -84,12 +84,12 @@ class AplazoGameController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(AplazoGame $aplazo_game)
+    public function edit($id)
     {
+        $aplazo_game = AplazoGame::findOrFail($id);
         $campaigns = Campaign::all();
         $content_type = ContentType::where('system_name','games')->first();
         $time_slots = get_time_slots();
-
          return view('admin.games.aplazogame.edit', [
             'aplazo_game'   => $aplazo_game->load('award','campaign'),
             'campaigns'     => $campaigns,
@@ -101,9 +101,11 @@ class AplazoGameController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(SaveAplazoGameRequest $request, AplazoGame $aplazo_game)
+    public function update($id, SaveAplazoGameRequest $request)
     {
         $data = $request->all();
+
+        $aplazo_game = AplazoGame::findOrFail($id);
 
         if($request->file('featured_image')){
             $data['featured_image'] = $this->uploadImage('gcs','aplazo_games',$request->file('featured_image'));
@@ -136,7 +138,7 @@ class AplazoGameController extends Controller
         $aplazo_game->fill($data);
         $aplazo_game->save();
 
-        return redirect(route('aplazo_games.index', ['tenant' => tenant('id')]))->with('status', trans('Aplazo game saved successful'));
+        return redirect(route('aplazogames.edit', ['tenant' => tenant('id'), 'aplazogame' => $aplazo_game]))->with('status', trans('Aplazo game saved successful'));
     }
 
     /**

@@ -1,9 +1,10 @@
 @extends('layouts.v2.app')
- <x-slot name="title">
-        AplazoGame
-    </x-slot>
+
+<x-slot name="title">
+        {{ !is_null($aplazo_game->title) ? $aplazo_game->title : trans('Create') . '' . trans('Aplazo game') }}
+</x-slot>
     <x-slot name="description">
-        Description
+        {{ $aplazo_game->id == null ? '' : $aplazo_game->description }}
     </x-slot>
     <x-slot name="header">
         <h1 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
@@ -12,302 +13,207 @@
     </x-slot>
     @section('content')
 <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
-                    <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
-    <h2 class="text-xl font-semibold text-gray-800 dark:text-white/90">
-        Transaction Details
-    </h2>
-    <nav>
-        <ol class="flex items-center gap-1.5">
-            <li>
-                <a class="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400" href="https://laravel-demo.tailadmin.com">
-                    Home
-                    <svg class="stroke-current" width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M6.0765 12.667L10.2432 8.50033L6.0765 4.33366" stroke="" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path>
-                    </svg>
-                </a>
-            </li>
-            <li class="text-sm text-gray-800 dark:text-white/90">
-                Transaction Details
-            </li>
-        </ol>
-    </nav>
-</div>
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+        <h2 class="text-xl font-semibold text-gray-800 dark:text-white/90">
+            {{ $aplazo_game->id == null ? trans('Create') : trans('Edit') }} {{ __('Aplazo game') }}
+        </h2>
+        <nav>
+            <ol class="flex items-center gap-1.5">
+                <li>
+                    <a class="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400" href="https://laravel-demo.tailadmin.com">
+                        Home
+                        <svg class="stroke-current" width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6.0765 12.667L10.2432 8.50033L6.0765 4.33366" stroke="" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                    </a>
+                </li>
+                <li class="text-sm text-gray-800 dark:text-white/90">
+                     {{ !is_null($aplazo_game->title) ? $aplazo_game->title : trans('Create') . '' . trans('Aplazo game') }}
+                </li>
+            </ol>
+        </nav>
+    </div>
     <div class="space-y-6">
-        <div class="flex flex-col justify-between gap-6 rounded-2xl border border-gray-200 bg-white px-6 py-5 sm:flex-row sm:items-center dark:border-gray-800 dark:bg-white/3">
-    <div class="flex flex-col gap-2.5 divide-gray-300 sm:flex-row sm:divide-x dark:divide-gray-700">
-        <div class="flex items-center gap-2 sm:pr-3">
-            <span class="text-base font-medium text-gray-700 dark:text-gray-400">
-                Order ID : #34834</span>
-            <span class="bg-success-50 text-success-600 dark:bg-success-500/15 dark:text-success-500 inline-flex items-center justify-center gap-1 rounded-full px-2.5 py-0.5 text-sm font-medium">Completed</span>
-        </div>
-        <p class="text-sm text-gray-500 sm:pl-3 dark:text-gray-400">Due date:&nbsp;25 August 2025</p>
-    </div>
-    <div class="flex gap-3">
-        <button class="bg-brand-500 shadow-theme-xs hover:bg-brand-600 inline-flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-medium text-white transition">
-            View Receipt
-        </button>
-        <button class="shadow-theme-xs inline-flex items-center justify-center gap-2 rounded-lg bg-white px-4 py-3 text-sm font-medium text-gray-700 ring-1 ring-gray-300 transition hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-400 dark:ring-gray-700 dark:hover:bg-white/[0.03]">
-            Refund
-        </button>
+        @if (session('status'))
+            <x-v2.ui.alert
+                variant="success"
+                title="{{ session('status') }}"
+                :showLink="false"
+            />
+        @endif
+        <form id="form-campaign" method="POST" enctype="multipart/form-data"
+                    action="{{ $aplazo_game->id == null ? route('aplazogames.store', ['tenant' => tenant('id')]) : route('aplazogames.update', ['tenant' => tenant('id'), 'aplazogame' => $aplazo_game]) }}">
+            <div class="mb-6 flex flex-col justify-between gap-6 rounded-2xl border border-gray-200 bg-white px-6 py-5 sm:flex-row sm:items-center dark:border-gray-800 dark:bg-white/3">
+                <div class="flex flex-col gap-2.5 divide-gray-300 sm:flex-row sm:divide-x dark:divide-gray-700">
+                    <div class="flex items-center gap-2 sm:pr-3">
+                        @if ($aplazo_game->active)
+                            <span class="bg-success-50 text-success-600 dark:bg-success-500/15 dark:text-success-500 inline-flex items-center justify-center gap-1 rounded-full px-2.5 py-0.5 text-sm font-medium">Active</span>
+                        @endif
+                    </div>
+                    <p class="text-sm text-gray-500 sm:pl-3 dark:text-gray-400">Expires At:&nbsp;<strong>{{ $aplazo_game->only_date }}</strong></p>
+                </div>
+                <div class="flex items-center gap-3 mt-6 lg:justify-end">
+                    <button type="button" aria-label="{{ __('Close modal') }}"
+                        class="flex w-full justify-center rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] sm:w-auto">
+                        {{ __('Close') }}
+                    </button>
+                    <button type="submit" aria-label="{{ __('Save changes') }}" 
+                        class="flex w-full justify-center rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-600 disabled:opacity-50 disabled:cursor-not-allowed sm:w-auto transition-opacity">
+                        <span >{{ __('Save Changes') }}</span>
+                    </button>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 gap-6 lg:grid-cols-12">
+                <div class="lg:col-span-8 2xl:col-span-9">
+                    <div class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/3">
+                        <div class="px-2 overflow-y-auto ">
+                            <div class="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
+                                @csrf
+                                @isset($aplazo_game->id)
+                                    @method('PATCH')
+                                    <input type="hidden" name="id" value="{{ $aplazo_game->id }}">
+                                @endisset
+                                <input type="hidden" name="content_type_id" value="{{ $content_type->id }}">
+                                <h2 class="mt-6 text-lg col-span-2 font-semibold text-gray-800 dark:text-white/90">Game Details</h2>
+                                <x-ui.forms.input-select label="{{ __('Campaign') }}" :options="$campaigns" name="campaign_id" placeholder="" :value="$aplazo_game->campaign->id" data-field="campaign.campaign_id" />
+                                <x-ui.forms.input-text label="{{ __('Title') }}" name="title" placeholder="" :value="$aplazo_game->title" data-field="campaign.title" />
+                                <x-ui.forms.input-text label="{{ __('Description') }}" cols="2" name="description" placeholder="" :value="$aplazo_game->description" data-field="campaign.description" />
+                                <h2 class="mt-6 text-lg col-span-2 font-semibold text-gray-800 dark:text-white/90">Top Banner Settings</h2>
+                                <x-ui.forms.input-file label="{{ __('Top Banner') }}" dummy_img="/storage/dummy_assets/600x200.png" name="game_banner" placeholder="" :value="$aplazo_game->game_banner" data-field="campaign.game_banner" />
+                                <x-ui.forms.input-text label="{{ __('Banner URL (Image)') }}" name="game_banner_url" placeholder="" :value="$aplazo_game->game_banner_url" data-field="campaign.game_banner_url" />
+                                <x-ui.forms.input-text label="{{ __('Video') }}" name="game_banner_video" placeholder="" :value="$aplazo_game->game_banner_video" data-field="campaign.game_banner_video" />
+                                <h2 class="mt-6 text-lg col-span-2 font-semibold text-gray-800 dark:text-white/90">Promo Information</h2>
+                                <x-ui.forms.input-text label="{{ __('Product name') }}"  name="product_name" placeholder="" :value="$aplazo_game->product_name" data-field="campaign.product_name" />
+                                <x-ui.forms.input-text label="{{ __('Promo description') }}"  name="product_description" placeholder="" :value="$aplazo_game->product_description" data-field="campaign.product_description" />
+                                <x-ui.forms.input-text label="{{ __('Slug') }}" name="slug" placeholder="" :value="$aplazo_game->slug" data-field="campaign.slug" />
+                                <x-ui.forms.input-text label="{{ __('Price') }}" name="price" placeholder="" :value="$aplazo_game->price" data-field="campaign.price" />
+                                <x-ui.forms.input-file label="{{ __('Promo Image') }}" dummy_img="/storage/dummy_assets/800x1180.png" name="promo_image" placeholder="" :value="$aplazo_game->promo_image" data-field="campaign.promo_image" />
+
+                            </div>
+                        </div>
+                        
+                    </div>
+                    @if (!is_null($aplazo_game->id))
+                        <div class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/3 mt-6">
+                            <div class="flex justify-between">
+                                <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight mb-5">
+                                    {{ __('Award') }}
+                                </h2>
+                                @if (is_null($aplazo_game->award))
+                                    <a href="{{ route('awards.create', ['tenant' => tenant('id'), 'awardable_id' => $aplazo_game, 'awardable_type' => 'App\Models\AplazoGame' ]) }}"
+                                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                                        {{ __('Create') }} {{ __('Award') }}
+                                    </a>
+                                @endif
+
+                            </div>
+                            @if (!is_null($aplazo_game->award))
+                                <div class="relative overflow-x-auto shadow-md rounded-lg">
+                                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                                        <thead
+                                            class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                            <tr>
+                                                <th scope="col" class="px-6 py-3">
+                                                    {{ __('Title') }}
+                                                </th>
+                                                <th scope="col" class="px-6 py-3">
+                                                    {{ __('Actions') }}
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
+                                                <th scope="row" class="px-6 py-4">
+                                                    {!!$aplazo_game->award->title!!}
+                                                </th>
+                                                <td class="px-6 py-4">
+                                                    <a href="{{ route('v2awards.edit', ['tenant' => tenant('id'), 'v2award' => $aplazo_game->award]) }}"
+                                                        class="font-medium text-blue-600 dark:text-blue-500 hover:underline">{{ __('Edit') }}</a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            @endif
+                        </div>
+                    @endif
+                </div>
+                <div class="space-y-6 lg:col-span-4 2xl:col-span-3">
+                    <div class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/3">
+                        <h2 class="mb-5 text-lg font-semibold text-gray-800 dark:text-white/90">Date Configuration</h2>
+                        <x-ui.forms.input-datetime label="{{ __('Select Start Date') }}" iddatepicker="datepickerInitDate" class="mb-3" name="init_date" placeholder="{{ __('Start Date') }}" :value="$aplazo_game->init_date" data-field="campaign.init_date"/>
+                        <x-ui.forms.input-datetime label="{{ __('Select End Date') }}" iddatepicker="datepickerEndDate" name="end_date" placeholder="{{ __('End Date') }}" :value="$aplazo_game->end_date" data-field="campaign.end_date"/>
+                    </div>
+                    <div class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/3 space-y-3">
+                        <h2 class="mb-5 text-lg font-semibold text-gray-800 dark:text-white/90">Button Settings</h2>
+                        <x-ui.forms.input-color label="{{ __('Gradient Button Background 1') }}" name="btn_background_color_1" placeholder="" :value="$aplazo_game->btn_background_color_1" data-field="campaign.btn_background_color_1" />
+                        <x-ui.forms.input-color label="{{ __('Gradient Button Background 2') }}" name="btn_background_color_2" placeholder="" :value="$aplazo_game->btn_background_color_2" data-field="campaign.btn_background_color_2" />
+                        <x-ui.forms.input-color label="{{ __('Button Border Color') }}" name="btn_border_color" placeholder="" :value="$aplazo_game->btn_border_color" data-field="campaign.btn_border_color" />
+                        <x-ui.forms.input-switch label="{{ __('Has shadow') }}" name="btn_shadow" placeholder="" :value="$aplazo_game->btn_shadow" data-field="campaign.btn_shadow" />
+                        <x-ui.forms.input-text label="{{ __('Text Active') }}" name="btn_text_active" placeholder="" :value="$aplazo_game->btn_text_active" data-field="campaign.btn_text_active" />
+                        <x-ui.forms.input-switch label="{{ __('Enable Button Shadow') }}" name="btn_enable_shadow" placeholder="" :value="$aplazo_game->btn_enable_shadow" data-field="campaign.btn_enable_shadow" />
+                        <x-ui.forms.input-text label="{{ __('Text Inactive') }}" name="btn_text_inactive" placeholder="" :value="$aplazo_game->btn_text_inactive" data-field="campaign.btn_text_inactive" />
+                    </div>
+                    <div class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/3">
+                        <h2 class="mb-5 text-lg font-semibold text-gray-800 dark:text-white/90">Card Settings</h2>
+                        <x-ui.forms.input-color label="{{ __('Gradient Background 1') }}" name="gradient_1" placeholder="" :value="$aplazo_game->gradient_1" data-field="campaign.gradient_1" />
+                        <x-ui.forms.input-color label="{{ __('Gradient Background 2') }}" name="gradient_2" placeholder="" :value="$aplazo_game->gradient_2" data-field="campaign.gradient_2" />
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
-        <div class="grid grid-cols-1 gap-6 lg:grid-cols-12">
-            <div class="lg:col-span-8 2xl:col-span-9">
-                <div class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/3">
-    <h2 class="mb-5 text-lg font-semibold text-gray-800 dark:text-white/90">Order Details</h2>
-    <div class="overflow-hidden rounded-2xl border border-gray-100 dark:border-gray-800">
-        <div class="custom-scrollbar overflow-x-auto">
-            <table class="min-w-full text-left text-sm text-gray-700 dark:border-gray-800">
-                <thead class="bg-gray-50 dark:bg-gray-900">
-                    <tr class="border-b border-gray-100 whitespace-nowrap dark:border-gray-800">
-                        <th class="px-5 py-4 text-sm font-medium whitespace-nowrap text-gray-700 dark:text-gray-400">
-                            S. No.
-                        </th>
-                        <th class="px-5 py-4 text-sm font-medium whitespace-nowrap text-gray-500 dark:text-gray-400">
-                            Products
-                        </th>
-                        <th class="px-5 py-4 text-sm font-medium whitespace-nowrap text-gray-700 dark:text-gray-400">
-                            Quantity
-                        </th>
-                        <th class="px-5 py-4 text-sm font-medium whitespace-nowrap text-gray-700 dark:text-gray-400">
-                            Unit Cost
-                        </th>
-                        <th class="px-5 py-4 text-sm font-medium whitespace-nowrap text-gray-700 dark:text-gray-400">
-                            Discount
-                        </th>
-                        <th class="px-5 py-4 text-sm font-medium whitespace-nowrap text-gray-700 dark:text-gray-400">
-                            Total
-                        </th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-100 bg-white dark:divide-gray-800 dark:bg-white/[0.03]">
-                    <tr>
-                        <td class="px-5 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
-                            1
-                        </td>
-                        <td class="px-5 py-4 text-sm font-medium whitespace-nowrap text-gray-800 dark:text-white/90">
-                            Macbook pro 13”
-                        </td>
-                        <td class="px-5 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
-                            1
-                        </td>
-                        <td class="px-5 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
-                            $1200
-                        </td>
-                        <td class="px-5 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
-                            0%
-                        </td>
-                        <td class="px-5 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
-                            $1200
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="px-5 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
-                            2
-                        </td>
-                        <td class="px-5 py-4 text-sm font-medium whitespace-nowrap text-gray-800 dark:text-white/90">
-                            Apple Watch Ultra
-                        </td>
-                        <td class="px-5 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
-                            1
-                        </td>
-                        <td class="px-5 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
-                            $300
-                        </td>
-                        <td class="px-5 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
-                            50%
-                        </td>
-                        <td class="px-5 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
-                            $150
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="px-5 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
-                            3
-                        </td>
-                        <td class="px-5 py-4 text-sm font-medium whitespace-nowrap text-gray-800 dark:text-white/90">
-                            iPhone 15 Pro Max
-                        </td>
-                        <td class="px-5 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
-                            2
-                        </td>
-                        <td class="px-5 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
-                            $800
-                        </td>
-                        <td class="px-5 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
-                            0%
-                        </td>
-                        <td class="px-5 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
-                            $1600
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="px-5 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
-                            4
-                        </td>
-                        <td class="px-5 py-4 text-sm font-medium whitespace-nowrap text-gray-800 dark:text-white/90">
-                            iPad Pro 3rd Gen
-                        </td>
-                        <td class="px-5 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
-                            1
-                        </td>
-                        <td class="px-5 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
-                            $900
-                        </td>
-                        <td class="px-5 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
-                            0%
-                        </td>
-                        <td class="px-5 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
-                            $900
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="flex flex-wrap justify-between sm:justify-end">
-        <div class="mt-6 w-full space-y-1 text-right sm:w-[220px]">
-            <p class="mb-4 text-left text-sm font-medium text-gray-800 dark:text-white/90">
-                Order summary
-            </p>
-            <ul class="space-y-2">
-                <li class="flex justify-between gap-5">
-                    <span class="text-sm text-gray-500 dark:text-gray-400"> Sub Total </span>
-                    <span class="text-sm font-medium text-gray-700 dark:text-gray-400">$3,850</span>
-                </li>
-                <li class="flex items-center justify-between">
-                    <span class="text-sm text-gray-500 dark:text-gray-400"> Vat (10%): </span>
-                    <span class="text-sm font-medium text-gray-700 dark:text-gray-400">$385</span>
-                </li>
-                <li class="flex items-center justify-between">
-                    <span class="font-medium text-gray-700 dark:text-gray-400"> Total </span>
-                    <span class="text-lg font-semibold text-gray-800 dark:text-white/90">$4,235</span>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
-            </div>
-            <div class="space-y-6 lg:col-span-4 2xl:col-span-3">
-                <div class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/3">
-    <h2 class="mb-5 text-lg font-semibold text-gray-800 dark:text-white/90">Customer Details</h2>
-    <ul class="divide-y divide-gray-100 dark:divide-gray-800">
-        <li class="flex items-start gap-5 py-2.5">
-            <span class="w-1/2 text-sm text-gray-500 sm:w-1/3 dark:text-gray-400">Name</span>
-            <span class="w-1/2 text-sm text-gray-700 sm:w-2/3 dark:text-gray-400">Mushafrof Chowdhury</span>
-        </li>
-        <li class="flex items-start gap-5 py-2.5">
-            <span class="w-1/2 text-sm text-gray-500 sm:w-1/3 dark:text-gray-400">Email</span>
-            <span class="w-1/2 text-sm text-gray-700 sm:w-2/3 dark:text-gray-400">name@example.com</span>
-        </li>
-        <li class="flex items-start gap-5 py-2.5">
-            <span class="w-1/2 text-sm text-gray-500 sm:w-1/3 dark:text-gray-400">Phone</span>
-            <span class="w-1/2 text-sm text-gray-700 sm:w-2/3 dark:text-gray-400">Mountain View, CA, 94040</span>
-        </li>
-        <li class="flex items-start gap-5 py-2.5">
-            <span class="w-1/2 text-sm text-gray-500 sm:w-1/3 dark:text-gray-400">Phone</span>
-            <span class="w-1/2 text-sm text-gray-700 sm:w-2/3 dark:text-gray-400">+123 456 7890</span>
-        </li>
-        <li class="flex items-start gap-5 py-2.5">
-            <span class="w-1/2 text-sm text-gray-500 sm:w-1/3 dark:text-gray-400">Country</span>
-            <span class="w-1/2 text-sm text-gray-700 sm:w-2/3 dark:text-gray-400">United States</span>
-        </li>
-        <li class="flex items-start gap-5 py-2.5">
-            <span class="w-1/2 text-sm text-gray-500 sm:w-1/3 dark:text-gray-400">Address</span>
-            <span class="w-1/2 text-sm text-gray-700 sm:w-2/3 dark:text-gray-400">62 Miles Drive St, Newark, NJ 07103, California.</span>
-        </li>
-    </ul>
-</div>
-                <div class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/3">
-    <h2 class="mb-5 text-lg font-semibold text-gray-800 dark:text-white/90">Order History</h2>
-    <!-- Timeline item -->
-    <div class="relative pb-7 pl-11">
-        <!-- Icon -->
-        <div class="absolute top-0 left-0 z-10 flex h-12 w-12 items-center justify-center rounded-full border-2 border-gray-50 bg-white text-gray-700 ring ring-gray-200 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:ring-gray-800">
-            <!-- Shopping cart icon -->
-            <svg class="size-5" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M1.73828 3H2.6237C3.18449 3 3.65964 3.41301 3.73774 3.96834L3.85169 4.77871M3.85169 4.77871L4.67828 10.6567C4.75637 11.212 5.23153 11.625 5.79232 11.625L12.8135 11.625C13.2612 11.625 13.6663 11.3595 13.845 10.949L15.8455 6.35267C16.1689 5.60962 15.6243 4.77871 14.814 4.77871H3.85169Z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M5.83789 14.625H5.84539M12.2407 14.625H12.2482" stroke="currentColor" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"></path>
-            </svg>
-        </div>
-        <div class="ml-4 flex justify-between">
-            <div>
-                <h4 class="font-medium text-gray-800 dark:text-white/90">Checkout Started</h4>
-                <p class="text-sm text-gray-500 dark:text-gray-400">via tailadmin.com</p>
-            </div>
+{{-- <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const dates = document.querySelectorAll('[type="datetime-local"]');
+    dates.forEach(dateInput => {
+        const value = dateInput.value
+        if (value) {
+            dateInput.value = fromBackendToDatetimeLocal(value);
+        }
+    });
+});
 
-            <div>
-                <span class="text-xs text-gray-500 dark:text-gray-400">12:54</span>
-                <p class="text-xs text-gray-500 dark:text-gray-400">12th Apr 28</p>
-            </div>
-        </div>
+function fromBackendToDatetimeLocal(value) {
+    const date = new Date(value.replace(' ', 'T'));
+    return this.formatDateTimeLocal(date);
+}
+function formatDateTimeLocal(date = new Date()) {
+    const pad = n => String(n).padStart(2, '0');
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+</script>   --}}
+<script>
+    
+    function setDateTimeFromPicker(target) {
+        // Get the selected date from the datepicker
+        const datepickerElement = document.getElementById(`datepicker-${target}`);
+        const selectedDate = datepickerElement.datepicker.getDate();
 
-        <!-- Vertical line -->
-        <div class="absolute top-8 left-6 h-full w-px border border-dashed border-gray-300 dark:border-gray-700"></div>
-    </div>
-
-    <!-- Timeline item -->
-    <div class="relative pb-7 pl-11">
-        <!-- Icon -->
-        <div class="absolute top-0 left-0 z-10 flex h-12 w-12 items-center justify-center rounded-full border-2 border-gray-50 bg-white text-gray-700 ring ring-gray-200 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:ring-gray-800">
-            <!--Card icon -->
-            <svg class="size-5" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
-                <path d="M2.0625 7.875V12.9375C2.0625 13.5588 2.56618 14.0625 3.1875 14.0625H6.97559M2.0625 7.875V6.75M2.0625 7.875H9.06152C9.06152 7.875 10.3431 6.7552 12.4698 6.75M2.0625 6.75V5.0625C2.0625 4.44118 2.56618 3.9375 3.1875 3.9375H14.8125C15.4338 3.9375 15.9375 4.44118 15.9375 5.0625V6.75M2.0625 6.75H12.4698M15.9375 6.75V7.92188C15.9375 7.92188 14.649 6.75526 12.4995 6.75M15.9375 6.75H12.4995M12.4698 6.75C12.4797 6.74998 12.4896 6.74998 12.4995 6.75M12.4698 6.75H12.4995M13.7812 10.8576C13.7812 10.3139 13.3405 9.87318 12.7968 9.87318H12.2812C11.6599 9.87318 11.1562 10.3769 11.1562 10.9982V11.197C11.1562 11.6659 11.4471 12.0857 11.8862 12.2503L13.0513 12.6873C13.4904 12.852 13.7812 13.2717 13.7812 13.7406V13.9395C13.7812 14.5608 13.2776 15.0645 12.6562 15.0645H12.1407C11.597 15.0645 11.1562 14.6237 11.1562 14.08M12.4688 15.0645V15.9375M12.4688 9V9.87318" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path>
-            </svg>
-        </div>
-        <div class="ml-4 flex justify-between">
-            <div>
-                <h4 class="font-medium text-gray-800 dark:text-white/90">Purchased</h4>
-                <p class="text-sm text-gray-500 dark:text-gray-400">for US$4,235 via PayPal</p>
-            </div>
-
-            <div>
-                <span class="text-xs text-gray-500 dark:text-gray-400">12:58</span>
-                <p class="text-xs text-gray-500 dark:text-gray-400">12th Apr 28</p>
-            </div>
-        </div>
-
-        <!-- Vertical line -->
-        <div class="absolute top-8 left-6 h-full w-px border border-dashed border-gray-300 dark:border-gray-700"></div>
-    </div>
-
-    <!-- Timeline item -->
-    <div class="relative pl-11">
-        <!-- Icon -->
-        <div class="absolute top-0 left-0 z-10 flex h-12 w-12 items-center justify-center rounded-full border-2 border-gray-50 bg-white text-gray-700 ring ring-gray-200 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:ring-gray-800">
-            <!--Card icon -->
-            <svg class="size-5" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
-                <path d="M15.9375 4.67548V12.9375C15.9375 13.5588 15.4338 14.0625 14.8125 14.0625H3.1875C2.56618 14.0625 2.0625 13.5588 2.0625 12.9375V4.67548M2.80194 3.9375H15.1983C15.6066 3.9375 15.9375 4.26843 15.9376 4.67669C15.9376 4.91843 15.8195 5.14491 15.6212 5.28318L9.64374 9.45142C9.25711 9.72103 8.7434 9.72103 8.35676 9.45142L2.37912 5.28304C2.18095 5.14485 2.06282 4.91854 2.06274 4.67694C2.06261 4.2686 2.3936 3.9375 2.80194 3.9375Z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>
-            </svg>
-        </div>
-        <div class="ml-4 flex justify-between">
-            <div>
-                <h4 class="font-medium text-gray-800 dark:text-white/90">Receipt Email Sent</h4>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Receipt #1734535</p>
-            </div>
-
-            <div>
-                <span class="text-xs text-gray-500 dark:text-gray-400">12:58</span>
-                <p class="text-xs text-gray-500 dark:text-gray-400">12th Apr 28</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Action buttons -->
-    <div class="mt-5 flex items-center justify-center gap-2">
-        <button class="shadow-theme-xs rounded-md border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">
-            Resend
-        </button>
-        <button class="shadow-theme-xs rounded-md border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">
-            Forward
-        </button>
-        <button class="shadow-theme-xs rounded-md border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">
-            Preview
-        </button>
-    </div>
-</div>
-            </div>
-        </div>
-    </div>
-            </div>
-            
+        var date = new Date(selectedDate);
+        var dateString = date.toISOString().split('T')[0];
+        // Get the selected time from the timetable
+        const inputElement = document.getElementById(target);
+        const selectedTimeRadio = document.querySelector(`input[name="timetable-${target}"]:checked`);
+        const selectedTimeLabel = selectedTimeRadio ? selectedTimeRadio.nextElementSibling.textContent.trim() : null;
+        
+        // Set the value in the main input
+        if (dateString && selectedTimeLabel) {
+            const dateTimeString = `${dateString} ${selectedTimeLabel}:00`;
+            inputElement.value = dateTimeString;
+            inputElement.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+    }
+    
+    function saveDateTimePicker(e) {
+         setDateTimeFromPicker(e.dataset.targetCalendar);
+        // Close the modal after saving
+        const modal = document.getElementById('timepicker-modal');
+        const modalToggleBtn = modal.querySelector('[data-modal-hide="timepicker-modal"]');
+        if (modalToggleBtn) {
+            modalToggleBtn.click();
+        }
+    }
+</script>
 @endsection

@@ -17,7 +17,7 @@
             title="{{ session('status') }}"
             :showLink="false"
         />
-      @endif
+    @endif
     <x-v2.common.page-breadcrumb pageTitle="{{ $title }}" />
     <div class="space-y-6">
         
@@ -117,37 +117,37 @@
             </button>
         </div>
         <form id="form-campaign" method="POST" enctype="multipart/form-data">
-                <div class="px-2 overflow-y-auto custom-scrollbar h-[510px]">
-                    <div class="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
-                        @csrf
-                        <input type="hidden" name="_method" value="POST" id="method-field">
-                        <input type="hidden" name="id" data-field="campaign.id">
-                        <input type="hidden" name="delete_image_holder_hidden" value="0">
-                        <x-ui.forms.input-text label="{{ __('Campaign Name') }}" name="name" placeholder="" value="" data-field="campaign.name" />
-                        <x-ui.forms.input-text label="{{ __('Description') }}" name="description" placeholder="" value="" data-field="campaign.description" />
-                        <x-ui.forms.input-text cols="2" label="{{ __('Resource') }}" name="slug" placeholder="Resource" value="" data-field="campaign.slug" />
-                        <x-ui.forms.input-switch label="{{ __('Active') }}" name="active" data-field="campaign.active" data-checkbox-type="boolean" />
-                        <x-ui.forms.input-switch label="{{ __('Games') }}" name="games" data-field="has_coupons" data-checkbox-type="relation" data-relation-field-id="coupons_content_type.id" />
-                        <x-ui.forms.input-switch label="{{ __('Tickets') }}" name="tickets" data-field="has_games" data-checkbox-type="relation" data-relation-field-id="game_content_type.id" />
-                        <x-ui.forms.input-switch label="{{ __('Coupons') }}" name="coupons" data-field="has_tickets" data-checkbox-type="relation" data-relation-field-id="tickets_content_type.id" />
-                        <x-ui.forms.input-datetime label="{{ __('Select Start Date') }}" name="init_date" placeholder="{{ __('Start Date') }}" value="" data-field="campaign.init_date"/>
-                        <x-ui.forms.input-datetime label="{{ __('Select End Date') }}" name="end_date" placeholder="{{ __('End Date') }}" value="" data-field="campaign.end_date"/>
-                        <x-ui.forms.input-area-tinymce cols="2" label="{{ __('Instrucciones') }}" name="instructions" value="" data-field="campaign.campaign_splash_page.instructions" />
-                        <x-ui.forms.input-file isimg="true" data-is-img="true" label="{{ __('Image') }}" name="featured_image_url" value=""  placeholder="" data-field="campaign.campaign_splash_page.featured_image_url" />
-                        <x-ui.forms.input-text isvideo="true" data-is-video="true" label="{{ __('Video') }}" name="featured_video_url" placeholder="" value=""  data-field="campaign.campaign_splash_page.featured_video_url" />
-                    </div>
+            <div class="px-2 overflow-y-auto custom-scrollbar h-[510px]">
+                <div class="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
+                    @csrf
+                    <input type="hidden" name="_method" value="POST" id="method-field">
+                    <input type="hidden" name="id" data-field="campaign.id">
+                    <input type="hidden" name="delete_image_holder_hidden" value="0">
+                    <x-ui.forms.input-text label="{{ __('Campaign Name') }}" name="name" placeholder="" value="" data-field="campaign.name" />
+                    <x-ui.forms.input-text label="{{ __('Description') }}" name="description" placeholder="" value="" data-field="campaign.description" />
+                    <x-ui.forms.input-text cols="2" label="{{ __('Resource') }}" name="slug" placeholder="Resource" value="" data-field="campaign.slug" />
+                    <x-ui.forms.input-switch label="{{ __('Active') }}" name="active" data-field="campaign.active" data-checkbox-type="boolean" />
+                    <x-ui.forms.input-switch label="{{ __('Games') }}" name="games" data-field="has_coupons" data-checkbox-type="relation" data-relation-field-id="coupons_content_type.id" />
+                    <x-ui.forms.input-switch label="{{ __('Tickets') }}" name="tickets" data-field="has_games" data-checkbox-type="relation" data-relation-field-id="game_content_type.id" />
+                    <x-ui.forms.input-switch label="{{ __('Coupons') }}" name="coupons" data-field="has_tickets" data-checkbox-type="relation" data-relation-field-id="tickets_content_type.id" />
+                    <x-ui.forms.input-datetime label="{{ __('Select Start Date') }}" name="init_date" placeholder="{{ __('Start Date') }}" value="" data-field="campaign.init_date"/>
+                    <x-ui.forms.input-datetime label="{{ __('Select End Date') }}" name="end_date" placeholder="{{ __('End Date') }}" value="" data-field="campaign.end_date"/>
+                    <x-ui.forms.input-area-tinymce cols="2" label="{{ __('Instrucciones') }}" name="instructions" value="" data-field="campaign.campaign_splash_page.instructions" />
+                    <x-ui.forms.input-file isimg="true" data-is-img="true" label="{{ __('Image') }}" name="featured_image_url" value=""  placeholder="" data-field="campaign.campaign_splash_page.featured_image_url" />
+                    <x-ui.forms.input-text isvideo="true" data-is-video="true" label="{{ __('Video') }}" name="featured_video_url" placeholder="" value=""  data-field="campaign.campaign_splash_page.featured_video_url" />
                 </div>
-                <div class="flex items-center gap-3 mt-6 lg:justify-end">
-                    <button type="button" aria-label="{{ __('Close modal') }}"
-                        class="flex w-full justify-center rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] sm:w-auto">
-                        {{ __('Close') }}
-                    </button>
-                    <button type="submit" aria-label="{{ __('Save changes') }}" 
-                        class="flex w-full justify-center rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-600 disabled:opacity-50 disabled:cursor-not-allowed sm:w-auto transition-opacity">
-                        <span >{{ __('Save Changes') }}</span>
-                    </button>
-                </div>
-            </form>
+            </div>
+            <div class="flex items-center gap-3 mt-6 lg:justify-end">
+                <button type="button" aria-label="{{ __('Close modal') }}"
+                    class="flex w-full justify-center rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] sm:w-auto">
+                    {{ __('Close') }}
+                </button>
+                <button type="submit" aria-label="{{ __('Save changes') }}" 
+                    class="flex w-full justify-center rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-600 disabled:opacity-50 disabled:cursor-not-allowed sm:w-auto transition-opacity">
+                    <span >{{ __('Save Changes') }}</span>
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 

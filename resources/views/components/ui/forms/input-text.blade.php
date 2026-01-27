@@ -15,9 +15,16 @@
             ]) 
         }}
          />
-         @if ($isvideo)
-            <div class="aspect-w-16 aspect-h-9 mb-6">
-                <iframe id="video-{{ $name }}" src="" class="w-full mt-2" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-         @endif
+        @if ($isvideo)
+        <div class="aspect-w-16 aspect-h-9 mb-6">
+            <iframe id="video-{{ $name }}" src="" class="w-full mt-2" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        @endif
+        @if ($errors->get($name))
+            <ul {{ $attributes->merge(['class' => 'font-bold space-y-1 mt-2 text-sm text-red-600 dark:text-red-500']) }} >
+                @foreach ((array) $errors->get($name) as $error)
+                    <li><p class="text-theme-xs text-error-500">{{ $error }}</p></li>
+                @endforeach
+            </ul>
+        @endif
 </div>

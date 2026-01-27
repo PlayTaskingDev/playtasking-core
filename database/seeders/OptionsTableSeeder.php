@@ -288,10 +288,12 @@ class OptionsTableSeeder extends Seeder
                 ],
                 [
                     'option_name'    => 'app_active',
-                    'option_value'   => '#fff',
+                    'option_value'   =>  true,
                 ]
                 
             ]
         );
     }
 }
+
+

@@ -333,7 +333,12 @@ Route::group([
         Route::resource('triviagames',App\Http\Controllers\Admin\Games\TriviaGameController::class);
         // Game - Vote
         Route::resource('votegames',App\Http\Controllers\Admin\Games\VoteGameController::class);
-        
+        // Awards
+        Route::resource('v2awards', App\Http\Controllers\Admin\AwardsController::class);
+        // Awards Codes
+        Route::resource('awardcodes', App\Http\Controllers\Admin\AwardCodesController::class);
+        // Resources
+        Route::resource('resources', App\Http\Controllers\Admin\ResourcesController::class);
         // options
         Route::get('/options', [App\Http\Controllers\Admin\OptionsController::class, 'index'])->name('v2.options');
         Route::post('/save_options', [App\Http\Controllers\Admin\OptionsController::class, 'save'])->name('v2.save.options');

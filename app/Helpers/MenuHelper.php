@@ -44,7 +44,7 @@ class MenuHelper
             [
                 'name' => 'Códigos de Premios',
                 'icon' => 'ticket',
-                'path' => '/basic-tables'
+                'path' => route('awardcodes.index', ['tenant' => tenant('id')]),
             ],
             [
                 'name' => 'Tickets',
@@ -67,7 +67,7 @@ class MenuHelper
             [
                 'name' => 'Recursos',
                 'icon' => 'media',
-                'path' => '/basic-tables'
+                'path' => route('resources.index', ['tenant' => tenant('id')]),
             ],
         ];
     }

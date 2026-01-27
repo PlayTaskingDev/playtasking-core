@@ -136,6 +136,13 @@
         />
       </div>
     </div>
+    @if ($errors->get($name))
+          <ul {{ $attributes->merge(['class' => 'font-bold space-y-1 mt-2 text-sm text-red-600 dark:text-red-500']) }} >
+              @foreach ((array) $errors->get($name) as $error)
+                  <li><p class="text-theme-xs text-error-500">{{ $error }}</p></li>
+              @endforeach
+          </ul>
+      @endif
     <!-- END Input -->
     </div>
 </div>
