@@ -72,13 +72,14 @@
                     </div>
 
                     <!-- Phone -->
-                    <div class="mt-4 phone-section">
-                        <x-input-label for="phone" :value="__('Phone')" />
-                        <x-text-input id="phone" class="block mt-1 w-full" type="text" name="phone"
-                            :value="old('phone')" autofocus autocomplete="phone" />
-                        <x-input-error :messages="$errors->get('phone')" class="mt-2" />
-                    </div>
-
+                    @if(false)
+                        <div class="mt-4 phone-section">
+                            <x-input-label for="phone" :value="__('Phone')" />
+                            <x-text-input id="phone" class="block mt-1 w-full" type="text" name="phone"
+                                :value="old('phone')" autofocus autocomplete="phone" />
+                            <x-input-error :messages="$errors->get('phone')" class="mt-2" />
+                        </div>
+                    @endif
                     @if (get_app_setting('allow_city') == true)
                     <!-- Municipios/Ciudades -->
                      <div class="mt-4 relative">
