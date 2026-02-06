@@ -112,9 +112,9 @@
                     {{-- End Branding Options --}}
                     {{-- Inicio Options --}}
                     <section class="max-w-full space-y-12  transition-all ease-in duration-200" id="inicio" role="tabpanel" aria-labelledby="inicio-tab">
-                        <x-ui.forms.input-area-tinymce label="Contenido de Página de Inicio" name="home_content" value="{{$settings->home_content}}"  />
-                        <x-ui.forms.input-area-tinymce label="Texto Términos y Condiciones" name="terms_text" value="{{$settings->terms_text}}" />
-                        <x-ui.forms.input-area-tinymce label="Texto Página de Privacidad" name="privacy_text" value="{{$settings->privacy_text}}" />
+                        <x-ui.forms.input-area-tinymce label="Contenido de Página de Inicio" name="home_content" value="{!!$settings->home_content!!}"  />
+                        <x-ui.forms.input-area-tinymce label="Texto Términos y Condiciones" name="terms_text" value="{!!$settings->terms_text!!}" />
+                        <x-ui.forms.input-area-tinymce label="Texto Página de Privacidad" name="privacy_text" value="{!!$settings->privacy_text!!}" />
                     </section>
                     {{-- End Inicio Options --}}
                     {{-- Registro Options --}}
