@@ -17,7 +17,8 @@ export default defineConfig({
                 'resources/js/glgc/gpzl.js',
                 'resources/js/cruds/crud-form.js',
                 'resources/js/cruds/crud-modal.js',
-                'resources/js/cruds/campaign.js'
+                'resources/js/cruds/campaign.js',
+                'resources/js/cruds/aplazogame.js'
             ],
             refresh: true,
         }),
