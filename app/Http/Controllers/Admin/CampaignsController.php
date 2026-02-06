@@ -139,7 +139,7 @@ class CampaignsController extends Controller
      * @param  \App\Models\Campaign  $campaign
      * @return \Illuminate\Http\Response
      */
-    public function update($id, SaveCampaignRequest $request, Campaign $campaign)
+    public function update($id, SaveCampaignRequest $request)
     {
         
         $data = $request->validated();
@@ -148,9 +148,9 @@ class CampaignsController extends Controller
             $data['active'] = false;
         }
 
+        $campaign = Campaign::findorFail($id);
         $this->syncContentTypes($campaign, $request, $data);
 
-        $campaign = Campaign::findorFail($id);
         $campaign->fill($data);
         $campaign->save();
 
@@ -163,8 +163,9 @@ class CampaignsController extends Controller
      * @param  \App\Models\Campaign  $campaign
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Campaign $campaign)
+    public function destroy($id)
     {
+        $campaign = Campaign::findorFail($id);
         $campaign->load(['quizzes','memory_quizzes','share_quizzes','content_types']);
         
         if ($campaign->quizzes && $campaign->quizzes->isNotEmpty() || $campaign->memory_quizzes && $campaign->memory_quizzes->isNotEmpty() || $campaign->share_quizzes && $campaign->share_quizzes->isNotEmpty()) {

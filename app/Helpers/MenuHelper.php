@@ -3,13 +3,18 @@
 namespace App\Helpers;
 
 use App\Models\ContentType;
+use App\Models\Page;
 
 class MenuHelper
 {
     public static function getMainNavItems()
     {
-        $content_types = ContentType::all();
-
+        
+        $pages = Page::all();
+        $arPages = [];
+        foreach ($pages as $page) {
+           $arPages[] = ['name' => $page->title, 'path' => route('pages.edit', ['tenant' => tenant('id'), 'page' => $page->id])];
+        }
         return [
             [
                 'icon' => 'chart',
@@ -37,6 +42,7 @@ class MenuHelper
                     ['name' => 'Compartir', 'path' => route('sharegames.index', ['tenant' => tenant('id')])],
                     ['name' => 'Memoramas', 'path' => route('memorygames.index', ['tenant' => tenant('id')])],
                     ['name' => 'Rompecabezas', 'path' => route('puzzlegames.index', ['tenant' => tenant('id')])],
+                    ['name' => 'Smash Games', 'path' => route('smashgames.index', ['tenant' => tenant('id')])],
                     ['name' => 'Trivias', 'path' => route('triviagames.index', ['tenant' => tenant('id')])],
                     ['name' => 'Votaciones', 'path' => route('votegames.index', ['tenant' => tenant('id')])],
                 ],
@@ -50,19 +56,15 @@ class MenuHelper
                 'name' => 'Tickets',
                 'icon' => 'document-upload',
                 'subItems' => [
-                    ['name' => 'Preguntas de Tickets', 'path' => '/form-elements'],
-                    ['name' => 'Tickets Enviados', 'path' => '/form-elements'],
+                    ['name' => 'Preguntas de Tickets', 'path' => route('ticketquestions.index', ['tenant' => tenant('id')])],
+                    ['name' => 'Tickets Enviados', 'path' => route('tickets.index', ['tenant' => tenant('id')])],
                 ],
             ],
             [
                 'name' => 'Páginas',
                 'icon' => 'pages',
-                'subItems' => [
-                    ['name' => 'Aviso de Privacidad', 'path' => '/blank'],
-                    ['name' => 'Términos y Condiciones', 'path' => '/error-404'],
-                    ['name' => 'Dinámica de la Promoción', 'path' => '/error-404'],
-                    ['name' => 'Preguntas Frequentes', 'path' => '/error-404']
-                ],
+                'path' => route('pages.index', ['tenant' => tenant('id')]),
+                'subItems' => $arPages,
             ],
             [
                 'name' => 'Recursos',
@@ -76,20 +78,15 @@ class MenuHelper
     {
         return [
             [
-                'icon' => 'brush',
-                'name' => 'Branding',
-                'path' => route('v2.branding', ['tenant' => tenant('id')])
-            ],
-            [
                 'icon' => 'setting',
                 'name' => 'Options',
                 'path' => route('v2.options', ['tenant' => tenant('id')])
             ],
-            [
-                'icon' => 'code',
-                'name' => 'Integraciones',
-                'path' => route('v2.integrations', ['tenant' => tenant('id')])
-            ],
+            // [
+            //     'icon' => 'code',
+            //     'name' => 'Integraciones',
+            //     'path' => route('v2.integrations', ['tenant' => tenant('id')])
+            // ],
         ];
     }
 

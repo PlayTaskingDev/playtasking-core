@@ -64,9 +64,14 @@
         :class="(!$store.sidebar.isExpanded && !$store.sidebar.isHovered && !$store.sidebar.isMobileOpen) ?
         'xl:justify-center' :
         'justify-center'">
-        <a href="/">
+        <a href="{{ route('welcome', ['tenant' => tenant('id')]) }}">
             <img x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen"
                 class="dark:hidden" src="{{get_app_setting('app_logo')}}" alt="Logo" width="150" height="40" />
+            <img x-show="$store.sidebar.isExpanded || $store.sidebar.isHovered || $store.sidebar.isMobileOpen"
+                class="hidden dark:block" src="{{get_app_setting('app_logo')}}" alt="Logo" width="150"
+                height="40" />
+            <img x-show="!$store.sidebar.isExpanded && !$store.sidebar.isHovered && !$store.sidebar.isMobileOpen"
+               src="{{get_app_setting('app_logo')}}" alt="Logo" width="32" height="32" />
         </a>
     </div>
 

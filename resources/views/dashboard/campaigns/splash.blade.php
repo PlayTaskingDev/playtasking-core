@@ -15,7 +15,7 @@
                 <div class="game-card rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 p-6">
                     @if ($active_campaign->campaign_splash_page->featured_video_url)
                     <div class="aspect-w-16 aspect-h-9 mb-6">
-                        <iframe src="{{$active_campaign->campaign_splash_page->featured_video_url}}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <iframe class="w-full aspect-video rounded-lg shadow-lg" src="{{$active_campaign->campaign_splash_page->featured_video_url}}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                     </div>
                     @endif
                     @if ($active_campaign->campaign_splash_page->featured_image_url)

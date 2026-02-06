@@ -1,5 +1,5 @@
-@props(['label','value', 'name'])
-<div class="flex flex-col justify-center">
+@props(['label','value', 'name', 'cols' => 0])
+<div class="flex flex-col justify-center col-span-{{ $cols }}">
     <!-- Dropzone -->
     <label for="{{ $name }}" class="font-bold"> {{ $label }} </label>
     <div 
@@ -24,15 +24,19 @@
                 }
             },
             uploadFiles(files) {
-                // Implement your file upload logic here
-                // Example: Use FormData and fetch/axios to upload
-                console.log('Uploading files:', files);
+                // Access the element using $refs.fileInput
+                const inputElement = this.$refs.fileInput;
+                const form = inputElement.form;
+                const formData = new FormData(form);
+                 files.forEach(file => {
+                    formData.append('asset[]', file); 
+                });
             },
             removeFile(index) {
                 this.files.splice(index, 1);
             }
         }"
-        class="transition border border-gray-300 border-dashed cursor-pointer dark:hover:border-brand-500 dark:border-gray-700 rounded-xl hover:border-brand-500"
+        class="transition border border-gray-300 border-dashed cursor-pointer dark:hover:border-brand-500 dark:border-gray-700 rounded-xl hover:border-brand-500 w-full"
     >
         <div 
             @drop.prevent="handleDrop($event)"
@@ -55,6 +59,7 @@
                 accept="image/png,image/jpeg,image/webp,image/svg+xml"
                 
                 class="hidden"
+                multiple
                 @click.stop
             />
 

@@ -7,6 +7,7 @@ use App\Models\MediaElement;
 use Illuminate\Http\Request;
 use App\Http\Requests\Panel\SaveMediaElementRequest;
 use App\Traits\UploadImageTrait;
+use Illuminate\Support\Str;
 
 class ResourcesController extends Controller
 {
@@ -34,7 +35,11 @@ class ResourcesController extends Controller
      */
     public function create()
     {
-        //
+        $media_element = new MediaElement();
+
+        return view('admin.resources.edit', [
+            'media_element' => $media_element,
+        ]);
     }
 
     /**
@@ -43,18 +48,29 @@ class ResourcesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(SaveMediaElementRequest $request)
     {
-        //
+        $data = $request->all();
+        foreach($request->file('asset') as $file){
+            $data['asset'] = $this->uploadImage('gcs','media_elements',$file);
+            $data['mime_type'] = $file->getClientMimeType();
+            $data['description'] = $this::sanitizeFileName($file);
+            MediaElement::create($data);
+        }
+        return response()->json([
+            'message'  => 'File(s) uploaded succesfully!'
+        ], 200);
+
     }
 
-    /**
+
+     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\ContentType  $contentType
+     * @param  \App\Models\MediaElement  $mediaElement
      * @return \Illuminate\Http\Response
      */
-    public function show(ContentType $contentType)
+    public function show(MediaElement $media_element)
     {
         //
     }
@@ -62,60 +78,55 @@ class ResourcesController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\ContentType  $contentType
+     * @param  \App\Models\MediaElement  $mediaElement
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(MediaElement $media_element)
     {
-        return response()->json([
-            'data'   => ContentType::find($id)
-        ], 200);
-        
+        return view('panel.media_elements.edit', [
+            'media_element'  => $media_element
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\ContentType  $contentType
+     * @param  \App\Models\MediaElement  $mediaElement
      * @return \Illuminate\Http\Response
      */
-    public function update($id, SaveContentTypeRequest $request, ContentType $contentType)
+    public function update(SaveMediaElementRequest $request, MediaElement $media_element)
     {
-        $data = $request->validated();
+        $data = $request->all();
 
-        if($request->file('icon')){
-            $data['icon'] = $this->uploadImage('gcs','settings',$request->file('icon'));
-        }
-
-        if($request->file('icon_active')){
-            $data['icon_active'] = $this->uploadImage('gcs','settings',$request->file('icon_active'));
-        }
-
-        if($request->file('section_banner')){
-            $data['section_banner'] = $this->uploadImage('gcs','settings',$request->file('section_banner'));
-        }
-
-        if (isset(($data['delete_image_holder_hidden'])) && $data['delete_image_holder_hidden'] == true) {
-            $contentType->section_banner = null;
+        if($request->file('asset')){
+            $data['asset'] = $this->uploadImage('gcs','media_elements',$request->file('asset'));
         }
         
-        $contentType = ContentType::findorFail($id);
-        $contentType->fill($data);
-        $contentType->save();
+        $media_element->fill($data);
+        $media_element->save();
 
-        return redirect(route('dynamics.index', ['tenant' => tenant('id')]))->with('status', trans('Dynamic Content saved successful'));
-       
+        return redirect(route('media_elements.index', ['tenant' => tenant('id')]))->with('status', trans('Media element saved successful'));
     }
 
-    /**
+     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\ContentType  $contentType
+     * @param  \App\Models\MediaElement  $mediaElement
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ContentType $contentType)
+    public function destroy(MediaElement $media_element)
     {
         //
+    }
+
+    private function sanitizeFileName($file)
+    {
+        $originalName = $file->getClientOriginalName();
+        $cleanName = Str::slug(
+            pathinfo($originalName, PATHINFO_FILENAME)
+        );
+        $extension = $file->getClientOriginalExtension();
+        return $cleanName . '.' . $extension;
     }
 }

@@ -91,6 +91,10 @@ class OptionsTableSeeder extends Seeder
                     'option_value'   => 'Si no eres miembro Club Cinépolis, regístrate ahora.',
                 ],
                 [
+                    'option_name'    => 'members_number',
+                    'option_value'   => '',
+                ],
+                [
                     'option_name'    => 'members_placeholder',
                     'option_value'   => 'Ingresa tu número de Cineclub',
                 ],
@@ -289,6 +293,10 @@ class OptionsTableSeeder extends Seeder
                 [
                     'option_name'    => 'app_active',
                     'option_value'   =>  true,
+                ],
+                [
+                    'option_name'    => 'social_login_active',
+                    'option_value'   =>  false,
                 ]
                 
             ]

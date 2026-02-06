@@ -22,6 +22,7 @@ export default class CrudModal {
 
   async open(button) {
     const action = button.dataset.action;
+    const type = button.dataset.modalType;
     const saveRoute = button.dataset.saveRoute;
 
     this.form.setAction(saveRoute);
@@ -37,7 +38,9 @@ export default class CrudModal {
       this.setTitle(this.titleEdit);
 
       const response = await axios.get(button.dataset.editRoute);
-      this.form.fill(response.data.data);
+      if(type !== 'upload'){
+        this.form.fill(response.data.data);
+      }
     }
 
     this.modal.show();

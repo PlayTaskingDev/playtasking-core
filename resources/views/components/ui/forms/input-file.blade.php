@@ -33,7 +33,7 @@
             }} 
             />
     </label>
-    <x-v2.ui.button size="sm" variant="outline" > Upload {{ $label }} </x-v2.ui.button>
+    <x-v2.ui.button size="sm" onclick="document.getElementById('{{ $name }}').click()" variant="outline" > Upload {{ $label }} </x-v2.ui.button>
 </div>
 @if ($errors->get($name))
     <ul {{ $attributes->merge(['class' => 'font-bold space-y-1 mt-2 text-sm text-red-600 dark:text-red-500']) }} >

@@ -25,8 +25,8 @@ class SaveMediaElementRequest extends FormRequest
     public function rules()
     {
         return [
-            'description'   => ['required','regex:/^[A-Za-z0-9áéíóúÁÉÍÓÚÑñⓇ$,.;:!"¡?¿#\(\)\' \-]+$/'],
-            'asset'         => [Rule::requiredIf(!$this->id),'image:jpg,png,jpeg,svg','max:2024'],
+            'description'   => ['regex:/^[A-Za-z0-9áéíóúÁÉÍÓÚÑñⓇ$,.;:!"¡?¿#\(\)\' \-]+$/'],
+            'asset.*'       => [Rule::requiredIf(!$this->id),'image:jpg,png,jpeg,svg','max:2024'],
         ];
     }
 }

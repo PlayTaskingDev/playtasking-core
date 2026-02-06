@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\admin\Games;
+namespace App\Http\Controllers\Admin\Games;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Panel\SaveCatchGameRequest;
@@ -20,7 +20,7 @@ class CatchGameController extends Controller
     {
         $catch_games = CatchGame::all();
 
-        return view('admin.games.catchgame', [
+        return view('admin.games.catchgame.list', [
             'title'         => 'Panel | ' . trans('Catch Games'),
             'description'   => 'Admin Panel',
             'catch_games'   => $catch_games
@@ -37,7 +37,7 @@ class CatchGameController extends Controller
         $content_type = ContentType::where('system_name','games')->first();
         $time_slots = get_time_slots();
 
-        return view('panel.catch_games.edit', [
+        return view('admin.games.catchgame.edit', [
             'catch_game'   => $catch_game,
             'campaigns'    => $campaigns,
             'content_type' => $content_type,
@@ -78,7 +78,7 @@ class CatchGameController extends Controller
 
         CatchGame::create($data);
 
-        return redirect(route('catch_games.index', ['tenant' => tenant('id')]))->with('status', trans('Catch Game saved successful'));
+        return redirect(route('catchgames.index', ['tenant' => tenant('id')]))->with('status', trans('Catch Game saved successful'));
     }
 
     /**
@@ -92,13 +92,14 @@ class CatchGameController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(CatchGame $catch_game)
+    public function edit($id)
     {
+        $catch_game = CatchGame::findOrFail($id);
         $campaigns = Campaign::all();
         $content_type = ContentType::where('system_name','games')->first();
         $time_slots = get_time_slots();
 
-        return view('panel.catch_games.edit', [
+        return view('admin.games.catchgame.edit', [
             'catch_game'   => $catch_game->load('catch_objects'),
             'campaigns'    => $campaigns,
             'content_type' => $content_type,
@@ -109,7 +110,7 @@ class CatchGameController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(SaveCatchGameRequest $request, CatchGame $catch_game)
+    public function update($id, SaveCatchGameRequest $request)
     {
         $data = $request->validated();
 
@@ -137,6 +138,7 @@ class CatchGameController extends Controller
             $data['basket_image'] = $this->uploadImage('gcs','catch_games',$request->file('basket_image'));
         }
 
+        $catch_game = CatchGame::findorFail($id);
         if (isset(($data['delete_image_holder_hidden'])) && $data['delete_image_holder_hidden'] == true) {
             $catch_game->game_banner = null;
         }
@@ -150,8 +152,9 @@ class CatchGameController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(CatchGame $catch_game)
+    public function destroy($id)
     {
+        $catch_game = CatchGame::findorFail($id);
         $catch_game->load(['catch_objects','award','coupons']);
 
         if ($catch_game->memory_cards && $catch_game->memory_cards->isNotEmpty()) {

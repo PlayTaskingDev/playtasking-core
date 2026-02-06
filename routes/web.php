@@ -321,22 +321,43 @@ Route::group([
         Route::resource('aplazogames',App\Http\Controllers\Admin\Games\AplazoGameController::class);
         // Game - Catch Game
         Route::resource('catchgames',App\Http\Controllers\Admin\Games\CatchGameController::class);
+            // Game - Catch Game Object
+            Route::resource('catchgameobjects',App\Http\Controllers\Admin\Games\CatchGameObjectController::class);
         // Game - Click Win
         Route::resource('clickwingames',App\Http\Controllers\Admin\Games\ClickWinGameController::class);
         // Game - Share
         Route::resource('sharegames',App\Http\Controllers\Admin\Games\ShareGameController::class);
         // Game - Memory
         Route::resource('memorygames',App\Http\Controllers\Admin\Games\MemoryGameController::class);
+            // Game - Memory Card
+            Route::resource('memorygamecards',App\Http\Controllers\Admin\Games\MemoryGameCardController::class);
+        // Game - Smash Games
+        Route::resource('smashgames',App\Http\Controllers\Admin\Games\SmashGameController::class);
+            // Game - Smash Game Object
+            Route::resource('smashgameobjects',App\Http\Controllers\Admin\Games\SmashGameObjectController::class);
         // Game - Puzzle
         Route::resource('puzzlegames',App\Http\Controllers\Admin\Games\PuzzleGameController::class);
         // Game - Trivia
         Route::resource('triviagames',App\Http\Controllers\Admin\Games\TriviaGameController::class);
+            // Game - Trivia Question
+            Route::resource('triviagamequestions',App\Http\Controllers\Admin\Games\TriviaGameQuestionController::class);
+            // Game - Trivia Answer
+            Route::resource('triviagameanswers',App\Http\Controllers\Admin\Games\TriviaGameAnswerController::class);
         // Game - Vote
         Route::resource('votegames',App\Http\Controllers\Admin\Games\VoteGameController::class);
         // Awards
         Route::resource('v2awards', App\Http\Controllers\Admin\AwardsController::class);
         // Awards Codes
         Route::resource('awardcodes', App\Http\Controllers\Admin\AwardCodesController::class);
+        // Tickets
+        Route::resource('tickets', App\Http\Controllers\Admin\TicketController::class);
+            // Tickets Questions
+            Route::resource('ticketquestions', App\Http\Controllers\Admin\TicketQuestionController::class);
+             // Tickets Answers
+            Route::resource('ticketanswers', App\Http\Controllers\Admin\TicketAnswerController::class);
+
+         // Pages
+        Route::resource('pages', App\Http\Controllers\Admin\PageController::class);
         // Resources
         Route::resource('resources', App\Http\Controllers\Admin\ResourcesController::class);
         // options

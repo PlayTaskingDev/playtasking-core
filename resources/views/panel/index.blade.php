@@ -18,19 +18,19 @@
     @endsection
 
     <div class="py-6 mx-3">
-        <div class="max-w-2xl mx-auto sm:px-3 lg:px-3 bg-white p-3 rounded shadow">
+        <div class="max-w-2xl mx-auto md:p-8 bg-white p-4 rounded shadow">
             @if (session('status'))
                 <x-alert :status="session('status')" class="max-w-7xl mx-auto sm:px-6 lg:px-8 p-4 mb-4 text-sm rounded-lg"
                     role="alert" />
             @endif
-            <h1 class="mb-5 text-4xl font-bold leading-none tracking-tight text-gray-900 md:text-4xl dark:text-white">
+            <h1 class="mb-5 text-3xl font-bold leading-none tracking-tight text-gray-900 md:text-3xl dark:text-white">
                 {{__('Welcome to the Admin Panel')}}
             </h1>
             <p>
                 {{__('Navigate using the menu above. Happy Management!')}}
             </p>
            
-            <h2 class="my-5 text-2xl font-bold leading-none tracking-tight text-gray-900 md:text-2xl dark:text-white">
+            <h2 class="my-5 text-lg font-bold leading-none tracking-tight text-gray-900 md:text-lg dark:text-white">
                 {{__('App settings')}}
             </h2>
             <form action="{{route('panel.settings.save', ['tenant' => tenant('id')])}}" enctype="multipart/form-data" method="POST">

@@ -11,6 +11,7 @@ export default class CrudForm {
             path.forEach(p => value = value?.[p]);
 
             const isTxtVideo = el.dataset.isVideo || false;
+            const typeText = el.dataset.type || '';
             if (el.type === 'checkbox') {
                 const type = el.dataset.checkboxType || 'boolean';
 
@@ -49,7 +50,7 @@ export default class CrudForm {
                     return;
                 }
 
-            else if(el.type === 'datetime-local') el.value = this.fromBackendToDatetimeLocal(value);
+            else if( typeText === 'datetime') el.value = value;
             else el.value = value ?? '';
         });
     }
@@ -72,13 +73,5 @@ export default class CrudForm {
 
     setAction(url) {
         this.form.action = url;
-    }
-    fromBackendToDatetimeLocal(value) {
-        const date = new Date(value.replace(' ', 'T'));
-        return this.formatDateTimeLocal(date);
-    }
-    formatDateTimeLocal(date = new Date()) {
-        const pad = n => String(n).padStart(2, '0');
-        return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
     }
 }

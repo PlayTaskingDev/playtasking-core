@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Option;
+use App\Traits\UploadImageTrait;
 
 class OptionsController extends Controller
 {
+    use UploadImageTrait;
+
     public function index()
     {
         $options  = Option::all();
@@ -26,9 +29,13 @@ class OptionsController extends Controller
 
     public function save(Request $request)
     {
-          foreach($request->all() as $k => $v){
-            if($k !== '_token'){
-                Option::updateOrCreate(
+        foreach($request->all() as $k => $v){
+        if($k !== '_token'){
+            if(!is_string($v) && (!empty($v) && $v->isFile())){
+                $v = $this->uploadImage('gcs','settings',$request->file($k));
+                $v = str_replace('\\', '/', $v);
+            }
+            Option::updateOrCreate(
                     ['option_name' => $k],
                     ['option_value' => $v]
                 );

@@ -1,48 +1,48 @@
 @extends('layouts.v2.app')
 
 <x-slot name="title">
-        {{ !is_null($aplazo_game->title) ? $aplazo_game->title : trans('Create') . '' . trans('Aplazo game') }}
+    {{ !is_null($aplazo_game->title) ? $aplazo_game->title : trans('Create') . '' . trans('Aplazo game') }}
 </x-slot>
-    <x-slot name="description">
-        {{ $aplazo_game->id == null ? '' : $aplazo_game->description }}
-    </x-slot>
-    <x-slot name="header">
-        <h1 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Content types') }}
-        </h1>
-    </x-slot>
-    @section('content')
-<div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
-    <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
-        <h2 class="text-xl font-semibold text-gray-800 dark:text-white/90">
+<x-slot name="description">
+    {{ $aplazo_game->id == null ? '' : $aplazo_game->description }}
+</x-slot>
+<x-slot name="header">
+    <h1 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+    {{ __('Content types') }}
+    </h1>
+</x-slot>
+@section('content')
+    <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+            <h2 class="text-xl font-semibold text-gray-800 dark:text-white/90">
             {{ $aplazo_game->id == null ? trans('Create') : trans('Edit') }} {{ __('Aplazo game') }}
-        </h2>
-        <nav>
+            </h2>
+            <nav>
             <ol class="flex items-center gap-1.5">
                 <li>
-                    <a class="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400" href="https://laravel-demo.tailadmin.com">
-                        Home
-                        <svg class="stroke-current" width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M6.0765 12.667L10.2432 8.50033L6.0765 4.33366" stroke="" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path>
-                        </svg>
-                    </a>
+                <a class="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400" href="https://laravel-demo.tailadmin.com">
+                Home
+                <svg class="stroke-current" width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6.0765 12.667L10.2432 8.50033L6.0765 4.33366" stroke="" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+                </a>
                 </li>
                 <li class="text-sm text-gray-800 dark:text-white/90">
-                     {{ !is_null($aplazo_game->title) ? $aplazo_game->title : trans('Create') . '' . trans('Aplazo game') }}
+                {{ !is_null($aplazo_game->title) ? $aplazo_game->title : trans('Create') . '' . trans('Aplazo game') }}
                 </li>
             </ol>
-        </nav>
-    </div>
-    <div class="space-y-6">
-        @if (session('status'))
-            <x-v2.ui.alert
+            </nav>
+        </div>
+        <div class="space-y-6">
+            @if (session('status'))
+                <x-v2.ui.alert
                 variant="success"
                 title="{{ session('status') }}"
                 :showLink="false"
-            />
-        @endif
-        <form id="form-campaign" method="POST" enctype="multipart/form-data"
-                    action="{{ $aplazo_game->id == null ? route('aplazogames.store', ['tenant' => tenant('id')]) : route('aplazogames.update', ['tenant' => tenant('id'), 'aplazogame' => $aplazo_game]) }}">
+                />
+            @endif
+            <form id="form-campaign" method="POST" enctype="multipart/form-data"
+            action="{{ $aplazo_game->id == null ? route('aplazogames.store', ['tenant' => tenant('id')]) : route('aplazogames.update', ['tenant' => tenant('id'), 'aplazogame' => $aplazo_game]) }}">
             <div class="mb-6 flex flex-col justify-between gap-6 rounded-2xl border border-gray-200 bg-white px-6 py-5 sm:flex-row sm:items-center dark:border-gray-800 dark:bg-white/3">
                 <div class="flex flex-col gap-2.5 divide-gray-300 sm:flex-row sm:divide-x dark:divide-gray-700">
                     <div class="flex items-center gap-2 sm:pr-3">
@@ -54,12 +54,12 @@
                 </div>
                 <div class="flex items-center gap-3 mt-6 lg:justify-end">
                     <button type="button" aria-label="{{ __('Close modal') }}"
-                        class="flex w-full justify-center rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] sm:w-auto">
-                        {{ __('Close') }}
+                    class="flex w-full justify-center rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] sm:w-auto">
+                    {{ __('Close') }}
                     </button>
-                    <button type="submit" aria-label="{{ __('Save changes') }}" 
-                        class="flex w-full justify-center rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-600 disabled:opacity-50 disabled:cursor-not-allowed sm:w-auto transition-opacity">
-                        <span >{{ __('Save Changes') }}</span>
+                    <button type="submit" aria-label="{{ __('Save changes') }}"
+                    class="flex w-full justify-center rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-600 disabled:opacity-50 disabled:cursor-not-allowed sm:w-auto transition-opacity">
+                    <span >{{ __('Save Changes') }}</span>
                     </button>
                 </div>
             </div>
@@ -70,14 +70,18 @@
                             <div class="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
                                 @csrf
                                 @isset($aplazo_game->id)
-                                    @method('PATCH')
-                                    <input type="hidden" name="id" value="{{ $aplazo_game->id }}">
+                                @method('PATCH')
+                                <input type="hidden" name="id" value="{{ $aplazo_game->id }}">
                                 @endisset
                                 <input type="hidden" name="content_type_id" value="{{ $content_type->id }}">
                                 <h2 class="mt-6 text-lg col-span-2 font-semibold text-gray-800 dark:text-white/90">Game Details</h2>
                                 <x-ui.forms.input-select label="{{ __('Campaign') }}" :options="$campaigns" name="campaign_id" placeholder="" :value="$aplazo_game->campaign->id" data-field="campaign.campaign_id" />
                                 <x-ui.forms.input-text label="{{ __('Title') }}" name="title" placeholder="" :value="$aplazo_game->title" data-field="campaign.title" />
                                 <x-ui.forms.input-text label="{{ __('Description') }}" cols="2" name="description" placeholder="" :value="$aplazo_game->description" data-field="campaign.description" />
+
+                                <x-ui.forms.input-file label="{{ __('Image On') }}" dummy_img="/storage/dummy_assets/600x200.png" name="featured_image" placeholder="" :value="$aplazo_game->featured_image" data-field="campaign.featured_image" />
+                                <x-ui.forms.input-file label="{{ __('Image Off') }}" dummy_img="/storage/dummy_assets/600x200.png" name="featured_image_disabled" placeholder="" :value="$aplazo_game->featured_image_disabled" data-field="campaign.featured_image_disabled" />
+
                                 <h2 class="mt-6 text-lg col-span-2 font-semibold text-gray-800 dark:text-white/90">Top Banner Settings</h2>
                                 <x-ui.forms.input-file label="{{ __('Top Banner') }}" dummy_img="/storage/dummy_assets/600x200.png" name="game_banner" placeholder="" :value="$aplazo_game->game_banner" data-field="campaign.game_banner" />
                                 <x-ui.forms.input-text label="{{ __('Banner URL (Image)') }}" name="game_banner_url" placeholder="" :value="$aplazo_game->game_banner_url" data-field="campaign.game_banner_url" />
@@ -91,18 +95,18 @@
 
                             </div>
                         </div>
-                        
+
                     </div>
                     @if (!is_null($aplazo_game->id))
                         <div class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/3 mt-6">
                             <div class="flex justify-between">
                                 <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight mb-5">
-                                    {{ __('Award') }}
+                                {{ __('Award') }}
                                 </h2>
                                 @if (is_null($aplazo_game->award))
-                                    <a href="{{ route('awards.create', ['tenant' => tenant('id'), 'awardable_id' => $aplazo_game, 'awardable_type' => 'App\Models\AplazoGame' ]) }}"
-                                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-                                        {{ __('Create') }} {{ __('Award') }}
+                                    <a href="{{ route('v2awards.create', ['tenant' => tenant('id'), 'awardable_id' => $aplazo_game, 'awardable_type' => 'App\Models\AplazoGame' ]) }}"
+                                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                                    {{ __('Create') }} {{ __('Award') }}
                                     </a>
                                 @endif
 
@@ -111,109 +115,110 @@
                                 <div class="relative overflow-x-auto shadow-md rounded-lg">
                                     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                                         <thead
-                                            class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                            <tr>
-                                                <th scope="col" class="px-6 py-3">
-                                                    {{ __('Title') }}
-                                                </th>
-                                                <th scope="col" class="px-6 py-3">
-                                                    {{ __('Actions') }}
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
-                                                <th scope="row" class="px-6 py-4">
-                                                    {!!$aplazo_game->award->title!!}
-                                                </th>
-                                                <td class="px-6 py-4">
-                                                    <a href="{{ route('v2awards.edit', ['tenant' => tenant('id'), 'v2award' => $aplazo_game->award]) }}"
-                                                        class="font-medium text-blue-600 dark:text-blue-500 hover:underline">{{ __('Edit') }}</a>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            @endif
-                        </div>
-                    @endif
+                                        class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                        <tr>
+                                        <th scope="col" class="px-6 py-3">
+                                        {{ __('Title') }}
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                        {{ __('Actions') }}
+                                        </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
+                                        <th scope="row" class="px-6 py-4">
+                                        {!!$aplazo_game->award->title!!}
+                                        </th>
+                                        <td class="px-6 py-4">
+                                        <a href="{{ route('v2awards.edit', ['tenant' => tenant('id'), 'v2award' => $aplazo_game->award]) }}"
+                                        class="font-medium text-blue-600 dark:text-blue-500 hover:underline">{{ __('Edit') }}</a>
+                                        </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        @endif
+                    </div>
+                @endif
+            </div>
+            <div class="space-y-6 lg:col-span-4 2xl:col-span-3">
+                <div class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/3">
+                    <h2 class="mb-5 text-lg font-semibold text-gray-800 dark:text-white/90">Date Configuration</h2>
+                    <x-ui.forms.input-datetime label="{{ __('Select Start Date') }}" iddatepicker="datepickerInitDate" class="mb-3" name="init_date" placeholder="{{ __('Start Date') }}" :value="$aplazo_game->init_date" data-field="campaign.init_date"/>
+                    <x-ui.forms.input-datetime label="{{ __('Select End Date') }}" iddatepicker="datepickerEndDate" name="end_date" placeholder="{{ __('End Date') }}" :value="$aplazo_game->end_date" data-field="campaign.end_date"/>
                 </div>
-                <div class="space-y-6 lg:col-span-4 2xl:col-span-3">
-                    <div class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/3">
-                        <h2 class="mb-5 text-lg font-semibold text-gray-800 dark:text-white/90">Date Configuration</h2>
-                        <x-ui.forms.input-datetime label="{{ __('Select Start Date') }}" iddatepicker="datepickerInitDate" class="mb-3" name="init_date" placeholder="{{ __('Start Date') }}" :value="$aplazo_game->init_date" data-field="campaign.init_date"/>
-                        <x-ui.forms.input-datetime label="{{ __('Select End Date') }}" iddatepicker="datepickerEndDate" name="end_date" placeholder="{{ __('End Date') }}" :value="$aplazo_game->end_date" data-field="campaign.end_date"/>
-                    </div>
-                    <div class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/3 space-y-3">
-                        <h2 class="mb-5 text-lg font-semibold text-gray-800 dark:text-white/90">Button Settings</h2>
-                        <x-ui.forms.input-color label="{{ __('Gradient Button Background 1') }}" name="btn_background_color_1" placeholder="" :value="$aplazo_game->btn_background_color_1" data-field="campaign.btn_background_color_1" />
-                        <x-ui.forms.input-color label="{{ __('Gradient Button Background 2') }}" name="btn_background_color_2" placeholder="" :value="$aplazo_game->btn_background_color_2" data-field="campaign.btn_background_color_2" />
-                        <x-ui.forms.input-color label="{{ __('Button Border Color') }}" name="btn_border_color" placeholder="" :value="$aplazo_game->btn_border_color" data-field="campaign.btn_border_color" />
-                        <x-ui.forms.input-switch label="{{ __('Has shadow') }}" name="btn_shadow" placeholder="" :value="$aplazo_game->btn_shadow" data-field="campaign.btn_shadow" />
-                        <x-ui.forms.input-text label="{{ __('Text Active') }}" name="btn_text_active" placeholder="" :value="$aplazo_game->btn_text_active" data-field="campaign.btn_text_active" />
-                        <x-ui.forms.input-switch label="{{ __('Enable Button Shadow') }}" name="btn_enable_shadow" placeholder="" :value="$aplazo_game->btn_enable_shadow" data-field="campaign.btn_enable_shadow" />
-                        <x-ui.forms.input-text label="{{ __('Text Inactive') }}" name="btn_text_inactive" placeholder="" :value="$aplazo_game->btn_text_inactive" data-field="campaign.btn_text_inactive" />
-                    </div>
-                    <div class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/3">
-                        <h2 class="mb-5 text-lg font-semibold text-gray-800 dark:text-white/90">Card Settings</h2>
-                        <x-ui.forms.input-color label="{{ __('Gradient Background 1') }}" name="gradient_1" placeholder="" :value="$aplazo_game->gradient_1" data-field="campaign.gradient_1" />
-                        <x-ui.forms.input-color label="{{ __('Gradient Background 2') }}" name="gradient_2" placeholder="" :value="$aplazo_game->gradient_2" data-field="campaign.gradient_2" />
-                    </div>
+                <div class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/3 space-y-3">
+                    <h2 class="mb-5 text-lg font-semibold text-gray-800 dark:text-white/90">Button Settings</h2>
+                    <x-ui.forms.input-color label="{{ __('Gradient Button Background 1') }}" name="btn_background_color_1" placeholder="" :value="$aplazo_game->btn_background_color_1" data-field="campaign.btn_background_color_1" />
+                    <x-ui.forms.input-color label="{{ __('Gradient Button Background 2') }}" name="btn_background_color_2" placeholder="" :value="$aplazo_game->btn_background_color_2" data-field="campaign.btn_background_color_2" />
+                    <x-ui.forms.input-color label="{{ __('Button Border Color') }}" name="btn_border_color" placeholder="" :value="$aplazo_game->btn_border_color" data-field="campaign.btn_border_color" />
+                    <x-ui.forms.input-switch label="{{ __('Has shadow') }}" name="btn_shadow" placeholder="" :value="$aplazo_game->btn_shadow" data-field="campaign.btn_shadow" />
+                    <x-ui.forms.input-text label="{{ __('Text Active') }}" name="btn_text_active" placeholder="" :value="$aplazo_game->btn_text_active" data-field="campaign.btn_text_active" />
+                    <x-ui.forms.input-switch label="{{ __('Enable Button Shadow') }}" name="btn_enable_shadow" placeholder="" :value="$aplazo_game->btn_enable_shadow" data-field="campaign.btn_enable_shadow" />
+                    <x-ui.forms.input-text label="{{ __('Text Inactive') }}" name="btn_text_inactive" placeholder="" :value="$aplazo_game->btn_text_inactive" data-field="campaign.btn_text_inactive" />
+                </div>
+                <div class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/3">
+                    <h2 class="mb-5 text-lg font-semibold text-gray-800 dark:text-white/90">Card Settings</h2>
+                    <x-ui.forms.input-color label="{{ __('Gradient Background 1') }}" name="gradient_1" placeholder="" :value="$aplazo_game->gradient_1" data-field="campaign.gradient_1" />
+                    <x-ui.forms.input-color label="{{ __('Gradient Background 2') }}" name="gradient_2" placeholder="" :value="$aplazo_game->gradient_2" data-field="campaign.gradient_2" />
                 </div>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
+</div>
 </div>
 {{-- <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const dates = document.querySelectorAll('[type="datetime-local"]');
-    dates.forEach(dateInput => {
-        const value = dateInput.value
-        if (value) {
-            dateInput.value = fromBackendToDatetimeLocal(value);
-        }
-    });
+const dates = document.querySelectorAll('[type="datetime-local"]');
+dates.forEach(dateInput => {
+const value = dateInput.value
+if (value) {
+dateInput.value = fromBackendToDatetimeLocal(value);
+}
+});
 });
 
 function fromBackendToDatetimeLocal(value) {
-    const date = new Date(value.replace(' ', 'T'));
-    return this.formatDateTimeLocal(date);
+const date = new Date(value.replace(' ', 'T'));
+return this.formatDateTimeLocal(date);
 }
 function formatDateTimeLocal(date = new Date()) {
-    const pad = n => String(n).padStart(2, '0');
-    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+const pad = n => String(n).padStart(2, '0');
+return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
 </script>   --}}
 <script>
-    
-    function setDateTimeFromPicker(target) {
-        // Get the selected date from the datepicker
-        const datepickerElement = document.getElementById(`datepicker-${target}`);
-        const selectedDate = datepickerElement.datepicker.getDate();
 
-        var date = new Date(selectedDate);
-        var dateString = date.toISOString().split('T')[0];
-        // Get the selected time from the timetable
-        const inputElement = document.getElementById(target);
-        const selectedTimeRadio = document.querySelector(`input[name="timetable-${target}"]:checked`);
-        const selectedTimeLabel = selectedTimeRadio ? selectedTimeRadio.nextElementSibling.textContent.trim() : null;
-        
-        // Set the value in the main input
-        if (dateString && selectedTimeLabel) {
-            const dateTimeString = `${dateString} ${selectedTimeLabel}:00`;
-            inputElement.value = dateTimeString;
-            inputElement.dispatchEvent(new Event('change', { bubbles: true }));
-        }
-    }
-    
-    function saveDateTimePicker(e) {
-         setDateTimeFromPicker(e.dataset.targetCalendar);
-        // Close the modal after saving
-        const modal = document.getElementById('timepicker-modal');
-        const modalToggleBtn = modal.querySelector('[data-modal-hide="timepicker-modal"]');
-        if (modalToggleBtn) {
-            modalToggleBtn.click();
-        }
-    }
+function setDateTimeFromPicker(target) {
+// Get the selected date from the datepicker
+const datepickerElement = document.getElementById(`datepicker-${target}`);
+const selectedDate = datepickerElement.datepicker.getDate();
+
+var date = new Date(selectedDate);
+var dateString = date.toISOString().split('T')[0];
+// Get the selected time from the timetable
+const inputElement = document.getElementById(target);
+const selectedTimeRadio = document.querySelector(`input[name="timetable-${target}"]:checked`);
+const selectedTimeLabel = selectedTimeRadio ? selectedTimeRadio.nextElementSibling.textContent.trim() : null;
+
+// Set the value in the main input
+if (dateString && selectedTimeLabel) {
+const dateTimeString = `${dateString} ${selectedTimeLabel}:00`;
+inputElement.value = dateTimeString;
+inputElement.dispatchEvent(new Event('change', { bubbles: true }));
+}
+}
+
+function saveDateTimePicker(e) {
+setDateTimeFromPicker(e.dataset.targetCalendar);
+// Close the modal after saving
+const modal = document.getElementById('timepicker-modal');
+const modalToggleBtn = modal.querySelector('[data-modal-hide="timepicker-modal"]');
+if (modalToggleBtn) {
+modalToggleBtn.click();
+}
+}
 </script>
 @endsection
+
