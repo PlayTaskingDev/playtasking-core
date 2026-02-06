@@ -295,6 +295,10 @@ class OptionsTableSeeder extends Seeder
                     'option_value'   =>  true,
                 ],
                 [
+                    'option_name'    => 'allow_city',
+                    'option_value'   =>  false,
+                ],
+                [
                     'option_name'    => 'social_login_active',
                     'option_value'   =>  false,
                 ]
