@@ -100,7 +100,6 @@
 
     <x-footer.tinymce-config/>
 
-    @vite(['resources/js/cruds/aplazogame.js'])
 
 @endsection
 

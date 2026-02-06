@@ -100,7 +100,6 @@
 
     <x-footer.tinymce-config/>
 
-    @vite(['resources/js/cruds/sharegame.js'])
 
 @endsection
 
