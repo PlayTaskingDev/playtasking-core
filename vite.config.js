@@ -18,7 +18,8 @@ export default defineConfig({
                 'resources/js/cruds/crud-form.js',
                 'resources/js/cruds/crud-modal.js',
                 'resources/js/cruds/campaign.js',
-                'resources/js/cruds/aplazogame.js'
+                'resources/js/cruds/aplazogame.js',
+                'resources/js/cruds/resource.js'
             ],
             refresh: true,
         }),
