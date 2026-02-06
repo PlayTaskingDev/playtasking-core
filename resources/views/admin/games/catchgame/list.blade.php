@@ -100,8 +100,5 @@
     </div>
 
     <x-footer.tinymce-config/>
-
-    @vite(['resources/js/cruds/catchgame.js'])
-
 @endsection
 
