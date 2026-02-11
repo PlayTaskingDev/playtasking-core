@@ -22,14 +22,12 @@
     <div class="space-y-6">
 
         <div class="w-full flex justify-end">
-            <button
-            data-action="create"
-            data-modal-target="clickwingame-modal"
-            data-modal-toggle="clickwingame-modal"
-            data-save-route="{{ route('clickwingames.store', tenant('id')) }}"
-            class="btn bg-brand-500 hover:bg-brand-600 flex w-full justify-center rounded-lg px-4 py-2.5 text-sm font-medium text-white sm:w-auto" aria-label="{{ __('Add new Click and Win game') }}">
-            {{ __('Add Click and Win game +') }}
-            </button>
+            <a
+                data-action="create"
+                href="{{ route('clickwingames.create', ['tenant' => tenant('id')]) }}"
+                class="btn bg-brand-500 hover:bg-brand-600 flex w-full justify-center rounded-lg px-4 py-2.5 text-sm font-medium text-white sm:w-auto" aria-label="{{ __('Add new Click and Win game') }}">
+                {{ __('Add Click and Win game +') }}
+            </a>
         </div>
         <x-v2.common.component-card title="{{ $title }}">
         <div class="max-w-full overflow-x-auto custom-scrollbar">
@@ -78,9 +76,11 @@
                             <x-heroicon-o-pencil-square class="w-5"/>
                             {{ __('Edit') }}
                             </a>
+                            @if($click_win->award)
                             <a href="{{ route('v2awards.edit', ['tenant' => tenant('id'), 'v2award' => $click_win->award]) }}" class=" inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 rounded-lg transition-colors">
                             <x-heroicon-o-gift class="w-5"/>
                             {{ __('Edit Award') }}</a>
+                            @endif
                             <form method="post" action="{{ route('clickwingames.destroy', ['tenant' => tenant('id'), 'clickwingame' => $click_win]) }}">
                                 @csrf
                                 @method('delete')

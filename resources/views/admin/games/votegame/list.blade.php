@@ -22,14 +22,12 @@
     <div class="space-y-6">
 
         <div class="w-full flex justify-end">
-            <button
-            data-action="create"
-            data-modal-target="votegame-modal"
-            data-modal-toggle="votegame-modal"
-            data-save-route="{{ route('votegames.store', tenant('id')) }}"
-            class="btn bg-brand-500 hover:bg-brand-600 flex w-full justify-center rounded-lg px-4 py-2.5 text-sm font-medium text-white sm:w-auto" aria-label="{{ __('Add new VoteGame') }}">
-            {{ __('Add VoteGame +') }}
-            </button>
+            <a
+                data-action="create"
+                href="{{ route('votegames.create', ['tenant' => tenant('id')]) }}"
+                class="btn bg-brand-500 hover:bg-brand-600 flex w-full justify-center rounded-lg px-4 py-2.5 text-sm font-medium text-white sm:w-auto" aria-label="{{ __('Add new VoteGame') }}">
+                {{ __('Add VoteGame +') }}
+            </a>
         </div>
         <x-v2.common.component-card title="{{ $title }}">
         <div class="max-w-full overflow-x-auto custom-scrollbar">
@@ -78,16 +76,7 @@
                             <x-heroicon-o-pencil-square class="w-5"/>
                             {{ __('Edit') }}
                             </a>
-                            <a href="{{ route('v2awards.edit', ['tenant' => tenant('id'), 'v2award' => $votegame->award]) }}" class=" inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 rounded-lg transition-colors">
-                            <x-heroicon-o-gift class="w-5"/>
-                            {{ __('Edit Award') }}</a>
-                            <form method="post" action="{{ route('votegames.destroy', ['tenant' => tenant('id'), 'votegame' => $votegame]) }}">
-                                @csrf
-                                @method('delete')
-                                <button type="submit" class="font-medium text-red-600 dark:text-red-500 hover:underline" onclick="return confirm('{{ __('Are you sure to delete this?') }}')">
-                                <x-heroicon-o-trash class="w-5" />
-                                </button>
-                            </form>
+                           
                         </div>
                         </td>
                         </tr>

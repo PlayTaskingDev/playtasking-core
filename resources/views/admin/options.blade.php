@@ -119,7 +119,7 @@
                     {{-- End Inicio Options --}}
                     {{-- Registro Options --}}
                     <section class="max-w-full w-[600px] space-y-6" id="registro" role="tabpanel" aria-labelledby="registro-tab">
-                        <x-ui.forms.input-switch label="Agregar Campo Ciudad" name="social_login_active" switcher="{{ $settings->allow_city }}"/>
+                        <x-ui.forms.input-switch label="Agregar Campo Ciudad" name="allow_city" switcher="{{ $settings->allow_city }}"/>
                         <x-ui.forms.input-switch label="Permitir registro con redes sociales" name="social_login_active" switcher="{{ $settings->social_login_active }}"/>
                         <x-ui.forms.input-switch label="Solicitar ID de miembros" name="members_number" switcher="{{ $settings->members_number }}"/>
                         <x-ui.forms.input-text label="Members legend" name="members_legend" value="{{$settings->members_legend}}"  placeholder="" />

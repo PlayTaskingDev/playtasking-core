@@ -21,7 +21,7 @@
             <nav>
             <ol class="flex items-center gap-1.5">
                 <li>
-                <a class="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400" href="https://laravel-demo.tailadmin.com">
+                <a class="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400" href="{{ route('welcome', ['tenant' => tenant('id')]) }}">
                 Home
                 <svg class="stroke-current" width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M6.0765 12.667L10.2432 8.50033L6.0765 4.33366" stroke="" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -51,7 +51,9 @@
                             <span class="bg-success-50 text-success-600 dark:bg-success-500/15 dark:text-success-500 inline-flex items-center justify-center gap-1 rounded-full px-2.5 py-0.5 text-sm font-medium">Active</span>
                         @endif
                     </div>
+                    @if (isset($quiz->is_expired) && $quiz->is_expired)
                     <p class="text-sm text-gray-500 sm:pl-3 dark:text-gray-400">Expires At:&nbsp;<strong>{{ $quiz->only_date }}</strong></p>
+                    @endif
                 </div>
                 <div class="flex items-center gap-3 mt-6 lg:justify-end">
                     <button type="button" aria-label="{{ __('Close modal') }}"
@@ -76,7 +78,7 @@
                                 @endisset
                                 <input type="hidden" name="content_type_id" value="{{ $content_type->id }}">
                                 <h2 class="mt-6 text-lg col-span-2 font-semibold text-gray-800 dark:text-white/90">Game Details</h2>
-                                <x-ui.forms.input-select label="{{ __('Campaign') }}" :options="$campaigns" name="campaign_id" placeholder="" :value="$quiz->campaign->id" data-field="campaign.campaign_id" />
+                                <x-ui.forms.input-select label="{{ __('Campaign') }}" :options="$campaigns" name="campaign_id" placeholder="" :value="($quiz->campaign->id ?? null)" data-field="campaign.campaign_id" />
                                 <x-ui.forms.input-text label="{{ __('Title') }}" name="title" placeholder="" :value="$quiz->title" data-field="campaign.title" />
                                 <x-ui.forms.input-text label="{{ __('Description') }}" cols="2" name="description" placeholder="" :value="$quiz->description" data-field="campaign.description" />
                                 <x-ui.forms.input-file label="{{ __('Image On') }}" dummy_img="/storage/dummy_assets/600x200.png" name="featured_image" placeholder="" :value="$quiz->featured_image" data-field="campaign.featured_image" />

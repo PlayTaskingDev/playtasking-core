@@ -17,16 +17,17 @@ class AwardCodesController extends Controller
     {
         $awards = Award::with(['awardable'])->withCount(['codes_available','codes_delivered'])->orderBy('created_at','desc')->get();
 
-        return response()->view('admin.awardcodes',[
+        return response()->view('admin.awardcodes.list',[
             'title'         => 'Panel | ' . trans('Award Codes'),
             'description'   => 'Admin Panel',
             'awards'        => $awards
         ]);
     }
 
-    public function show(Award $award)
+    public function show($id)
     {
-        return response()->view('admin.show',[
+        $award = Award::findOrFail($id);
+        return response()->view('admin.awardcodes.import',[
             'title'         => 'Panel | ' . trans('Award Codes'),
             'description'   => 'Admin Panel',
             'award'         => $award->load('awardable')
@@ -60,14 +61,14 @@ class AwardCodesController extends Controller
             $import = new AwardCodeImport($request->award_id);
             $import->import($request->file('file'), null, null);
 
-            return redirect(route('awards.codes.index', ['tenant' => tenant('id')]))->with('status', trans('Codes stored successful'));
+            return redirect(route('awardcodes.index', ['tenant' => tenant('id')]))->with('status', trans('Codes stored successful'));
 
         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
             $failures = $e->failures();
 
             $awards = Award::with(['awardable','codes'])->withCount(['codes_available','codes_delivered'])->get();
 
-            return response()->view('panel.award_codes.index',[
+            return response()->view('admin.awardcodes.list',[
                 'title'         => 'Panel | ' . trans('Award Codes'),
                 'description'   => 'Admin Panel',
                 'awards'        => $awards,
@@ -92,7 +93,7 @@ class AwardCodesController extends Controller
             $this->generate_codes($data['award_id'],$data['quantity'],$data['product'] ?? null,$data['validity'] ?? null);
         }
 
-        return redirect(route('awards.codes.index', ['tenant' => tenant('id')]))->with('status', trans('Codes added successful'));
+        return redirect(route('awardcodes.index', ['tenant' => tenant('id')]))->with('status', trans('Codes added successful'));
     }
 
     private function generate_codes($award_id,$quantity,$product = null,$validity = null)
@@ -116,6 +117,6 @@ class AwardCodesController extends Controller
         DB::table('award_codes')->where('award_id', $award->id)->delete();
         DB::table('award_user')->where('model_id', $award->id)->delete();
 
-        return redirect(route('awards.codes.index', ['tenant' => tenant('id')]))->with('status', trans('Codes deleted successful'));
+        return redirect(route('awardcodes.index', ['tenant' => tenant('id')]))->with('status', trans('Codes deleted successful'));
     }
 }

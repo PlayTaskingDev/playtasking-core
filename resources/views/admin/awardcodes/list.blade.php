@@ -12,11 +12,12 @@
 </x-slot>
 @section('content')
     @if (session('status'))
-        <x-v2.ui.alert
+        {{-- <x-v2.ui.alert
         variant="success"
         title="{{ session('status') }}"
         :showLink="false"
-        />
+        /> --}}
+    <x-ui.modal-alert :title="session('status')" :description="session('description')" :open="true" />
     @endif
     <x-v2.common.page-breadcrumb pageTitle="{{ $title }}" />
 
@@ -63,8 +64,7 @@
                     <td class="px-5 py-4 sm:px-6">
                     <div class="flex items-center justify-start space-x-3">
                         <a
-                        data-action="show"
-                        href=""
+                        href="{{ route('awardcodes.show', ['tenant' => tenant('id'), 'awardcode' => $award]) }}"
                         class="show-button inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 rounded-lg transition-colors"
                         aria-label="{{ __('Import') }} {{ $award->name }}"
                         >
@@ -137,6 +137,7 @@
         </div>
     </div>
 </div>
+
 
 <script>
 let formDeleteCodes = document.getElementById('formDeleteCodes');

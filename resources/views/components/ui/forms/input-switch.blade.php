@@ -1,7 +1,16 @@
 @props(['label','name', 'cols' => 0, 'switcher'=> 0 ])
 
-<div class="flex items-center col-span-{{ $cols }}">
-    <input id="{{ $name }}" name="{{ $name }}" type="checkbox"  @checked(old('is_active', $switcher ?? false)) value="1" 
+<div x-data="{ 
+    handleChange: function(event) {
+        const element = event.target;
+        if(element.checked){
+            element.value = 1;
+        } else {
+            element.value = 0;
+        }
+}}" class="flex items-center col-span-{{ $cols }}">
+    <input type="hidden" name="{{ $name }}" value="0">
+    <input id="{{ $name }}" name="{{ $name }}" type="checkbox" @change="handleChange(event)" @checked(old('is_active', $switcher ?? false)) value="1" 
     {{ 
         $attributes->merge([
         'class' => 'w-4 h-4 border border-default-medium rounded-xs bg-neutral-secondary-medium focus:ring-2 focus:ring-brand-soft'

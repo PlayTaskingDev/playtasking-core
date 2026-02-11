@@ -20,7 +20,7 @@
             <nav>
             <ol class="flex items-center gap-1.5">
                 <li>
-                <a class="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400" href="https://laravel-demo.tailadmin.com">
+                <a class="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400" href="{{ route('welcome', ['tenant' => tenant('id')]) }}">
                 Home
                 <svg class="stroke-current" width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M6.0765 12.667L10.2432 8.50033L6.0765 4.33366" stroke="" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -93,50 +93,7 @@
                         </div>
 
                     </div>
-                    @if (!is_null($vote_contest->id))
-                        <div class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/3 mt-6">
-                            <div class="flex justify-between">
-                                <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight mb-5">
-                                {{ __('Award') }}
-                                </h2>
-                                @if (is_null($vote_contest->award))
-                                    <a href="{{ route('v2awards.create', ['tenant' => tenant('id'), 'awardable_id' => $vote_contest, 'awardable_type' => 'App\Models\VoteContest' ]) }}"
-                                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-                                    {{ __('Create') }} {{ __('Award') }}
-                                    </a>
-                                @endif
-
-                            </div>
-                            @if (!is_null($vote_contest->award))
-                                <div class="relative overflow-x-auto shadow-md rounded-lg">
-                                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                                        <thead
-                                        class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                        <tr>
-                                        <th scope="col" class="px-6 py-3">
-                                        {{ __('Title') }}
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                        {{ __('Actions') }}
-                                        </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
-                                        <th scope="row" class="px-6 py-4">
-                                        {!!$vote_contest->award->title!!}
-                                        </th>
-                                        <td class="px-6 py-4">
-                                        <a href="{{ route('v2awards.edit', ['tenant' => tenant('id'), 'v2award' => $vote_contest->award]) }}"
-                                        class="font-medium text-blue-600 dark:text-blue-500 hover:underline">{{ __('Edit') }}</a>
-                                        </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        @endif
-                    </div>
-                @endif
+                    
             </div>
             <div class="space-y-6 lg:col-span-4 2xl:col-span-3">
                 <div class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/3">

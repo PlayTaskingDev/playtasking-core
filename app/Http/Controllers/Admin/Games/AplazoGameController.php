@@ -37,7 +37,7 @@ class AplazoGameController extends Controller
         $content_type = ContentType::where('system_name','games')->first();
         $time_slots = get_time_slots();
 
-        return view('panel.aplazo_games.edit', [
+        return view('admin.games.aplazogame.edit', [
             'aplazo_game'   => $aplazo_game->load('award','campaign'),
             'campaigns'     => $campaigns,
             'content_type'  => $content_type,

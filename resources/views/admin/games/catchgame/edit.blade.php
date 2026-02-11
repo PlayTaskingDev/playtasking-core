@@ -21,7 +21,7 @@
             <nav>
             <ol class="flex items-center gap-1.5">
                 <li>
-                <a class="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400" href="https://laravel-demo.tailadmin.com">
+                <a class="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 cursor-pointer" onclick="history.back();">
                 Home
                 <svg class="stroke-current" width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M6.0765 12.667L10.2432 8.50033L6.0765 4.33366" stroke="" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -51,7 +51,9 @@
                             <span class="bg-success-50 text-success-600 dark:bg-success-500/15 dark:text-success-500 inline-flex items-center justify-center gap-1 rounded-full px-2.5 py-0.5 text-sm font-medium">Active</span>
                         @endif
                     </div>
+                    @if (isset($catch_game->is_expired) && $catch_game->is_expired)
                     <p class="text-sm text-gray-500 sm:pl-3 dark:text-gray-400">Expires At:&nbsp;<strong>{{ $catch_game->only_date }}</strong></p>
+                    @endif
                 </div>
                 <div class="flex items-center gap-3 mt-6 lg:justify-end">
                     <button type="button" aria-label="{{ __('Close modal') }}"
@@ -60,7 +62,7 @@
                     </button>
                     <button type="submit" aria-label="{{ __('Save changes') }}"
                     class="flex w-full justify-center rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-600 disabled:opacity-50 disabled:cursor-not-allowed sm:w-auto transition-opacity">
-                    <span >{{ __('Save Changes') }}</span>
+                    <span >{{ !is_null($catch_game->title) ? __('Save Changes') : __('Create Game') }}</span>
                     </button>
                 </div>
             </div>
@@ -76,7 +78,7 @@
                                 @endisset
                                 <input type="hidden" name="content_type_id" value="{{ $content_type->id }}">
                                 <h2 class="mt-6 text-lg col-span-2 font-semibold text-gray-800 dark:text-white/90">Game Details</h2>
-                                <x-ui.forms.input-select label="{{ __('Campaign') }}" :options="$campaigns" name="campaign_id" placeholder="" :value="$catch_game->campaign->id" data-field="campaign.campaign_id" />
+                                <x-ui.forms.input-select label="{{ __('Campaign') }}" :options="$campaigns" name="campaign_id" placeholder="" :value="($catch_game->campaign->id ?? null)" data-field="campaign.campaign_id" />
                                 <x-ui.forms.input-text label="{{ __('Title') }}" name="title" placeholder="" :value="$catch_game->title" data-field="campaign.title" />
                                 <x-ui.forms.input-text label="{{ __('Description') }}" cols="2" name="description" placeholder="" :value="$catch_game->description" data-field="campaign.description" />
                                 <x-ui.forms.input-file label="{{ __('Image On') }}" dummy_img="/storage/dummy_assets/600x200.png" name="featured_image" placeholder="" :value="$catch_game->featured_image" data-field="campaign.featured_image" />

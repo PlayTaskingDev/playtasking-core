@@ -349,6 +349,10 @@ Route::group([
         Route::resource('v2awards', App\Http\Controllers\Admin\AwardsController::class);
         // Awards Codes
         Route::resource('awardcodes', App\Http\Controllers\Admin\AwardCodesController::class);
+        Route::get('awardcodes_import/{award}', [App\Http\Controllers\Admin\AwardCodesController::class, 'show'])->name('awards.codes.show');
+        Route::post('create-award-codes', [App\Http\Controllers\Admin\AwardCodesController::class, 'create_award_codes'])->name('awards.create_award_codes');
+        Route::get('get-codes-sample', [App\Http\Controllers\Admin\AwardCodesController::class, 'download_sample'])->name('awards.codes.sample');
+        Route::post('import-codes', [App\Http\Controllers\Admin\AwardCodesController::class, 'import'])->name('awards.codes.import');
         // Tickets
         Route::resource('tickets', App\Http\Controllers\Admin\TicketController::class);
             // Tickets Questions

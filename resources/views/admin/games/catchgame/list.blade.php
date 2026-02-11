@@ -23,14 +23,12 @@
     <div class="space-y-6">
 
         <div class="w-full flex justify-end">
-            <button
+            <a
             data-action="create"
-            data-modal-target="catchgame-modal"
-            data-modal-toggle="catchgame-modal"
-            data-save-route="{{ route('catchgames.store', tenant('id')) }}"
+            href="{{ route('catchgames.create', ['tenant' => tenant('id')]) }}"
             class="btn bg-brand-500 hover:bg-brand-600 flex w-full justify-center rounded-lg px-4 py-2.5 text-sm font-medium text-white sm:w-auto" aria-label="{{ __('Add new CatchGame') }}">
             {{ __('Add CatchGame +') }}
-            </button>
+        </a>
         </div>
         <x-v2.common.component-card title="{{ $title }}">
         <div class="max-w-full overflow-x-auto custom-scrollbar">
@@ -79,9 +77,11 @@
                             <x-heroicon-o-pencil-square class="w-5"/>
                             {{ __('Edit') }}
                             </a>
+                            @if($catch_game->award)
                             <a href="{{ route('v2awards.edit', ['tenant' => tenant('id'), 'v2award' => $catch_game->award]) }}" class=" inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 rounded-lg transition-colors">
                             <x-heroicon-o-gift class="w-5"/>
                             {{ __('Edit Award') }}</a>
+                            @endif
                             <form method="post" action="{{ route('catchgames.destroy', ['tenant' => tenant('id'), 'catchgame' => $catch_game]) }}">
                                 @csrf
                                 @method('delete')

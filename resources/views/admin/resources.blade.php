@@ -65,150 +65,148 @@
             @endif
         </div>
     </div>
-    <div id="resource-modal" tabindex="-1"
-    class="hidden fixed inset-0 z-9999  items-center justify-center bg-black/50">
+    <div id="resource-modal" tabindex="-1" class="hidden fixed inset-0 z-9999  items-center justify-center bg-black/50">
+        <div class="relative w-full max-w-3xl rounded-3xl bg-white p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="modal-title"
+                class="text-2xl font-semibold text-gray-800">
+                {{ __('Add Resource') }}
+                </h3>
+                <button data-modal-hide="resource-modal" class="text-gray-400 hover:text-gray-600">
+                ✕
+                </button>
+            </div>
+            <form id="form-resource" method="POST" enctype="multipart/form-data">
+                        <div class="px-2 overflow-y-auto custom-scrollbar h-[510px]">
+                            <div class="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
+                                @csrf
+                                <input type="hidden" name="_method" value="POST" id="method-field">
+                                <div class="flex flex-col justify-center col-span-2">
+                                    <!-- Dropzone -->
+                                    <label for="asset" class="font-bold"> Cargar Recurso </label>
+                                    <div
+                                    x-data="{
+                                    isDragging: false,
+                                    files: [],
+                                    handleDrop(e) {
+                                    this.isDragging = false;
+                                    const droppedFiles = Array.from(e.dataTransfer.files);
+                                    this.handleFiles(droppedFiles);
+                                    },
+                                    handleFiles(selectedFiles) {
+                                    const validTypes = ['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml'];
+                                    const validFiles = selectedFiles.filter(file => validTypes.includes(file.type));
 
-    <div class="relative w-full max-w-3xl rounded-3xl bg-white p-6">
-        <div class="flex justify-between items-center mb-4">
-            <h3 id="modal-title"
-            class="text-2xl font-semibold text-gray-800">
-            {{ __('Add Resource') }}
-            </h3>
-            <button data-modal-hide="resource-modal" class="text-gray-400 hover:text-gray-600">
-            ✕
-            </button>
-        </div>
-        <form id="form-resource" method="POST" enctype="multipart/form-data">
-            <div class="px-2 overflow-y-auto custom-scrollbar h-[510px]">
-                <div class="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
-                    @csrf
-                    <input type="hidden" name="_method" value="POST" id="method-field">
-                    <div class="flex flex-col justify-center col-span-2">
-                        <!-- Dropzone -->
-                        <label for="asset" class="font-bold"> Cargar Recurso </label>
-                        <div
-                        x-data="{
-                        isDragging: false,
-                        files: [],
-                        handleDrop(e) {
-                        this.isDragging = false;
-                        const droppedFiles = Array.from(e.dataTransfer.files);
-                        this.handleFiles(droppedFiles);
-                        },
-                        handleFiles(selectedFiles) {
-                        const validTypes = ['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml'];
-                        const validFiles = selectedFiles.filter(file => validTypes.includes(file.type));
+                                    if (validFiles.length > 0) {
+                                    this.files = [...this.files, ...validFiles];
+                                    console.log('Files uploaded:', validFiles);
 
-                        if (validFiles.length > 0) {
-                        this.files = [...this.files, ...validFiles];
-                        console.log('Files uploaded:', validFiles);
+                                    // Here you can add logic to upload files to server
+                                    this.uploadFiles(validFiles);
+                                    }
+                                    },
+                                    uploadFiles(files) {
+                                    // Access the element using $refs.fileInput
+                                    const inputElement = this.$refs.fileInput;
+                                    const form = inputElement.form;
+                                    const formData = new FormData(form);
+                                    files.forEach(file => {
+                                    formData.append('asset[]', file);
+                                    });
+                                    sendFormData(formData);
+                                    },
+                                    removeFile(index) {
+                                    this.files.splice(index, 1);
+                                    }
+                                    }"
+                                    class="transition border border-gray-300 border-dashed cursor-pointer dark:hover:border-brand-500 dark:border-gray-700 rounded-xl hover:border-brand-500 w-full"
+                                    >
+                                    <div
+                                    @drop.prevent="handleDrop($event)"
+                                    @dragover.prevent="isDragging = true"
+                                    @dragleave.prevent="isDragging = false"
+                                    @click="$refs.fileInput.click()"
+                                    :class="isDragging
+                                    ? 'border-brand-500 bg-gray-100 dark:bg-gray-800'
+                                    : 'border-gray-300 bg-gray-50 dark:border-gray-700 dark:bg-gray-900'"
+                                    class="dropzone rounded-xl border-dashed border-gray-300 p-7 lg:p-10 transition-colors cursor-pointer"
+                                    id="asset"
+                                    >
+                                    <!-- Hidden File Input -->
+                                    <input
+                                    x-ref="fileInput"
+                                    type="file"
+                                    id="asset"
+                                    name="asset[]"
+                                    @change="handleFiles(Array.from($event.target.files)); $event.target.value = ''"
+                                    accept="image/png,image/jpeg,image/webp,image/svg+xml"
 
-                        // Here you can add logic to upload files to server
-                        this.uploadFiles(validFiles);
-                        }
-                        },
-                        uploadFiles(files) {
-                        // Access the element using $refs.fileInput
-                        const inputElement = this.$refs.fileInput;
-                        const form = inputElement.form;
-                        const formData = new FormData(form);
-                        files.forEach(file => {
-                        formData.append('asset[]', file);
-                        });
-                        sendFormData(formData);
-                        },
-                        removeFile(index) {
-                        this.files.splice(index, 1);
-                        }
-                        }"
-                        class="transition border border-gray-300 border-dashed cursor-pointer dark:hover:border-brand-500 dark:border-gray-700 rounded-xl hover:border-brand-500 w-full"
-                        >
-                        <div
-                        @drop.prevent="handleDrop($event)"
-                        @dragover.prevent="isDragging = true"
-                        @dragleave.prevent="isDragging = false"
-                        @click="$refs.fileInput.click()"
-                        :class="isDragging
-                        ? 'border-brand-500 bg-gray-100 dark:bg-gray-800'
-                        : 'border-gray-300 bg-gray-50 dark:border-gray-700 dark:bg-gray-900'"
-                        class="dropzone rounded-xl border-dashed border-gray-300 p-7 lg:p-10 transition-colors cursor-pointer"
-                        id="asset"
-                        >
-                        <!-- Hidden File Input -->
-                        <input
-                        x-ref="fileInput"
-                        type="file"
-                        id="asset"
-                        name="asset[]"
-                        @change="handleFiles(Array.from($event.target.files)); $event.target.value = ''"
-                        accept="image/png,image/jpeg,image/webp,image/svg+xml"
+                                    class="hidden"
+                                    multiple
+                                    @click.stop
+                                    />
 
-                        class="hidden"
-                        multiple
-                        @click.stop
-                        />
+                                    <div class="flex flex-col items-center m-0">
 
-                        <div class="flex flex-col items-center m-0">
+                                        <!-- Text Content -->
+                                        <h4 class="mb-3 font-semibold text-gray-800 text-theme-xl dark:text-white/90 text-center">
+                                        <span x-show="!isDragging">Drag & Drop Here</span>
+                                        <span x-show="isDragging" x-cloak>Drop Here</span>
+                                        </h4>
 
-                            <!-- Text Content -->
-                            <h4 class="mb-3 font-semibold text-gray-800 text-theme-xl dark:text-white/90 text-center">
-                            <span x-show="!isDragging">Drag & Drop Here</span>
-                            <span x-show="isDragging" x-cloak>Drop Here</span>
-                            </h4>
+                                        <span class="text-center mb-5 block w-full max-w-[290px] text-sm text-gray-700 dark:text-gray-400">
+                                        Drag and drop your PNG, JPG, WebP, SVG images here or browse
+                                        </span>
 
-                            <span class="text-center mb-5 block w-full max-w-[290px] text-sm text-gray-700 dark:text-gray-400">
-                            Drag and drop your PNG, JPG, WebP, SVG images here or browse
-                            </span>
+                                        <span class="font-medium underline text-theme-sm text-brand-500">
+                                        Browse File
+                                        </span>
+                                    </div>
+                                </div>
 
-                            <span class="font-medium underline text-theme-sm text-brand-500">
-                            Browse File
-                            </span>
-                        </div>
-                    </div>
-
-                    <!-- File Preview List (Optional) -->
-                    <div x-show="files.length > 0" class="mt-4 p-4 border-t border-gray-200 dark:border-gray-700" x-cloak>
-                        <h5 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Uploaded Files:</h5>
-                        <ul class="space-y-2">
-                            <template x-for="(file, index) in files" :key="index">
-                            <li class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                            <div class="flex items-center gap-3">
-                                <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                </svg>
-                                <span class="text-sm text-gray-700 dark:text-gray-300" x-text="file.name"></span>
+                                <!-- File Preview List (Optional) -->
+                                <div x-show="files.length > 0" class="mt-4 p-4 border-t border-gray-200 dark:border-gray-700" x-cloak>
+                                    <h5 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Uploaded Files:</h5>
+                                    <ul class="space-y-2">
+                                        <template x-for="(file, index) in files" :key="index">
+                                        <li class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                                        <div class="flex items-center gap-3">
+                                            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                            </svg>
+                                            <span class="text-sm text-gray-700 dark:text-gray-300" x-text="file.name"></span>
+                                        </div>
+                                        <button
+                                        @click.stop="removeFile(index)"
+                                        type="button"
+                                        class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+                                        >
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                        </button>
+                                        </li>
+                                        </template>
+                                    </ul>
+                                </div>
                             </div>
-                            <button
-                            @click.stop="removeFile(index)"
-                            type="button"
-                            class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
-                            >
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                            </button>
-                            </li>
-                            </template>
-                        </ul>
+                        </div>
+
                     </div>
                 </div>
-            </div>
-
+                <div class="flex items-center gap-3 mt-6 lg:justify-end">
+                    <button type="button" aria-label="{{ __('Close modal') }}"
+                    class="flex w-full justify-center rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] sm:w-auto">
+                    {{ __('Close') }}
+                    </button>
+                    <button id="upload-files-btn" type="button" aria-label="{{ __('Upload Files') }}"
+                    class="flex w-full justify-center rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-600 disabled:opacity-50 disabled:cursor-not-allowed sm:w-auto transition-opacity">
+                    <span >{{ __('Upload Files') }}</span>
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
-    <div class="flex items-center gap-3 mt-6 lg:justify-end">
-        <button type="button" aria-label="{{ __('Close modal') }}"
-        class="flex w-full justify-center rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] sm:w-auto">
-        {{ __('Close') }}
-        </button>
-        <button id="upload-files-btn" type="button" aria-label="{{ __('Upload Files') }}"
-        class="flex w-full justify-center rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-600 disabled:opacity-50 disabled:cursor-not-allowed sm:w-auto transition-opacity">
-        <span >{{ __('Upload Files') }}</span>
-        </button>
-    </div>
-</form>
-</div>
-</div>
 
 @vite(['resources/js/cruds/resource.js'])
 
