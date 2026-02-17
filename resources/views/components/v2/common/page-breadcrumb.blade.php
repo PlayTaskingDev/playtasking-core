@@ -1,38 +1,26 @@
-@props(['pageTitle' => 'Page'])
+@props(['pageTitle' => 'Page', 'desc' => '', 'modalId' =>'', 'isBtn' => '0', 'titleBtn' => '','routeDataBtn' => '', 'routeBtn' => ''])
 
-<div class="flex flex-wrap items-center justify-between gap-3 mb-6">
-    <h2 class="text-xl font-semibold text-gray-800 dark:text-white/90">
-        {{ $pageTitle }}
-    </h2>
-    <nav>
-        <ol class="flex items-center gap-1.5">
-            <li>
-                <a
-                    class="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400"
-                    href="{{ url('/') }}"
-                >
-                    Home
-                    <svg
-                        class="stroke-current"
-                        width="17"
-                        height="16"
-                        viewBox="0 0 17 16"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <path
-                            d="M6.0765 12.667L10.2432 8.50033L6.0765 4.33366"
-                            stroke=""
-                            stroke-width="1.2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                        />
-                    </svg>
-                </a>
-            </li>
-            <li class="text-sm text-gray-800 dark:text-white/90">
-                {{ $pageTitle }}
-            </li>
-        </ol>
-    </nav>
+<div class="flex flex-wrap items-center justify-between gap-3 mb-2">
+    <div class="py-3">
+        <h3 class="text-base font-bold text-gray-800 dark:text-white/90">
+             {{ $pageTitle }}
+        </h3>
+        @if($desc)
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                {{ $desc }}
+            </p>
+        @endif
+    </div>
+    @if ($isBtn)
+        <a
+                data-action="create"
+                data-modal-target="{{ $modalId }}"
+                data-modal-toggle="{{ $modalId }}"
+                data-save-route="{{ $routeDataBtn }}"
+                href="{{ $routeBtn ? $routeBtn:'#' }}"
+                class="btn bg-brand-500 hover:bg-brand-600 flex w-full justify-center rounded-lg px-4 py-2.5 text-sm font-medium text-white sm:w-auto cursor-pointer" aria-label="{{ $titleBtn }}">
+            {{ $titleBtn }}
+        </a>
+    @endif
+    <!--Add Button-->
 </div>

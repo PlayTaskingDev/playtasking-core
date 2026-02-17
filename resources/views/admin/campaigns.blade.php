@@ -18,20 +18,10 @@
         :showLink="false"
         />
     @endif
-    <x-v2.common.page-breadcrumb pageTitle="{{ $title }}" />
+    <x-v2.common.page-breadcrumb pageTitle="{{ $title }}" isBtn='1' modalId='campaign-modal' :titleBtn="__('Add Campaign +')" routeDataBtn="{{ route('campaigns.store', tenant('id')) }}" />
     <div class="space-y-6">
 
-        <div class="w-full flex justify-end">
-            <button
-            data-action="create"
-            data-modal-target="campaign-modal"
-            data-modal-toggle="campaign-modal"
-            data-save-route="{{ route('campaigns.store', tenant('id')) }}"
-            class="btn bg-brand-500 hover:bg-brand-600 flex w-full justify-center rounded-lg px-4 py-2.5 text-sm font-medium text-white sm:w-auto" aria-label="{{ __('Add new campaign') }}">
-            {{ __('Add Campaign +') }}
-            </button>
-        </div>
-        <x-v2.common.component-card title="{{ $title }}">
+        <x-v2.common.component-card >
         <div class="max-w-full overflow-x-auto custom-scrollbar">
             <table class="w-full ">
                 <thead>

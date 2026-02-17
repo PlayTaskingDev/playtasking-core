@@ -18,13 +18,11 @@
         :showLink="false"
         />
     @endif
-    <x-v2.common.page-breadcrumb pageTitle="{{ $title }}" />
+    <x-v2.common.page-breadcrumb pageTitle="{{ $title }}" desc="Edita y personaliza cada dinámica." />
     <div class="space-y-6">
-        <x-v2.common.component-card title="{{ $title }}">
-
-        <div class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+        <x-v2.common.component-card>
             <div class="max-w-full overflow-x-auto custom-scrollbar">
-                <table class="w-full min-w-[1102px]">
+                <table class="w-full">
                     <thead>
                         <tr class="border-b border-gray-100 dark:border-gray-800">
                         @foreach (['Dynamic', 'Icon On', 'Icon Off', 'Colors', 'Actions'] as $header)
@@ -39,22 +37,22 @@
                     <tbody>
                         @foreach ($content_types as $type)
                             <tr class="border-b border-gray-100 dark:border-gray-800">
-                            <td class="px-5 py-4 sm:px-6" colspan="1">
+                            <td class="px-5 py-4 sm:px-6">
                             <div class="flex items-center gap-3">
-                                <div class="w-lg">
+                                <div class="">
                                     <span class="block font-medium text-gray-800 text-theme-sm dark:text-white/90" >{{ $type->name }}</span>
-                                    <span class="block text-gray-500 text-theme-sm dark:text-gray-400" >{{ $type->description }}</span>
+                                    <span class="block text-gray-500 text-theme-xs dark:text-gray-400" >{{ $type->description }}</span>
                                 </div>
                             </div>
                             </td>
                             <td class="px-5 py-4 sm:px-6">
-                            <div class="w-12 h-12 overflow-hidden rounded-full bg-gray-400">
-                                <img src="{{ $type->icon_active }}" alt="{{ $type->name }} active icon" loading="lazy" class="w-full h-full object-cover">
+                            <div class="w-14 h-14 overflow-hidden rounded-full bg-gray-300 flex items-center justify-center">
+                                <img src="{{ $type->icon_active }}" alt="{{ $type->name }} active icon" loading="lazy" class="w-8 h-8 object-cover">
                             </div>
                             </td>
                             <td class="px-5 py-4 sm:px-6">
-                            <div class="w-12 h-12 overflow-hidden rounded-full bg-gray-400">
-                                <img src="{{ $type->icon }}" alt="{{ $type->name }} icon" loading="lazy" class="w-full h-full object-cover">
+                            <div class="w-14 h-14 overflow-hidden rounded-full bg-gray-300 flex items-center justify-center">
+                                <img src="{{ $type->icon }}" alt="{{ $type->name }} icon" loading="lazy" class="w-8 h-8 object-cover">
                             </div>
                             </td>
                             <td class="px-5 py-4 sm:px-6">
@@ -84,8 +82,6 @@
                     </tbody>
                 </table>
             </div>
-        </div>
-
         </x-v2.common.component-card>
     </div>
     <div x-data="dynamicModal()" class="dynamic-modal-container">

@@ -48,7 +48,7 @@
             return this.openSubmenus[key] || false;
         },
         isActive(path) {
-            return window.location.pathname === path || '{{ $currentPath }}' === path.replace(/^\//, '');
+            return window.location.href === path || '{{ $currentPath }}' === path.replace(/^\//, '');
         }
     }"
     :class="{
@@ -178,7 +178,7 @@
                                             </ul>
                                         </div>
                                     @else
-                                        <!-- Simple Menu Item -->
+                                        <!-- Simple Menu Item {{ $item['path'] }}-->
                                         <a href="{{ $item['path'] }}" class="menu-item group"
                                             :class="[
                                                 isActive('{{ $item['path'] }}') ? 'menu-item-active' :

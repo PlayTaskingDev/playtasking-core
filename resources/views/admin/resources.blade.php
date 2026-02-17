@@ -32,7 +32,7 @@
         </div>
         <div class="border-t border-gray-100 p-4 sm:p-6 dark:border-gray-800">
             @if (!$media_elements->isEmpty())
-                <div class="grid grid-cols-2 gap-5 sm:grid-cols-4 xl:grid-cols-6">
+                <div class="grid grid-cols-2 gap-5 sm:grid-cols-2 xl:grid-cols-4">
                     @foreach ($media_elements as $media_element)
                         <!-- Card Item -->
                         <div>
@@ -40,12 +40,12 @@
                                 <div class="mb-5 overflow-hidden rounded-lg">
                                     <img src="{{ $media_element->asset }}" alt="{{ $media_element->description }}" title="{{ $media_element->description }}" class="h-32 w-fit object-scale-down mb-3">
                                 </div>
-                                <div>
-                                    <h4 class="mb-1 text-theme-xl font-medium text-gray-800 dark:text-white/90">
-                                    {{ $media_element->description }}
+                                <div class="">
+                                    <h4 class="mb-1 text-theme-lg font-medium text-gray-800 dark:text-white/90">
+                                        {{ $media_element->description }}
                                     </h4>
                                     <p class="text-xs text-gray-500 dark:text-gray-400 break-words">
-                                    {{ $media_element->asset }}
+                                        {{ $media_element->asset }}
                                     </p>
                                     <button onclick="copyStringToClipboard(event,'{{ $media_element->asset }}')" class="mt-4 inline-flex items-center gap-2 rounded-lg bg-brand-500 px-4 py-3 text-sm font-medium text-white shadow-theme-xs hover:bg-brand-600">
                                     <x-heroicon-o-document-duplicate class="h-4" />
@@ -99,10 +99,9 @@
 
                                     if (validFiles.length > 0) {
                                     this.files = [...this.files, ...validFiles];
-                                    console.log('Files uploaded:', validFiles);
-
+                                    console.log(validFiles);
                                     // Here you can add logic to upload files to server
-                                    this.uploadFiles(validFiles);
+                                    this.uploadFiles(this.files);
                                     }
                                     },
                                     uploadFiles(files) {
@@ -111,7 +110,7 @@
                                     const form = inputElement.form;
                                     const formData = new FormData(form);
                                     files.forEach(file => {
-                                    formData.append('asset[]', file);
+                                        formData.append('asset[]', file);
                                     });
                                     sendFormData(formData);
                                     },

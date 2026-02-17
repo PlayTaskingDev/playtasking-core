@@ -18,18 +18,10 @@
         :showLink="false"
         />
     @endif
-    <x-v2.common.page-breadcrumb pageTitle="{{ $title }}" />
+    <x-v2.common.page-breadcrumb pageTitle="{{ $title }}" desc="Aquí podras agregar y editar juegos tipo Memorama." isBtn='1' :titleBtn="__('Add MemoryGame +')" routeBtn="{{ route('memorygames.create', ['tenant' => tenant('id')]) }}" />
     <div class="space-y-6">
 
-        <div class="w-full flex justify-end">
-            <a
-                data-action="create"
-                href="{{ route('memorygames.create', ['tenant' => tenant('id')]) }}"
-                class="btn bg-brand-500 hover:bg-brand-600 flex w-full justify-center rounded-lg px-4 py-2.5 text-sm font-medium text-white sm:w-auto" aria-label="{{ __('Add new MemoryGame') }}">
-                {{ __('Add MemoryGame +') }}
-            </a>
-        </div>
-        <x-v2.common.component-card title="{{ $title }}">
+        <x-v2.common.component-card >
         <div class="max-w-full overflow-x-auto custom-scrollbar">
             <table class="w-full ">
                 <thead>
@@ -48,9 +40,9 @@
                         <tr class="border-b border-gray-100 dark:border-gray-800">
                         <td class="px-5 py-4 sm:px-6" colspan="1">
                         <div class="flex items-center gap-3">
-                            <div class="w-lg">
-                                <span class="block font-medium text-gray-800 text-theme-sm dark:text-white/90" >{{ $memory_quiz->title }}</span>
-                                <span class="block text-gray-500 text-theme-sm dark:text-gray-400" >{{ $memory_quiz->description }}</span>
+                            <div class="">
+                                <span class="block font-bold text-gray-800 text-theme-sm dark:text-white/90" >{{ $memory_quiz->title }}</span>
+                                <span class="block text-gray-500 text-theme-xs dark:text-gray-400" >{{ $memory_quiz->description }}</span>
                             </div>
                         </div>
                         </td>
@@ -66,7 +58,7 @@
                         </div>
                         </td>
                         <td class="px-5 py-4 sm:px-6">
-                        <div class="flex items-center justify-start space-x-3">
+                        <div class="flex items-center justify-end space-x-3">
                             <a
                             data-action="edit"
                             href="{{ route('memorygames.edit', [tenant('id'), $memory_quiz]) }}"
