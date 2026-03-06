@@ -92,7 +92,6 @@
 
     <x-footer.tinymce-config/>
 
-    @vite(['resources/js/cruds/puzzlegame.js'])
 
 @endsection
 
