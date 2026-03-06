@@ -40,7 +40,7 @@
                         <tr class="border-b border-gray-100 dark:border-gray-800">
                         <td class="px-5 py-4 sm:px-6" colspan="1">
                         <div class="flex items-center gap-3">
-                            <div class="">
+                            <div class="w-64">
                                 <span class="block font-bold text-gray-800 text-theme-sm dark:text-white/90" >{{ $puzzle->title }}</span>
                                 <span class="block text-gray-500 text-theme-xs dark:text-gray-400" >{{ $puzzle->description }}</span>
                             </div>
