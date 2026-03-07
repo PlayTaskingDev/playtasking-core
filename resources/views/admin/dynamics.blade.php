@@ -67,7 +67,7 @@
                             </td>
                             <td class="px-5 py-4 sm:px-6">
                             <button
-                            class="edit-button inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 rounded-lg transition-colors"
+                            class="border border-black inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-black   dark:bg-blue-700 dark:hover:bg-blue-800 rounded-lg transition-colors"
                             @click="$dispatch('open-dynamic-modal', { id: '{{ $type->id }}', editRoute: '{{ route('dynamics.edit', ['tenant' => tenant('id'), 'dynamic' => $type]) }}', saveRoute: '{{ $type->id == null ? route('dynamics.store', ['tenant' => tenant('id')]) : route('dynamics.update', ['tenant' => tenant('id'), 'dynamic' => $type]) }}' })"
                             aria-label="{{ __('Edit') }} {{ $type->name }}"
                             >

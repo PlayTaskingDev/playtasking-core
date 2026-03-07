@@ -63,7 +63,7 @@
                             data-action="edit"
                             href="{{ route('clickwingames.edit', [tenant('id'), $click_win]) }}"
                             data-save-route="{{ route('clickwingames.update', [tenant('id'), $click_win]) }}"
-                            class="edit-button inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 rounded-lg transition-colors"
+                            class="border border-black inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-black   dark:bg-blue-700 dark:hover:bg-blue-800 rounded-lg transition-colors"
                             aria-label="{{ __('Edit') }} {{ $click_win->name }}">
                             <x-heroicon-o-pencil-square class="w-5"/>
                             {{ __('Edit') }}
@@ -72,6 +72,10 @@
                             <a href="{{ route('v2awards.edit', ['tenant' => tenant('id'), 'v2award' => $click_win->award]) }}" class=" inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 rounded-lg transition-colors">
                             <x-heroicon-o-gift class="w-5"/>
                             {{ __('Edit Award') }}</a>
+                            <a href="{{ route('panel.export_user_interactions', ['tenant' => tenant('id'), 'table_name' => $click_win->table_name, 'model_id' => $click_win->id]) }}"
+                                class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 rounded-lg transition-colors">
+                                {{ __('Export') }}
+                            </a>
                             @endif
                             <form method="post" action="{{ route('clickwingames.destroy', ['tenant' => tenant('id'), 'clickwingame' => $click_win]) }}">
                                 @csrf

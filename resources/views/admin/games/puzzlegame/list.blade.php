@@ -59,19 +59,25 @@
                         </td>
                         <td class="px-5 py-4 sm:px-6">
                         <div class="flex items-center justify-end space-x-3">
+                            
                             <a
                             data-action="edit"
                             href="{{ route('puzzlegames.edit', [tenant('id'), $puzzle]) }}"
                             data-save-route="{{ route('puzzlegames.update', [tenant('id'), $puzzle]) }}"
-                            class="edit-button inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 rounded-lg transition-colors"
+                            class="border border-black inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-black   dark:bg-blue-700 dark:hover:bg-blue-800 rounded-lg transition-colors"
                             aria-label="{{ __('Edit') }} {{ $puzzle->name }}">
                             <x-heroicon-o-pencil-square class="w-5"/>
                             {{ __('Edit') }}
                             </a>
                             @if($puzzle->award)
                             <a href="{{ route('v2awards.edit', ['tenant' => tenant('id'), 'v2award' => $puzzle->award]) }}" class=" inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 rounded-lg transition-colors">
-                            <x-heroicon-o-gift class="w-5"/>
-                            {{ __('Edit Award') }}</a>
+                                <x-heroicon-o-gift class="w-5"/>
+                                {{ __('Edit Award') }}
+                            </a>
+                            <a href="{{ route('panel.export_user_interactions', ['tenant' => tenant('id'), 'table_name' => $puzzle->table_name, 'model_id' => $puzzle->id]) }}"
+                                class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 rounded-lg transition-colors">
+                                {{ __('Export') }}
+                            </a>
                             @endif
                             <form method="post" action="{{ route('puzzlegames.destroy', ['tenant' => tenant('id'), 'puzzlegame' => $puzzle]) }}">
                                 @csrf

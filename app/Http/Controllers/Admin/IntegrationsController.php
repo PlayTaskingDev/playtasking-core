@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Option;
 
-class Integrations extends Controller
+class IntegrationsController extends Controller
 {
     public function index()
     {

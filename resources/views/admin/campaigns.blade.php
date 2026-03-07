@@ -18,7 +18,7 @@
         :showLink="false"
         />
     @endif
-    <x-v2.common.page-breadcrumb pageTitle="{{ $title }}" isBtn='1' modalId='campaign-modal' :titleBtn="__('Add Campaign +')" routeDataBtn="{{ route('campaigns.store', tenant('id')) }}" />
+    <x-v2.common.page-breadcrumb pageTitle="{{ $title }}" isBtn='1' modalId='campaign-modall' :titleBtn="__('Add Campaign +')" routeDataBtn="{{ route('campaigns.store', tenant('id')) }}" />
     <div class="space-y-6">
 
         <x-v2.common.component-card >
@@ -61,11 +61,9 @@
                         <div class="flex items-center justify-start space-x-3">
                             <button
                             data-action="edit"
-                            data-modal-target="campaign-modal"
-                            data-modal-toggle="campaign-modal"
                             data-edit-route="{{ route('campaigns.edit', [tenant('id'), $campaign]) }}"
                             data-save-route="{{ route('campaigns.update', [tenant('id'), $campaign]) }}"
-                            class="edit-button inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 rounded-lg transition-colors"
+                            class="border border-black inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-black   dark:bg-blue-700 dark:hover:bg-blue-800 rounded-lg transition-colors"
                             aria-label="{{ __('Edit') }} {{ $campaign->name }}"
                             >
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -93,7 +91,7 @@
         </x-v2.common.component-card>
     </div>
 
-    <div id="campaign-modal" tabindex="-1"
+    <div id="campaign-modall" tabindex="-1" aria-hidden="true"
     class="hidden fixed inset-0 z-9999  items-center justify-center bg-black/50">
 
     <div class="relative w-full max-w-3xl rounded-3xl bg-white p-6">
@@ -102,8 +100,9 @@
             class="text-2xl font-semibold text-gray-800">
             Nueva Campaña
             </h3>
-            <button data-modal-hide="campaign-modal" class="text-gray-400 hover:text-gray-600">
-            ✕
+            <button type="button" class="text-body bg-transparent hover:bg-neutral-tertiary hover:text-heading rounded-base text-sm w-9 h-9 ms-auto inline-flex justify-center items-center" data-modal-hide="campaign-modall">
+                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/></svg>
+                <span class="sr-only">Close modal</span>
             </button>
         </div>
         <form id="form-campaign" method="POST" enctype="multipart/form-data">
@@ -128,7 +127,7 @@
                 </div>
             </div>
             <div class="flex items-center gap-3 mt-6 lg:justify-end">
-                <button type="button" aria-label="{{ __('Close modal') }}"
+                <button type="button" aria-label="{{ __('Close modal') }}" data-modal-hide="campaign-modall"
                 class="flex w-full justify-center rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] sm:w-auto">
                 {{ __('Close') }}
                 </button>
