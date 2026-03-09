@@ -176,7 +176,7 @@ Route::group([
         // Tickets v1
         Route::middleware('campaign_has_tickets')->prefix('tickets')->group(function () {
             Route::get('/', [TicketController::class, 'index'])->name('tickets.index');
-            Route::get('/crear', [TicketController::class, 'create'])->name('tickets.create');
+            Route::get('/crear', [TicketController::class, 'create'])->name('ticketsdash.create');
             Route::post('/guardar', [TicketController::class, 'store'])->name('tickets.store');
             Route::get('/ticket-guardado', [TicketController::class, 'saved'])->name('tickets.saved');
         });

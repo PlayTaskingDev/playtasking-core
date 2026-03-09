@@ -5,7 +5,7 @@
         </a>
     @endif
     @if ($campaignTickets)
-        <a href="{{ get_app_setting('ocr_ticket_active') ? route('tickets.ocr.create', ['tenant' => tenant('id')]) : route('tickets.create', ['tenant' => tenant('id')]) }}">
+        <a href="{{ get_app_setting('ocr_ticket_active') ? route('tickets.ocr.create', ['tenant' => tenant('id')]) : route('ticketsdash.create', ['tenant' => tenant('id')]) }}">
             <img src="{{ $active == 'tickets' ? $campaignTickets->icon_active : $campaignTickets->icon }}" alt="{{ $campaignTickets->name }}" title="{{ $campaignTickets->name }}" class="w-24 h-24 {{$active == 'tickets' ? 'active' : ''}}">
         </a>
     @endif
@@ -38,7 +38,7 @@
     @endif
 @endif
 
-@if (!is_null($campaignTickets) && request()->routeIs('tickets.create') )
+@if (!is_null($campaignTickets) && request()->routeIs('ticketsdash.create') )
     @if (!is_null($campaignTickets->game_banner_video))
         <div class="aspect-w-16 aspect-h-9 mb-6">
             <iframe src="{{$campaignTickets->game_banner_video}}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
