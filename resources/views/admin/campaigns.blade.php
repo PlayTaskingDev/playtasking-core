@@ -18,7 +18,7 @@
         :showLink="false"
         />
     @endif
-    <x-v2.common.page-breadcrumb pageTitle="{{ $title }}" isBtn='1' modalId='campaign-modall' :titleBtn="__('Add Campaign +')" routeDataBtn="{{ route('campaigns.store', tenant('id')) }}" />
+    <x-v2.common.page-breadcrumb pageTitle="{{ $title }}" isBtn='1' modalId='' :titleBtn="__('Add Campaign +')" routeDataBtn="{{ route('campaigns.store', tenant('id')) }}" />
     <div class="space-y-6">
 
         <x-v2.common.component-card >
@@ -91,7 +91,7 @@
         </x-v2.common.component-card>
     </div>
 
-    <div id="campaign-modall" tabindex="-1" aria-hidden="true"
+    <div id="campaign-modal" tabindex="-1" aria-hidden="true"
     class="hidden fixed inset-0 z-9999  items-center justify-center bg-black/50">
 
     <div class="relative w-full max-w-3xl rounded-3xl bg-white p-6">
