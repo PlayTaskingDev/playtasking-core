@@ -23,7 +23,7 @@
     <div class="py-6 mx-5">
         <div class="max-w-2xl mx-auto sm:px-6 lg:px-8 bg-white p-3 rounded shadow">
             <form method="POST"
-            action="{{ $question->id == null ? route('questions.store', ['tenant' => tenant('id')]) : route('questions.update', ['tenant' => tenant('id'), 'question' => $question]) }}">
+            action="{{ $question->id == null ? route('triviagamequestions.store', ['tenant' => tenant('id')]) : route('triviagamequestions.update', ['tenant' => tenant('id'), 'triviagamequestion' => $question]) }}">
             @csrf
             @isset($question->id)
             @method('PATCH')
@@ -44,7 +44,7 @@
                 <button type="submit"
                 class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2  dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">{{ __('Save') }}</button>
                 @if (!is_null($question->id))
-                    <a href="{{ route('quizzes.edit', ['tenant' => tenant('id'), 'quiz' => $question->quiz]) }}"
+                    <a href="{{ route('triviagames.edit', ['tenant' => tenant('id'), 'triviagame' => $question->quiz]) }}"
                     class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2  dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">{{ __('Back to') }}
                     {{ __('Quiz') }}</a>
                 @endif

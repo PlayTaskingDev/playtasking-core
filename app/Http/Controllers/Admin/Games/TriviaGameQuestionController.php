@@ -46,7 +46,7 @@ class TriviaGameQuestionController extends Controller
 
         $question = Question::create($data);
 
-        return redirect(route('triviagamequestions.edit', ['tenant' => tenant('id'), 'question' => $question]))->with('status', trans('Question saved successful'));
+        return redirect(route('triviagamequestions.edit', ['tenant' => tenant('id'), 'triviagamequestion' => $question]))->with('status', trans('Question saved successful'));
     }
 
     /**

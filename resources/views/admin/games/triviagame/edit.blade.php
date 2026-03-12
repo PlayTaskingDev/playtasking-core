@@ -84,7 +84,7 @@
                                 <x-ui.forms.input-file label="{{ __('Image On') }}" dummy_img="/storage/dummy_assets/600x200.png" name="featured_image" placeholder="" :value="$quiz->featured_image" data-field="campaign.featured_image" />
                                 <x-ui.forms.input-file label="{{ __('Image Off') }}" dummy_img="/storage/dummy_assets/600x200.png" name="featured_image_disabled" placeholder="" :value="$quiz->featured_image_disabled" data-field="campaign.featured_image_disabled" />
                                 <h2 class="mt-6 text-lg col-span-2 font-semibold text-gray-800 dark:text-white/90">Top Banner Settings</h2>
-                                <x-ui.forms.input-file label="{{ __('Top Banner') }}" dummy_img="/storage/dummy_assets/600x200.png" name="failed_image" placeholder="" :value="$quiz->game_banner" data-field="campaign.game_banner" />
+                                <x-ui.forms.input-file label="{{ __('Top Banner') }}" dummy_img="/storage/dummy_assets/600x200.png" name="game_banner" placeholder="" :value="$quiz->game_banner" data-field="campaign.game_banner" />
                                 <x-ui.forms.input-text label="{{ __('Banner URL (Image)') }}" name="game_banner_url" placeholder="" :value="$quiz->game_banner_url" data-field="campaign.game_banner_url" />
                                 <x-ui.forms.input-text label="{{ __('Video') }}" name="game_banner_video" placeholder="" :value="$quiz->game_banner_video" data-field="campaign.game_banner_video" />
 
@@ -190,6 +190,7 @@
                     <x-ui.forms.input-color label="{{ __('Gradient Button Background 1') }}" name="btn_background_color_1" placeholder="" :value="$quiz->btn_background_color_1" data-field="campaign.btn_background_color_1" />
                     <x-ui.forms.input-color label="{{ __('Gradient Button Background 2') }}" name="btn_background_color_2" placeholder="" :value="$quiz->btn_background_color_2" data-field="campaign.btn_background_color_2" />
                     <x-ui.forms.input-color label="{{ __('Button Border Color') }}" name="btn_border_color" placeholder="" :value="$quiz->btn_border_color" data-field="campaign.btn_border_color" />
+                    <x-ui.forms.input-color label="{{ __('Button Text Color') }}" name="btn_text_color" placeholder="" :value="$quiz->btn_text_color" data-field="campaign.btn_text_color" />
                     <x-ui.forms.input-switch label="{{ __('Has shadow') }}" name="btn_shadow" placeholder="" :value="$quiz->btn_shadow" data-field="campaign.btn_shadow" />
                     <x-ui.forms.input-text label="{{ __('Text Active') }}" name="btn_text_active" placeholder="" :value="$quiz->btn_text_active" data-field="campaign.btn_text_active" />
                     <x-ui.forms.input-switch label="{{ __('Enable Button Shadow') }}" name="btn_enable_shadow" placeholder="" :value="$quiz->btn_enable_shadow" data-field="campaign.btn_enable_shadow" />

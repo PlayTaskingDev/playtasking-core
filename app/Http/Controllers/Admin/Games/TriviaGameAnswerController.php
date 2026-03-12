@@ -46,7 +46,6 @@ class TriviaGameAnswerController extends Controller
     public function store(SaveAnswerRequest $request)
     {
         $data = $request->all();
-
         if($request->file('featured_image')){
             $data['featured_image'] = $this->uploadImage('gcs','answers',$request->file('featured_image'));
         }
@@ -57,7 +56,7 @@ class TriviaGameAnswerController extends Controller
             $this->reset_answers($answer);
         }
 
-        return redirect(route('triviagameanswers.edit', ['tenant' => tenant('id'), 'answer' => $answer]))->with('status', trans('Answer saved successful'));
+        return redirect(route('triviagameanswers.edit', ['tenant' => tenant('id'), 'triviagameanswer' => $answer]))->with('status', trans('Answer saved successful'));
     }
 
     /**
@@ -77,8 +76,9 @@ class TriviaGameAnswerController extends Controller
      * @param  \App\Models\Answer  $answer
      * @return \Illuminate\Http\Response
      */
-    public function edit(Answer $answer)
+    public function edit($id)
     {
+        $answer = Answer::findOrFail($id);
         return view('admin.games.triviagame.createanswer', [
             'answer'  => $answer->load('question'),
         ]);
@@ -107,7 +107,7 @@ class TriviaGameAnswerController extends Controller
             $this->reset_answers($answer);
         }
 
-        return redirect(route('triviagameanswers.edit', ['tenant' => tenant('id'), 'answer' => $answer]))->with('status', trans('Answer saved successful'));
+        return redirect(route('triviagameanswers.edit', ['tenant' => tenant('id'), 'triviagameanswer' => $answer]))->with('status', trans('Answer saved successful'));
     }
 
     /**

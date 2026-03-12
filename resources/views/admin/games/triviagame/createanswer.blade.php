@@ -66,7 +66,7 @@
                 <button type="submit"
                 class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2  dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">{{ __('Save') }}</button>
                 @if (!is_null($answer->id))
-                    <a href="{{ route('questions.edit', ['tenant' => tenant('id'), 'question' => $answer->question]) }}"
+                    <a href="{{ route('triviagamequestions.edit', ['tenant' => tenant('id'), 'triviagamequestion' => $answer->question]) }}"
                     class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2  dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">{{ __('Back to') }}
                     {{ __('Question') }}</a>
                 @endif

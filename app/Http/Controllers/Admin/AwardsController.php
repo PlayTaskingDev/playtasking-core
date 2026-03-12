@@ -46,7 +46,7 @@ class AwardsController extends Controller
 
         $award = Award::create($data);
 
-        return redirect(route('awards.edit', ['tenant' => tenant('id'), 'award' => $award]))->with('status', trans('Award saved successful'));
+        return redirect(route('v2awards.edit', ['tenant' => tenant('id'), 'v2award' => $award]))->with('status', trans('Award saved successful'));
     }
 
     /**
