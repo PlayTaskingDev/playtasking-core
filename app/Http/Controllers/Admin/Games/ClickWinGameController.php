@@ -117,7 +117,7 @@ class ClickWinGameController extends Controller
      * @param  \App\Models\ShareQuiz  $click_win
      * @return \Illuminate\Http\Response
      */
-    public function update(SaveClickWinRequest $request, ClickWin $click_win)
+    public function update($id,SaveClickWinRequest $request)
     {
         $data = $request->all();
 
@@ -136,7 +136,7 @@ class ClickWinGameController extends Controller
         if($request->file('game_banner')){
             $data['game_banner'] = $this->uploadImage('gcs','click_wins',$request->file('game_banner'));
         } */
-
+        $click_win = ClickWin::findOrFail($id);
         $click_win->fill($data);
         $click_win->save();
 

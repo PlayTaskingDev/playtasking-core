@@ -128,7 +128,7 @@ class VoteGameController extends Controller
      * @param  \App\Models\VoteContest  $voteContest
      * @return \Illuminate\Http\Response
      */
-    public function update(SaveVoteContestRequest $request, VoteContest $voteContest)
+    public function update($id,SaveVoteContestRequest $request)
     {
         $data = $request->all();
 
@@ -144,6 +144,7 @@ class VoteGameController extends Controller
             $data['game_banner'] = $this->uploadImage('gcs','vote_contests',$request->file('game_banner'));
         }
 
+        $voteContest = VoteContest::findOrFail($id);
         if (isset(($data['delete_image_holder_hidden'])) && $data['delete_image_holder_hidden'] == true) {
             $voteContest->game_banner = null;
         }

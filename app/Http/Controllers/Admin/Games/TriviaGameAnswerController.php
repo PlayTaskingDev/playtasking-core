@@ -91,7 +91,7 @@ class TriviaGameAnswerController extends Controller
      * @param  \App\Models\Answer  $answer
      * @return \Illuminate\Http\Response
      */
-    public function update(SaveAnswerRequest $request, Answer $answer)
+    public function update($id,SaveAnswerRequest $request)
     {
         $data = $request->all();
 
@@ -99,6 +99,7 @@ class TriviaGameAnswerController extends Controller
             $data['featured_image'] = $this->uploadImage('gcs','answers',$request->file('featured_image'));
         }
         
+        $answer = Answer::findOrFail($id);
         $answer->fill($data);
         $answer->save();
 

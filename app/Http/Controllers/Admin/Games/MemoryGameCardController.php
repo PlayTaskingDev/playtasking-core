@@ -86,14 +86,14 @@ class MemoryGameCardController extends Controller
      * @param  \App\Models\MemoryCard  $memoryCard
      * @return \Illuminate\Http\Response
      */
-    public function update(SaveMemoryCardRequest $request, MemoryCard $memory_card)
+    public function update($id,SaveMemoryCardRequest $request)
     {
         $data = $request->all();
 
         if($request->file('featured_image')){
             $data['featured_image'] = $this->uploadImage('gcs','answers',$request->file('featured_image'));
         }
-        
+        $memory_card = MemoryCard::findOrFail($id);
         $memory_card->fill($data);
         $memory_card->save();
 

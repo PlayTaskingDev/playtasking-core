@@ -120,7 +120,7 @@ class ShareGameController extends Controller
      * @param  \App\Models\ShareQuiz  $shareQuiz
      * @return \Illuminate\Http\Response
      */
-    public function update(SaveShareQuizRequest $request, ShareQuiz $shareQuiz)
+    public function update($id,SaveShareQuizRequest $request)
     {
         $data = $request->all();
 
@@ -136,6 +136,7 @@ class ShareGameController extends Controller
             $data['featured_image_url'] = $this->uploadImage('gcs','share_quizzes',$request->file('featured_image_url'));
         }
 
+        $shareQuiz = ShareQuiz::findOrFail($id);
         if (isset(($data['delete_image_holder_hidden'])) && $data['delete_image_holder_hidden'] == true) {
             $shareQuiz->featured_image_url = null;
         }

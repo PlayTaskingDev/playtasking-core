@@ -119,7 +119,7 @@ class TriviaGameController extends Controller
      * @param  \App\Models\Quiz  $quiz
      * @return \Illuminate\Http\Response
      */
-    public function update(SaveQuizRequest $request, Quiz $quiz)
+    public function update($id, SaveQuizRequest $request)
     {
         $data = $request->all();
 
@@ -139,6 +139,7 @@ class TriviaGameController extends Controller
             $data['game_banner'] = $this->uploadImage('gcs','quizzes',$request->file('game_banner'));
         }
 
+        $quiz = Quiz::findOrFail($id);
         if (isset(($data['delete_image_holder_hidden'])) && $data['delete_image_holder_hidden'] == true) {
             $quiz->game_banner = null;
         }

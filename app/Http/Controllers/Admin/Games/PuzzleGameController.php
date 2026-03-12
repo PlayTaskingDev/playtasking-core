@@ -107,7 +107,7 @@ class PuzzleGameController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(SavePuzzleRequest $request, Puzzle $puzzle)
+    public function update($id,SavePuzzleRequest $request)
     {
         $data = $request->validated();
 
@@ -131,6 +131,7 @@ class PuzzleGameController extends Controller
             $data['game_banner'] = $this->uploadImage('gcs','puzzles',$request->file('game_banner'));
         }
 
+        $puzzle = Puzzle::findOrFail($id);
         if (isset(($data['delete_image_holder_hidden'])) && $data['delete_image_holder_hidden'] == true) {
             $puzzle->game_banner = null;
         }

@@ -105,9 +105,8 @@ class SmashGameController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(SaveSmashGameRequest $request, SmashGame $smash_game)
+    public function update($id, SaveSmashGameRequest $request)
     {
-        dd($request);
         $data = $request->validated();
 
         if($request->file('featured_image')){
@@ -130,6 +129,7 @@ class SmashGameController extends Controller
             $data['game_banner'] = $this->uploadImage('gcs','smash_games',$request->file('game_banner'));
         }
 
+        $smash_game = SmashGame::findOrFail($id);
         if (isset(($data['delete_image_holder_hidden'])) && $data['delete_image_holder_hidden'] == true) {
             $smash_game->game_banner = null;
         }

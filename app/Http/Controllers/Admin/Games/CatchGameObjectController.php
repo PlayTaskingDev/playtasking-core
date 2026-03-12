@@ -70,14 +70,14 @@ class CatchGameObjectController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(SaveCatchObjectRequest $request, CatchObject $catch_object)
+    public function update($id,SaveCatchObjectRequest $request)
     {
         $data = $request->all();
 
         if($request->file('object_image')){
             $data['object_image'] = $this->uploadImage('gcs','catchgameobjects',$request->file('object_image'));
         }
-
+        $catch_object = CatchObject::findOrFail($id);
         $catch_object->fill($data);
         $catch_object->save();
 

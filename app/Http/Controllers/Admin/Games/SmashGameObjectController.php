@@ -71,14 +71,14 @@ class SmashGameObjectController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(SaveSmashObjectRequest $request, SmashObject $smash_object)
+    public function update($id,SaveSmashObjectRequest $request)
     {
         $data = $request->all();
 
         if($request->file('object_image')){
             $data['object_image'] = $this->uploadImage('gcs','smash_objects',$request->file('object_image'));
         }
-
+        $smash_object = SmashObject::findOrFail($id);
         $smash_object->fill($data);
         $smash_object->save();
 

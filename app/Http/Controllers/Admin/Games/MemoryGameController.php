@@ -124,7 +124,7 @@ class MemoryGameController extends Controller
      * @param  \App\Models\MemoryQuiz  $memoryQuiz
      * @return \Illuminate\Http\Response
      */
-    public function update(SaveMemoryQuizRequest $request, MemoryQuiz $memoryQuiz)
+    public function update($id,SaveMemoryQuizRequest $request)
     {
         $data = $request->validated();
 
@@ -147,7 +147,8 @@ class MemoryGameController extends Controller
         if($request->file('game_banner')){
             $data['game_banner'] = $this->uploadImage('gcs','quizzes',$request->file('game_banner'));
         }
-
+        
+        $memoryQuiz = MemoryQuiz::findOrFail($id);
         if (isset(($data['delete_image_holder_hidden'])) && $data['delete_image_holder_hidden'] == true) {
             $memoryQuiz->game_banner = null;
         }

@@ -81,9 +81,10 @@ class TriviaGameQuestionController extends Controller
      * @param  \App\Models\Question  $question
      * @return \Illuminate\Http\Response
      */
-    public function update(SaveQuestionRequest $request, Question $question)
+    public function update($id, SaveQuestionRequest $request)
     {
         $data = $request->all();
+        $question = Question::findOrFail($id);
         $question->fill($data);
         $question->save();
 
