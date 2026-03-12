@@ -13,8 +13,7 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=montserrat:400,400i,700,700i,900&display=swap" rel="stylesheet" />
 
-    <!-- Scripts -->
-    @vite(['resources/scss/app.scss'])
+    @vite('resources/css/app.css')
 
     <style>
         #main-nav {
@@ -52,6 +51,8 @@
     @vite(['resources/js/app.js'])
 
     @yield('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.js"></script>
+
 </body>
 
 </html>

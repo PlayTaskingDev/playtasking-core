@@ -1,6 +1,6 @@
 <x-guest-layout>
-    <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0">
-        <div class="w-full rounded-lg dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+      <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0">
+        <div class="w-full md:mt-0 sm:max-w-md xl:p-0">
             <div class="py-6">
                 {!! get_app_setting('home_content') !!}
             </div>

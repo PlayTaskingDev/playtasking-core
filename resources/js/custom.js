@@ -37,6 +37,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+
+ 
+
     // Delete image
     const deleteImage = document.querySelectorAll('.delete-image');
 
@@ -56,3 +59,4 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
+  

@@ -436,7 +436,6 @@ class CampaignsTableSeeder extends Seeder
             'featured_image'    => '/storage/dummy_assets/award.png',
             'featured_image_disabled'    => '/storage/dummy_assets/award-disabled.png',
             'game_bg_image'     => '/storage/dummy_assets/catch-game-bg.jpg',
-            'basket_image'      => '/storage/dummy_assets/basket.png',
             'failed_image'      => '/storage/dummy_assets/800x1180.png',
             'campaign_id'       => $campaign->id,
             'content_type_id'   => $content_type_games->id,

@@ -66,7 +66,7 @@
                             @foreach ($coupons_dynamic as $dynamic)
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                 <th scope="row" class="px-6 py-4">
-                                    {{$dynamic->awardable && $dynamic->awardable->title ? $dynamic->awardable->title : 'OCR Tickets'}}:
+                                    {{$dynamic->awardable && $dynamic->awardable->title ? $dynamic->awardable->title : 'OCR Tickets'}}
                                 </th>
                                 <td class="px-6 py-4">
                                     {{number_format($dynamic->codes_delivered_count)}}

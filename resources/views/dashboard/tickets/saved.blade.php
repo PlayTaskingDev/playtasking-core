@@ -36,7 +36,7 @@
                     @endif
                     @if(false) {{-- Disabled for now AlbertoPaz--}}
                         <div class="mt-6 text-center">
-                            <x-primary-link href="{{ route('tickets.create', ['tenant' => tenant('id'), 'slug' => $campaign->slug]) }}"
+                            <x-primary-link href="{{ route('ticketsdash.create', ['tenant' => tenant('id'), 'slug' => $campaign->slug]) }}"
                                 class="inline-flex items-center">
                                 {{ __('Enter more tickets') }}
                             </x-primary-link>
