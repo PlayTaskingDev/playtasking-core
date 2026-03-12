@@ -4,12 +4,16 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Panel\SaveCampaignRequest;
+use App\Models\CampaignSplashPage;
 use App\Models\Campaign;
 use App\Models\ContentType;
 use Illuminate\Http\Request;
+use App\Traits\UploadImageTrait;
 
 class CampaignsController extends Controller
 {
+    
+    use UploadImageTrait;
     /**
      * Display a listing of the resource.
      *
@@ -19,7 +23,7 @@ class CampaignsController extends Controller
     {
         $campaigns = Campaign::withCount(['quizzes','memory_quizzes','share_quizzes'])->get();
 
-        return view('admin.campaigns', [
+        return view('admin.campaigns.index', [
             'title'             => 'Panel | ' . trans('Campaigns'),
             'description'       => 'Admin Panel',
             'campaigns'         => $campaigns
@@ -39,7 +43,7 @@ class CampaignsController extends Controller
         $tickets_content_type = ContentType::where('system_name','tickets')->first();
         $coupons_content_type = ContentType::where('system_name','coupons')->first();
         
-        return view('panel.campaigns.edit', [
+        return view('admin.campaigns.edit', [
             'campaign'              => $campaign,
             'time_slots'            => $time_slots,
             'game_content_type'     => $game_content_type,
@@ -63,6 +67,7 @@ class CampaignsController extends Controller
 
         $campaign = Campaign::create($data);
 
+
         if( $request->has('games') ){
             $campaign->content_types()->attach($data['games']);
         }
@@ -75,7 +80,19 @@ class CampaignsController extends Controller
             $campaign->content_types()->attach($data['coupons']);
         }
 
-        return redirect(route('panel.campaign.index', ['tenant' => tenant('id')]))->with('status', trans('Campaign saved successful'));
+        if($request->file('featured_image_url')){
+            $data['featured_image_url'] = $this->uploadImage('gcs','campaign_splash_pages',$request->file('featured_image_url'));
+        }
+
+
+        CampaignSplashPage::create([
+            'campaign_id' => $campaign->id,
+            'instructions' => $data['instructions'] ?? null,
+            'featured_image_url' => $data['featured_image_url'] ?? null,
+            'featured_video_url' => $data['featured_video_url'] ?? null,
+        ]);
+
+        return redirect(route('campaigns.index', ['tenant' => tenant('id')]))->with('status', trans('Campaign saved successful'));
     }
 
     /**
@@ -106,30 +123,30 @@ class CampaignsController extends Controller
         $has_tickets = $campaign->content_types->contains($tickets_content_type->id);
         $has_coupons = $campaign->content_types->contains($coupons_content_type->id);
 
-        return response()->json([
-            'message'  => 'Data retrive succesfully!',
-            'data'   => [
-                    'campaign'              => $campaign->load('campaign_splash_page'),
-                    'time_slots'            => $time_slots,
-                    'game_content_type'     => $game_content_type,
-                    'tickets_content_type'  => $tickets_content_type,
-                    'coupons_content_type'  => $coupons_content_type,
-                    'has_games'             => $has_games,
-                    'has_tickets'           => $has_tickets,
-                    'has_coupons'           => $has_coupons,
-                ]
-        ], 200);
+        // return response()->json([
+        //     'message'  => 'Data retrive succesfully!',
+        //     'data'   => [
+        //             'campaign'              => $campaign->load('campaign_splash_page'),
+        //             'time_slots'            => $time_slots,
+        //             'game_content_type'     => $game_content_type,
+        //             'tickets_content_type'  => $tickets_content_type,
+        //             'coupons_content_type'  => $coupons_content_type,
+        //             'has_games'             => $has_games,
+        //             'has_tickets'           => $has_tickets,
+        //             'has_coupons'           => $has_coupons,
+        //         ]
+        // ], 200);
 
-        // return view('panel.campaigns.edit', [
-        //     'campaign'              => $campaign->load('campaign_splash_page'),
-        //     'time_slots'            => $time_slots,
-        //     'game_content_type'     => $game_content_type,
-        //     'tickets_content_type'  => $tickets_content_type,
-        //     'coupons_content_type'  => $coupons_content_type,
-        //     'has_games'             => $has_games,
-        //     'has_tickets'           => $has_tickets,
-        //     'has_coupons'           => $has_coupons,
-        // ]);
+        return view('admin.campaigns.edit', [
+            'campaign'              => $campaign->load('campaign_splash_page'),
+            'time_slots'            => $time_slots,
+            'game_content_type'     => $game_content_type,
+            'tickets_content_type'  => $tickets_content_type,
+            'coupons_content_type'  => $coupons_content_type,
+            'has_games'             => $has_games,
+            'has_tickets'           => $has_tickets,
+            'has_coupons'           => $has_coupons,
+        ]);
     }
 
     /**
@@ -143,13 +160,25 @@ class CampaignsController extends Controller
     {
         
         $data = $request->validated();
-
         if( !$request->has('active') ){
             $data['active'] = false;
         }
 
         $campaign = Campaign::findorFail($id);
+        $campaignSplashPage = $campaign->campaign_splash_page;
         $this->syncContentTypes($campaign, $request, $data);
+
+        
+        if($request->file('featured_image_url')){
+            $data['featured_image_url'] = $this->uploadImage('gcs','campaign_splash_pages',$request->file('featured_image_url'));
+        }
+
+        if (isset($data['delete_image_holder_hidden']) && $data['delete_image_holder_hidden'] == true) {
+            $campaignSplashPage->featured_image_url = null;
+        }
+
+        $campaignSplashPage->fill($data);
+        $campaignSplashPage->save();
 
         $campaign->fill($data);
         $campaign->save();
@@ -169,7 +198,7 @@ class CampaignsController extends Controller
         $campaign->load(['quizzes','memory_quizzes','share_quizzes','content_types']);
         
         if ($campaign->quizzes && $campaign->quizzes->isNotEmpty() || $campaign->memory_quizzes && $campaign->memory_quizzes->isNotEmpty() || $campaign->share_quizzes && $campaign->share_quizzes->isNotEmpty()) {
-            return redirect(route('panel.campaign.index', ['tenant' => tenant('id')]))->with('status', trans('Campaign can not be deleted if has games.'));
+            return redirect(route('campaigns.index', ['tenant' => tenant('id')]))->with('status', trans('Campaign can not be deleted if has games.'));
         } else {
             if ($campaign->campaign_splash_page) {
                 $campaign->campaign_splash_page->delete();
@@ -180,7 +209,7 @@ class CampaignsController extends Controller
             $campaign->delete();
         }
 
-        return redirect(route('panel.campaign.index', ['tenant' => tenant('id')]))->with('status', trans('Campaign deleted successful'));
+        return redirect(route('campaigns.index', ['tenant' => tenant('id')]))->with('status', trans('Campaign deleted successful'));
     }
 
     /**

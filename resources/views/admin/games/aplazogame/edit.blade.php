@@ -57,10 +57,6 @@
                     
                 </div>
                 <div class="flex items-center gap-3 mt-6 lg:justify-end">
-                    <button type="button" aria-label="{{ __('Close modal') }}"
-                    class="flex w-full justify-center rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] sm:w-auto">
-                    {{ __('Close') }}
-                    </button>
                     <button type="submit" aria-label="{{ __('Save changes') }}"
                     class="flex w-full justify-center rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-600 disabled:opacity-50 disabled:cursor-not-allowed sm:w-auto transition-opacity">
                     <span >{{ !is_null($aplazo_game->title) ? __('Save Changes') : __('Create Game') }}</span>
@@ -96,10 +92,8 @@
                                 <x-ui.forms.input-text label="{{ __('Slug') }}" name="slug" placeholder="" :value="$aplazo_game->slug" data-field="campaign.slug" />
                                 <x-ui.forms.input-text label="{{ __('Price') }}" name="price" placeholder="" :value="$aplazo_game->price" data-field="campaign.price" />
                                 <x-ui.forms.input-file label="{{ __('Promo Image') }}" dummy_img="/storage/dummy_assets/800x1180.png" name="promo_image" placeholder="" :value="$aplazo_game->promo_image" data-field="campaign.promo_image" />
-
                             </div>
                         </div>
-
                     </div>
                     @if (!is_null($aplazo_game->id))
                         <div class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/3 mt-6">
