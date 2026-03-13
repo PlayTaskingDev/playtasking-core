@@ -34,7 +34,7 @@ class MemoryQuizController extends Controller
             ])->firstOrFail();
 
         // Check if user has been participated
-        $has_paticipated = $this->check_participation($model_id = $memory_quiz->id,$model_type = 'App\Models\MemoryQuiz',$user_id = Auth::user()->id);
+        $has_paticipated = $this->check_participation($model_id = $memory_quiz->id,$model_type = \App\Models\MemoryQuiz::class,$user_id = Auth::user()->id);
 
         if (!is_null($has_paticipated)) {
             return redirect(route('dashboard.awards.show', ['tenant' => tenant('id'), 'award' => $memory_quiz->award]));
@@ -75,7 +75,7 @@ class MemoryQuizController extends Controller
         }
 
         // Check if user has been participated and won
-        $has_paticipated = $this->check_participation($model_id = $memory_quiz->id,$model_type = 'App\Models\MemoryQuiz',$user_id = Auth::user()->id,$hit = true);
+        $has_paticipated = $this->check_participation($model_id = $memory_quiz->id,$model_type = \App\Models\MemoryQuiz::class,$user_id = Auth::user()->id,$hit = true);
         if (!is_null($has_paticipated)) {
             return redirect(route('dashboard.awards.show', ['tenant' => tenant('id'), 'award' => $memory_quiz->award]));
         }
@@ -85,7 +85,7 @@ class MemoryQuizController extends Controller
             'model_id'      => $data['data'],
             'award_id'     => $memory_quiz->award->id,
             'user_id'       => Auth::user()->id,
-            'model_type'    => 'App\Models\MemoryQuiz',
+            'model_type'    => \App\Models\MemoryQuiz::class,
             'hit'           => true,
             'created_at'    => Carbon::now(),
             'updated_at'    => Carbon::now()

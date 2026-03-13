@@ -31,7 +31,7 @@ class TicketOcrAwardSeeder extends Seeder
             </div>
             ',
             'awardable_id'      => $setting->id,
-            'awardable_type'    => 'App\Models\Setting'
+            'awardable_type'    => \App\Models\Setting::class
         ]);
     }
 }

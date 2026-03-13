@@ -122,7 +122,7 @@ class OcrTicketController extends Controller
             DB::table('award_user')->insert([
                 'model_id'      => $setting->id,
                 'user_id'       => $user->id,
-                'model_type'    => 'App\Models\Setting',
+                'model_type'    => \App\Models\Setting::class,
                 'hit'           => true,
                 'created_at'    => Carbon::now(),
                 'updated_at'    => Carbon::now()

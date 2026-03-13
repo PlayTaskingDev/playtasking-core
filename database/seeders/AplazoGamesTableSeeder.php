@@ -51,7 +51,7 @@ class AplazoGamesTableSeeder extends Seeder
             </div>
             ',
             'awardable_id'      => $aplazo_game->id,
-            'awardable_type'    => 'App\Models\AplazoGame'
+            'awardable_type'    => \App\Models\AplazoGame::class
         ]);
     }
 }

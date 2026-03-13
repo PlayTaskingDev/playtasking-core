@@ -142,7 +142,7 @@ class CampaignsTableSeeder extends Seeder
             <p class="text-lg text-center text-white my-2">Present this coupon and get your discount.</p>
             </div>
             ',
-            'awardable_type'    => 'App\Models\Quiz',
+            'awardable_type'    => \App\Models\Quiz::class,
             'awardable_id'      => $quiz->id,
         ]);
 
@@ -215,7 +215,7 @@ class CampaignsTableSeeder extends Seeder
             </div>
             ',
             'awardable_id'      => $memory_quiz->id,
-            'awardable_type'    => 'App\Models\MemoryQuiz'
+            'awardable_type'    => \App\Models\MemoryQuiz::class
         ]);
 
         $share_quiz = ShareQuiz::create([
@@ -247,7 +247,7 @@ class CampaignsTableSeeder extends Seeder
             </div>
             ',
             'awardable_id'      => $share_quiz->id,
-            'awardable_type'    => 'App\Models\ShareQuiz'
+            'awardable_type'    => \App\Models\ShareQuiz::class
         ]);
 
         VoteContest::create([
@@ -296,7 +296,7 @@ class CampaignsTableSeeder extends Seeder
             </div>
             ',
             'awardable_id'      => $click_win->id,
-            'awardable_type'    => 'App\Models\ClickWin'
+            'awardable_type'    => \App\Models\ClickWin::class
         ]);
 
         $aplazo_game = AplazoGame::create([
@@ -328,7 +328,7 @@ class CampaignsTableSeeder extends Seeder
             </div>
             ',
             'awardable_id'      => $aplazo_game->id,
-            'awardable_type'    => 'App\Models\AplazoGame'
+            'awardable_type'    => \App\Models\AplazoGame::class
         ]);
 
         $puzzle = Puzzle::create([
@@ -360,7 +360,7 @@ class CampaignsTableSeeder extends Seeder
             </div>
             ',
             'awardable_id'      => $puzzle->id,
-            'awardable_type'    => 'App\Models\Puzzle'
+            'awardable_type'    => \App\Models\Puzzle::class
         ]);
 
         $catchGame = CatchGame::create([
@@ -419,7 +419,7 @@ class CampaignsTableSeeder extends Seeder
             </div>
             ',
             'awardable_id'      => $catchGame->id,
-            'awardable_type'    => 'App\Models\CatchGame'
+            'awardable_type'    => \App\Models\CatchGame::class
         ]);
 
         $smashGame = SmashGame::create([
@@ -477,7 +477,7 @@ class CampaignsTableSeeder extends Seeder
             </div>
             ',
             'awardable_id'      => $smashGame->id,
-            'awardable_type'    => 'App\Models\SmashGame'
+            'awardable_type'    => \App\Models\SmashGame::class
         ]);
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');

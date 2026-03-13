@@ -85,7 +85,7 @@ class CatchGamesTableSeeder extends Seeder
             </div>
             ',
             'awardable_id'      => $catchGame->id,
-            'awardable_type'    => 'App\Models\CatchGame'
+            'awardable_type'    => \App\Models\CatchGame::class
         ]);
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');

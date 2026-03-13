@@ -42,7 +42,7 @@ class SmashGameController extends Controller
 
         
         // Check if user has been participated
-        $has_paticipated = $this->check_participation($model_id = $smash_game->id,$model_type = 'App\Models\SmashGame',$user_id = Auth::user()->id);
+        $has_paticipated = $this->check_participation($model_id = $smash_game->id,$model_type = \App\Models\SmashGame::class,$user_id = Auth::user()->id);
 
         if (!is_null($has_paticipated)) {
             return redirect(route('dashboard.awards.show', ['tenant' => tenant('id'), 'award' => $smash_game->award]));
@@ -101,7 +101,7 @@ class SmashGameController extends Controller
         }
 
         // Check if user has been participated and won
-        $has_paticipated = $this->check_participation($model_id = $smash_game->id,$model_type = 'App\Models\SmashGame',$user_id = Auth::user()->id,$hit = true);
+        $has_paticipated = $this->check_participation($model_id = $smash_game->id,$model_type = \App\Models\SmashGame::class,$user_id = Auth::user()->id,$hit = true);
         if (!is_null($has_paticipated)) {
             return redirect(route('dashboard.awards.show', ['tenant' => tenant('id'), 'award' => $smash_game->award]));
         }
@@ -110,7 +110,7 @@ class SmashGameController extends Controller
             'model_id'      => $smash_game_data->id,
             'award_id'     => $smash_game->award->id,
             'user_id'       => Auth::user()->id,
-            'model_type'    => 'App\Models\SmashGame',
+            'model_type'    => \App\Models\SmashGame::class,
             'hit'           => true,
             'created_at'    => Carbon::now(),
             'updated_at'    => Carbon::now()

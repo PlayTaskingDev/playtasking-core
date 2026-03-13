@@ -72,7 +72,7 @@ class VoteContestAssetController extends Controller
         DB::table('award_user')->where([
             'model_id'      => $vote_contest->id,
             'user_id'       => Auth::user()->id,
-            'model_type'    => 'App\Models\VoteContest',
+            'model_type'    => \App\Models\VoteContest::class,
         ])->delete();
 
         $asset->delete();

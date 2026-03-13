@@ -34,7 +34,7 @@ class ClickWinController extends Controller
             ])->firstOrFail();
 
         // Check if user has been participated and won
-        $has_paticipated = $this->check_participation($model_id = $click_win->id,$model_type = 'App\Models\ClickWin',$user_id = Auth::user()->id,$hit = true);
+        $has_paticipated = $this->check_participation($model_id = $click_win->id,$model_type = \App\Models\ClickWin::class,$user_id = Auth::user()->id,$hit = true);
         if (!is_null($has_paticipated)) {
             return redirect(route('dashboard.awards.show', ['tenant' => tenant('id'), 'award' => $click_win->award]));
         }
@@ -44,7 +44,7 @@ class ClickWinController extends Controller
             'model_id'      => $click_win->id,
             'award_id'     => $click_win->award->id,
             'user_id'       => Auth::user()->id,
-            'model_type'    => 'App\Models\ClickWin',
+            'model_type'    => \App\Models\ClickWin::class,
             'hit'           => true,
             'created_at'    => Carbon::now(),
             'updated_at'    => Carbon::now()

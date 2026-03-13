@@ -36,7 +36,7 @@ class PuzzleController extends Controller
             ])->firstOrFail();
 
         // Check if user has been participated
-        $has_paticipated = $this->check_participation($model_id = $puzzle->id,$model_type = 'App\Models\Puzzle',$user_id = Auth::user()->id);
+        $has_paticipated = $this->check_participation($model_id = $puzzle->id,$model_type = \App\Models\Puzzle::class,$user_id = Auth::user()->id);
 
         if (!is_null($has_paticipated)) {
             return redirect(route('dashboard.awards.show', ['tenant' => tenant('id'), 'award' => $puzzle->award]));
@@ -92,7 +92,7 @@ class PuzzleController extends Controller
         }
 
         // Check if user has been participated and won
-        $has_paticipated = $this->check_participation($model_id = $puzzle->id,$model_type = 'App\Models\Puzzle',$user_id = Auth::user()->id,$hit = true);
+        $has_paticipated = $this->check_participation($model_id = $puzzle->id,$model_type = \App\Models\Puzzle::class,$user_id = Auth::user()->id,$hit = true);
         if (!is_null($has_paticipated)) {
             return redirect(route('dashboard.awards.show', ['tenant' => tenant('id'), 'award' => $puzzle->award]));
         }
@@ -102,7 +102,7 @@ class PuzzleController extends Controller
             'model_id'      => $data['data'],
             'award_id'     => $puzzle->award->id,
             'user_id'       => Auth::user()->id,
-            'model_type'    => 'App\Models\Puzzle',
+            'model_type'    => \App\Models\Puzzle::class,
             'hit'           => true,
             'created_at'    => Carbon::now(),
             'updated_at'    => Carbon::now()
