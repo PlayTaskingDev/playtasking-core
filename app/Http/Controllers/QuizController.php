@@ -35,13 +35,13 @@ class QuizController extends Controller
             ])->firstOrFail();
 
         // Check if user has been participated and won
-        $has_paticipated = $this->check_participation($model_id = $quiz->id,$model_type = 'App\Models\Quiz',$user_id = Auth::user()->id,$hit = true);
+        $has_paticipated = $this->check_participation($model_id = $quiz->id,$model_type = \App\Models\Quiz::class,$user_id = Auth::user()->id,$hit = true);
         if (!is_null($has_paticipated)) {
             return redirect(route('dashboard.awards.show', ['tenant' => tenant('id'), 'award' => $quiz->award]));
         }
 
         // Check if user has been participated and failed
-        $has_paticipated = $this->check_participation($model_id = $quiz->id,$model_type = 'App\Models\Quiz',$user_id = Auth::user()->id);
+        $has_paticipated = $this->check_participation($model_id = $quiz->id,$model_type = \App\Models\Quiz::class,$user_id = Auth::user()->id);
         if (!is_null($has_paticipated)) {
             return redirect()->route('game.failed', [
                 'tenant' => tenant('id'), 
@@ -86,13 +86,13 @@ class QuizController extends Controller
             ])->first();
 
         // Check if user has been participated and won
-        $has_paticipated = $this->check_participation($model_id = $quiz->id,$model_type = 'App\Models\Quiz',$user_id = Auth::user()->id,$hit = true);
+        $has_paticipated = $this->check_participation($model_id = $quiz->id,$model_type = \App\Models\Quiz::class,$user_id = Auth::user()->id,$hit = true);
         if (!is_null($has_paticipated)) {
             return redirect(route('dashboard.awards.show', ['tenant' => tenant('id'), 'award' => $quiz->award]));
         }
 
         // Check if user has been participated and failed
-        $has_paticipated = $this->check_participation($model_id = $quiz->id,$model_type = 'App\Models\Quiz',$user_id = Auth::user()->id);
+        $has_paticipated = $this->check_participation($model_id = $quiz->id,$model_type = \App\Models\Quiz::class,$user_id = Auth::user()->id);
         if (!is_null($has_paticipated)) {
             return redirect()->route('game.failed', [
                 'tenant' => tenant('id'), 
@@ -128,7 +128,7 @@ class QuizController extends Controller
             'model_id'      => $data['quid'],
             'award_id'     => $quiz->award->id,
             'user_id'       => Auth::user()->id,
-            'model_type'    => 'App\Models\Quiz',
+            'model_type'    => \App\Models\Quiz::class,
             'hit'           => $hit,
             'created_at'    => Carbon::now(),
             'updated_at'    => Carbon::now()

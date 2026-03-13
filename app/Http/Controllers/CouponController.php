@@ -54,7 +54,7 @@ class CouponController extends Controller
         // If coupon type is multiple, the user can only participate once
         if ($code->type == 'multiple') {
             // Check if user has been participated and won
-            $has_paticipated = $this->check_participation($model_id = $code->id,$model_type = 'App\Models\Code',$user_id = Auth::user()->id,$hit = true);
+            $has_paticipated = $this->check_participation($model_id = $code->id,$model_type = \App\Models\Code::class,$user_id = Auth::user()->id,$hit = true);
             if (!is_null($has_paticipated)) {
                 return redirect()->route('coupons.duplicated', ['tenant' => tenant('id')]);
             }
@@ -78,7 +78,7 @@ class CouponController extends Controller
             'model_id'      => $code->id,
             'award_id'      => $code->award->id,
             'user_id'       => Auth::user()->id,
-            'model_type'    => 'App\Models\Code',
+            'model_type'    => \App\Models\Code::class,
             'hit'           => true,
             'created_at'    => Carbon::now(),
             'updated_at'    => Carbon::now()

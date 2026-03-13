@@ -39,7 +39,7 @@ class VoteContestController extends Controller
             ])->firstOrFail();
 
         // Check if user has been participated
-        $has_paticipated = $this->check_participation($model_id = $vote_contest->id,$model_type = 'App\Models\VoteContest',$user_id = Auth::user()->id);
+        $has_paticipated = $this->check_participation($model_id = $vote_contest->id,$model_type = \App\Models\VoteContest::class,$user_id = Auth::user()->id);
 
         if (!is_null($has_paticipated)) {
             return redirect()->route('vote_contest.ranking', ['tenant' => tenant('id'), 'slug' => $vote_contest->slug]);
@@ -63,7 +63,7 @@ class VoteContestController extends Controller
         $vote_contest = VoteContest::find($data['vote_contest']);
 
         // Check if user has been participated
-        $has_paticipated = $this->check_participation($model_id = $vote_contest->id,$model_type = 'App\Models\VoteContest',$user_id = Auth::user()->id);
+        $has_paticipated = $this->check_participation($model_id = $vote_contest->id,$model_type = \App\Models\VoteContest::class,$user_id = Auth::user()->id);
 
         if (!is_null($has_paticipated)) {
             return redirect()->route('vote_contest.ranking', ['tenant' => tenant('id'), 'slug' => $vote_contest->slug]);
@@ -90,7 +90,7 @@ class VoteContestController extends Controller
             'model_id'      => $data['vote_contest'],
             'award_id'      => null,
             'user_id'       => Auth::user()->id,
-            'model_type'    => 'App\Models\VoteContest',
+            'model_type'    => \App\Models\VoteContest::class,
             'hit'           => true,
             'created_at'    => Carbon::now(),
             'updated_at'    => Carbon::now()

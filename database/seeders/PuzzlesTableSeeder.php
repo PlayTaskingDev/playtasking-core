@@ -51,7 +51,7 @@ class PuzzlesTableSeeder extends Seeder
             </div>
             ',
             'awardable_id'      => $puzzle->id,
-            'awardable_type'    => 'App\Models\Puzzle'
+            'awardable_type'    => \App\Models\Puzzle::class
         ]);
     }
 }

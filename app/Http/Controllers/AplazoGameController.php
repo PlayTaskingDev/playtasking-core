@@ -168,7 +168,7 @@ class AplazoGameController extends Controller
             'model_id'      => $aplazoGame->id,
             'award_id'     => $aplazoGame->award->id,
             'user_id'       => $request->user()->id,
-            'model_type'    => 'App\Models\AplazoGame',
+            'model_type'    => \App\Models\AplazoGame::class,
             'hit'           => true,
             'created_at'    => Carbon::now(),
             'updated_at'    => Carbon::now()

@@ -85,7 +85,7 @@ class SmashGamesTableSeeder extends Seeder
             </div>
             ',
             'awardable_id'      => $smashGame->id,
-            'awardable_type'    => 'App\Models\SmashGame'
+            'awardable_type'    => \App\Models\SmashGame::class
         ]);
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
