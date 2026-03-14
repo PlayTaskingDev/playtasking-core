@@ -36,11 +36,11 @@ class RegisteredUserController extends Controller
             'email'                 => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
             'email_confirmation'    => ['required', 'string', 'email', 'max:255', 'same:email'],
             'phone'                 => ['nullable', 'digits:10'],
-            'city'                  => [Rule::requiredIf(get_app_setting('allow_city')), 'string', 'max:256'],
+            'city'                  => [Rule::requiredIf((bool)get_app_setting('allow_city')), 'string', 'max:256'],
             'checkbox_terms'        => ['required'],
             'checkbox_privacy'      => ['required'],
             'password'              => ['required', Rules\Password::defaults()],
-            'members_number'        => [Rule::requiredIf(get_app_setting('members_number')), 'string', 'max:16'],
+            'members_number'        => [Rule::requiredIf((bool)get_app_setting('members_number')), 'string', 'max:16'],
             'g-recaptcha-response'  => 'required|recaptchav3:register,0.5'
         ]);
         
