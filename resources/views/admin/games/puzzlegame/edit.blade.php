@@ -88,6 +88,7 @@
                                 <h2 class="mt-6 text-lg col-span-2 font-semibold text-gray-800 dark:text-white/90">Game Settings</h2>
                                 <x-ui.forms.input-text label="{{ __('Slug') }}" name="slug" placeholder="" :value="$puzzle->slug" data-field="campaign.slug" />
                                 <x-ui.forms.input-number label="{{ __('Seconds') }}" name="seconds" placeholder="" :value="$puzzle->seconds" data-field="campaign.seconds" />
+                                <x-ui.forms.input-number label="{{ __('Pieces') }}" name="pieces" placeholder="" :value="$puzzle->pieces" data-field="campaign.pieces" />
                                 <x-ui.forms.input-file label="{{ __('Failed Image') }}" dummy_img="/storage/dummy_assets/800x1180.png" name="failed_image" placeholder="" :value="$puzzle->failed_image" data-field="campaign.failed_image" />
                                 <x-ui.forms.input-file label="{{ __('Puzzle Image') }}" dummy_img="/storage/dummy_assets/800x1180.png" name="puzzle_image" placeholder="" :value="$puzzle->puzzle_image" data-field="campaign.puzzle_image" />
                             </div>
