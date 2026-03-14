@@ -70,7 +70,7 @@
                         </div>
                         <x-input-error :messages="$errors->get('password')" class="mt-2" />
                     </div>
-
+                    @if (false)
                     <!-- Phone -->
                     <div class="mt-4 phone-section">
                         <x-input-label for="phone" :value="__('Phone')" />
@@ -78,7 +78,7 @@
                             :value="old('phone')" autofocus autocomplete="phone" />
                         <x-input-error :messages="$errors->get('phone')" class="mt-2" />
                     </div>
-
+                    @endif
                     @if (get_app_setting('allow_city') == true)
                     <!-- Municipios/Ciudades -->
                      <div class="mt-4 relative">
