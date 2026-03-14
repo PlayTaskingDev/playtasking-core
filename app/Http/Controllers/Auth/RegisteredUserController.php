@@ -31,6 +31,7 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        dd(get_app_setting('allow_city'));
         dd($request);
         $request->validate([
             'name'                  => ['required', 'string', 'max:255'],
