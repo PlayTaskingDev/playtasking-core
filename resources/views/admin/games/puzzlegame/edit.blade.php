@@ -151,6 +151,7 @@
                     <x-ui.forms.input-color label="{{ __('Gradient Button Background 1') }}" name="btn_background_color_1" placeholder="" :value="$puzzle->btn_background_color_1" data-field="campaign.btn_background_color_1" />
                     <x-ui.forms.input-color label="{{ __('Gradient Button Background 2') }}" name="btn_background_color_2" placeholder="" :value="$puzzle->btn_background_color_2" data-field="campaign.btn_background_color_2" />
                     <x-ui.forms.input-color label="{{ __('Button Border Color') }}" name="btn_border_color" placeholder="" :value="$puzzle->btn_border_color" data-field="campaign.btn_border_color" />
+                    <x-ui.forms.input-color label="{{ __('Button Text Color') }}" name="btn_text_color" placeholder="" :value="$puzzle->btn_text_color" data-field="campaign.btn_text_color" />
                     <x-ui.forms.input-switch label="{{ __('Has shadow') }}" name="btn_shadow" placeholder="" :value="$puzzle->btn_shadow" data-field="campaign.btn_shadow" />
                     <x-ui.forms.input-text label="{{ __('Text Active') }}" name="btn_text_active" placeholder="" :value="$puzzle->btn_text_active" data-field="campaign.btn_text_active" />
                     <x-ui.forms.input-switch label="{{ __('Enable Button Shadow') }}" name="btn_enable_shadow" placeholder="" :value="$puzzle->btn_enable_shadow" data-field="campaign.btn_enable_shadow" />
