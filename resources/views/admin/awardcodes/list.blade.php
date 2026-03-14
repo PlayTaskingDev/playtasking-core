@@ -73,7 +73,7 @@
                         </a>
                         <a
                         data-action="edit"
-                        href="{{ route('awardcodes.edit', ['tenant' => tenant('id'), 'awardcode' => $award]) }}"
+                        href="{{ route('v2awards.edit', ['tenant' => tenant('id'), 'v2award' => $award]) }}"
                         class="edit-button inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 rounded-lg transition-colors"
                         aria-label="{{ __('Edit') }} {{ $award->name }}"
                         >
