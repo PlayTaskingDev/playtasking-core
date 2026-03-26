@@ -93,10 +93,10 @@ class FlappyGameController extends Controller
         $flappy_game = FlappyGame::with('award')->findOrFail($flappy_game_data->id);
 
         // Check if user is out of time
-        $is_out_of_time = $this->out_of_time_validation(session('game_start'), $flappy_game->seconds);
-        if ($is_out_of_time) {
-            return redirect()->route('campaign.splash', ['tenant' => tenant('id')]);
-        }
+        // $is_out_of_time = $this->out_of_time_validation(session('game_start'), $flappy_game->seconds);
+        // if ($is_out_of_time) {
+        //     return redirect()->route('campaign.splash', ['tenant' => tenant('id')]);
+        // }
 
         // Check if user has been participated and won
         $has_paticipated = $this->check_participation($model_id = $flappy_game->id,$model_type = 'App\Models\FlappyGame',$user_id = Auth::user()->id,$hit = true);

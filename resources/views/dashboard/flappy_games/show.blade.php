@@ -130,14 +130,15 @@
     </div>
 
    <script>
+    const settingspzl = JSON.parse(document.getElementById('settingspzl').content)
         const gameContainer = document.getElementById("game-container");
         const canvas = document.getElementById("canvas");
         const ctx = canvas.getContext("2d");
         const groundHeight = 30;
         let birdImageframe = 0;
         const flapInterval = 50;
-        const birdGravity = 0.20;
-        const birdJump = -4.6;
+        const birdGravity = 0.30;
+        const birdJump = -4.8;
         const pipes = [];
         const pipeWidth = 52;
         const minGap = 110;
@@ -257,7 +258,7 @@
         y: canvas.height - groundHeight,
         width: canvas.width,
         height: groundHeight,
-        speed: 1,
+        speed: 2,
         update: function () {
           this.x -= this.speed;
           if (this.x <= -this.width) this.x = 0;
@@ -368,7 +369,7 @@
           ctx.stroke();
           ctx.drawImage(pipesBackgroundImg, pipes[i].x, pipes[i].y + pipeGap, pipes[i].width, canvas.height - pipes[i].y - pipeGap - groundHeight);
 
-          pipes[i].x -= 1;
+          pipes[i].x -= 2;
 
           // if game over / Check for collisions
           if (
@@ -446,7 +447,7 @@
 
         ground.update();
         ground.draw();
-
+        console.log(score);
         scoreElement.textContent = 'Score: ' + score;
 
 
