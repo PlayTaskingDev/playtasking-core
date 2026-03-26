@@ -334,6 +334,9 @@ Route::group([
             Route::resource('catchgameobjects',App\Http\Controllers\Admin\Games\CatchGameObjectController::class);
         // Game - Click Win
         Route::resource('clickwingames',App\Http\Controllers\Admin\Games\ClickWinGameController::class);
+        // Game - Flappy Game
+        Route::resource('flappygames',App\Http\Controllers\Admin\Games\FlappyGameController::class);
+        Route::resource('clickwingames',App\Http\Controllers\Admin\Games\ClickWinGameController::class);
         // Game - Share
         Route::resource('sharegames',App\Http\Controllers\Admin\Games\ShareGameController::class);
         // Game - Memory

@@ -163,8 +163,9 @@ class VoteGameController extends Controller
      * @param  \App\Models\VoteContest  $voteContest
      * @return \Illuminate\Http\Response
      */
-    public function destroy(VoteContest $voteContest)
+    public function destroy($id)
     {
+        $voteContest = VoteContest::findOrFail($id);
         $voteContest->load('contest_assets.votations');
 
         // delete all assets uploaded by users (videos and photos)

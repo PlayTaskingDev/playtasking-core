@@ -164,8 +164,9 @@ class TriviaGameController extends Controller
      * @param  \App\Models\Quiz  $quiz
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Quiz $quiz)
+    public function destroy($id)
     {
+        $quiz = Quiz::findOrFail($id);
         $quiz->load(['questions','answers','award','coupons']);
 
         if ($quiz->answers && $quiz->answers->isNotEmpty()) {

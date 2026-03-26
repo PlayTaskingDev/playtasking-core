@@ -29,7 +29,6 @@ class FlappyGameController extends Controller
         
         $puzzle_settings = [
             'a' => $flappy_game->points_per_pipe,
-            'b' => $flappy_game->seconds,
             'c' => $flappy_game->max_points,
             'e' => __('You Win!'),
             'f' => route('flappy_game.complete', ['tenant' => tenant('id')]),

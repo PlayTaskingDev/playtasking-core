@@ -40,6 +40,7 @@ class MenuHelper
                     ['name' => 'Catch Games', 'path' => route('catchgames.index', ['tenant' => tenant('id')])],
                     ['name' => 'Click Win', 'path' => route('clickwingames.index', ['tenant' => tenant('id')])],
                     ['name' => 'Compartir', 'path' => route('sharegames.index', ['tenant' => tenant('id')])],
+                    ['name' => 'Flappy Bird', 'path' => route('flappygames.index', ['tenant' => tenant('id')])],
                     ['name' => 'Memoramas', 'path' => route('memorygames.index', ['tenant' => tenant('id')])],
                     ['name' => 'Rompecabezas', 'path' => route('puzzlegames.index', ['tenant' => tenant('id')])],
                     ['name' => 'Smash Games', 'path' => route('smashgames.index', ['tenant' => tenant('id')])],
