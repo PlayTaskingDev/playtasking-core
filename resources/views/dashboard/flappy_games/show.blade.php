@@ -137,7 +137,7 @@
         const groundHeight = 30;
         let birdImageframe = 0;
         const flapInterval = 50;
-        const birdGravity = 0.30;
+        const birdGravity = 0.24;
         const birdJump = -4.8;
         const pipes = [];
         const pipeWidth = 52;
@@ -258,7 +258,7 @@
         y: canvas.height - groundHeight,
         width: canvas.width,
         height: groundHeight,
-        speed: 2,
+        speed: 1,
         update: function () {
           this.x -= this.speed;
           if (this.x <= -this.width) this.x = 0;
@@ -369,7 +369,7 @@
           ctx.stroke();
           ctx.drawImage(pipesBackgroundImg, pipes[i].x, pipes[i].y + pipeGap, pipes[i].width, canvas.height - pipes[i].y - pipeGap - groundHeight);
 
-          pipes[i].x -= 2;
+          pipes[i].x -= 1;
 
           // if game over / Check for collisions
           if (
