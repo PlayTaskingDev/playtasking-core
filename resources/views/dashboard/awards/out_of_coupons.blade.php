@@ -8,7 +8,7 @@
 
     <div class="py-6">
         <div class="max-w-2xl mx-auto px-3 sm:px-6 lg:px-8">
-            <div class="dark:bg-gray-800 overflow-hidden">
+            <div class="dark:bg-gray-800 overflow-hidden p-3">
                 <div
                     class="game-card rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 p-3">
 
