@@ -8,9 +8,9 @@
 
     <div class="py-6">
         <div class="max-w-2xl mx-auto px-3 sm:px-6 lg:px-8">
-            <div class="dark:bg-gray-800 overflow-hidden p-3">
+            <div class="dark:bg-gray-800 overflow-hidden">
                 <div
-                    class="game-card rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 p-3">
+                    class="game-card rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 p-3 p-3">
                     @if (session('status') === 'success')
                         <h2 class="font-semibold text-2xl dark:text-gray-200 leading-tight pb-5 uppercase game-heading">
                             {{__('Ticket stored successfully')}}

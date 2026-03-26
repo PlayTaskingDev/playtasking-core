@@ -8,8 +8,8 @@
   
     <div class="py-6">
         <div class="max-w-2xl mx-auto px-3 sm:px-6 lg:px-8">
-            <div class="dark:bg-gray-800 overflow-hidden p-3">
-                <div class="game-card rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 p-3">
+            <div class="dark:bg-gray-800 overflow-hidden">
+                <div class="game-card rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 p-3 p-3">
                     <div id="game-holder">
 
                         <x-campaign-menu :campaign-games="$campaign_games" :campaign-tickets="$campaign_tickets" :campaign-coupons="$campaign_coupons" :campaign-url="route('campaign.show', ['tenant' => tenant('id'), 'slug' => $memory_quiz->campaign->slug])" :active="'games'" />
@@ -41,7 +41,7 @@
                         <div id="timer" class="rounded p-3 mb-5 text-2xl text-center font-bold">
                             {{ __('Remaining')}} <span></span> {{ __('seconds')}}
                         </div>
-                        <div class="dark:bg-gray-800 overflow-hidden p-3 rounded grid grid-cols-4 gap-1 sm:gap-2 memory-game">
+                        <div class="dark:bg-gray-800 overflow-hidden rounded grid grid-cols-4 gap-1 sm:gap-2 memory-game">
                             @foreach ($memory_quiz->memory_cards as $memory_card)
                                 <div class="memory-card" data-framework="{{ $memory_card->name }}">
                                     <img class="front-face" src="{{ $memory_card->featured_image }}" alt="{{ $memory_card->name }}" title="{{ $memory_card->name }}" />
