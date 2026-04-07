@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-         Schema::table('vote_contests_assets', function (Blueprint $table) {
+         Schema::table('vote_contest_assets', function (Blueprint $table) {
             $table->string('title', 600)->change();
         });
     }
@@ -21,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('vote_contests_assets', function (Blueprint $table) {
+        Schema::table('vote_contest_assets', function (Blueprint $table) {
             $table->integer('title', 100)->change();
         });
     }
