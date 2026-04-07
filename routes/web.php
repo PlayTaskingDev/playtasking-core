@@ -274,6 +274,7 @@ Route::group([
         Route::post('ticketQuestion/import', [TicketQuestionController::class, 'import'])->name('tickets.questions.import');
         Route::resource('ticketQuestion',TicketQuestionController::class);
         Route::resource('ticketAnswer', PanelTicketAnswerController::class);
+        Route::get('vote_contest/{model_id}/export', [PanelVoteContestController::class, 'export'])->name('panel.vote_contest.export');
         Route::resource('vote_contest', PanelVoteContestController::class)->names(
             [
                 'index'     => 'panel.vote_contest.index',
@@ -356,6 +357,7 @@ Route::group([
             // Game - Trivia Answer
             Route::resource('triviagameanswers',App\Http\Controllers\Admin\Games\TriviaGameAnswerController::class);
         // Game - Vote
+        Route::get('votegames/{model_id}/export', [App\Http\Controllers\Admin\Games\VoteGameController::class, 'export'])->name('votegames.export');
         Route::resource('votegames',App\Http\Controllers\Admin\Games\VoteGameController::class);
         // Awards
         Route::resource('v2awards', App\Http\Controllers\Admin\AwardsController::class);

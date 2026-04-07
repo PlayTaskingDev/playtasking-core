@@ -42,12 +42,18 @@
                         <form action="{{route('vote_contest.store', ['tenant' => tenant('id')])}}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="vote_contest" value="{{$vote_contest->id}}" />
-                            <div class="mt-3">
-                                <x-input-label for="title" :value="__('Title')" />
-                                <x-text-input id="title" class="block mt-1 w-full text-black" type="text" name="title"
-                                    :value="old('title')" required autofocus autocomplete="title" />
-                                <x-input-error :messages="$errors->get('title')" class="mt-2" />
-                            </div>
+                            @if($vote_contest->show_ranking)
+                                <div class="mt-3">
+                                    <x-input-label for="title" :value="__('Title')" />
+                                    <x-text-input id="title" class="block mt-1 w-full text-black" type="text" name="title"
+                                        :value="old('title')" required autofocus autocomplete="title" />
+                                    <x-input-error :messages="$errors->get('title')" class="mt-2" />
+                                </div>
+                            @else
+                                <div class="mt-3">
+                                    <x-ui.forms.input-text-area label="{{ __('Description') }}" cols="2" name="title" placeholder="" value="" data-field="campaign.title" />
+                                </div>
+                            @endif
                             <div class="mt-3">
                                 <x-text-input id="asset" class="block mt-1 w-full text-black bg-white" type="file" name="asset"
                                     :value="old('asset')" required />

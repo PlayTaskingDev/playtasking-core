@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers\Panel;
 
+
+use App\Exports\ContestInteractionsExport;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests\Panel\SaveVoteContestRequest;
 use App\Models\Campaign;
 use App\Models\ContentType;
 use App\Models\VoteContest;
 use Illuminate\Http\Request;
 use App\Traits\UploadImageTrait;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PanelVoteContestController extends Controller
 {
@@ -138,10 +142,47 @@ class PanelVoteContestController extends Controller
 
         $data['asset_kb_size'] = intval($data['asset_kb_size']) * 1000;
 
+        if( !$request->has('show_ranking') ){
+            $data['show_ranking'] = false;
+        }
+
+        if( !$request->has('btn_border') ){
+            $data['btn_border'] = false;
+        }
+
+        if( !$request->has('btn_shadow') ){
+            $data['btn_shadow'] = false;
+        }
+
         $voteContest->fill($data);
         $voteContest->save();
 
         return redirect(route('panel.vote_contest.index', ['tenant' => tenant('id')]))->with('status', trans('Vote contest saved successful'));
+    }
+
+    public function export($model_id)
+    {
+       $rows_collection = DB::table("user_interactions as ui")->where('ui.model_id', $model_id)
+            ->join('users as u', 'u.id', '=', 'ui.user_id')
+            ->join('vote_contest_assets as vca', 'vca.vote_contest_id', '=', 'ui.model_id')
+            ->selectRaw('
+                ui.model_id as game_id,
+                ui.model_title as game_title,
+                u.name as user_name,
+                u.email,
+                vca.title as description,
+                vca.asset_url as image,
+                u.created_at as user_created_at,
+                ui.hit_created_at as hit_created_at,
+                ui.hit_updated_at as hit_updated_at
+            ')
+            ->get();
+
+        return Excel::download(
+            new ContestInteractionsExport($rows_collection),
+            'user_interactions_contests.xlsx'
+        );
+
     }
 
     /**

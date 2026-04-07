@@ -66,7 +66,7 @@
                                         class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
                                         {{ __('Edit') }}
                                     </a>
-                                    <a href="{{ route('panel.export_user_interactions', ['tenant' => tenant('id'), 'model_id' => $vote_contest->id]) }}"
+                                    <a href="{{ route('panel.vote_contest.export', ['tenant' => tenant('id'), 'model_id' => $vote_contest->id]) }}"
                                         class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
                                         {{ __('Export') }}
                                     </a>
