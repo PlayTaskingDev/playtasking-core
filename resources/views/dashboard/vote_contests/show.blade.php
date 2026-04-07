@@ -39,23 +39,23 @@
                     </p>
                     
                     <div class="mt-5">
-                        <form action="{{route('vote_contest.store', ['tenant' => tenant('id')])}}" method="POST" enctype="multipart/form-data">
+                        <form id="voteContestForm" action="{{route('vote_contest.store', ['tenant' => tenant('id')])}}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="vote_contest" value="{{$vote_contest->id}}" />
                             @if($vote_contest->show_ranking)
                                 <div class="mt-3">
                                     <x-input-label for="title" :value="__('Title')" />
-                                    <x-text-input id="title" class="block mt-1 w-full text-black" type="text" name="title"
+                                    <x-text-input id="title" class="vte__input block mt-1 w-full text-black" type="text" name="title"
                                         :value="old('title')" required autofocus autocomplete="title" />
                                     <x-input-error :messages="$errors->get('title')" class="mt-2" />
                                 </div>
                             @else
                                 <div class="mt-3">
-                                    <x-ui.forms.input-text-area label="{{ __('Description') }}" cols="2" name="title" placeholder="" value="" data-field="campaign.title" />
+                                    <x-ui.forms.input-text-area label="{{ __('Description') }}" class="vte__input" cols="2" name="title" placeholder="" maxlength="600" charcount="true" value="" />
                                 </div>
                             @endif
                             <div class="mt-3">
-                                <x-text-input id="asset" class="block mt-1 w-full text-black bg-white" type="file" name="asset"
+                                <x-text-input id="asset" class="vte__input block mt-1 w-full text-black bg-white" type="file" name="asset"
                                     :value="old('asset')" required />
                                 <x-input-label class="my-3" for="ticket" :value="__('strings.contest_asset_limit', ['size' => $vote_contest->mb_size])" />
                                 <x-input-error :messages="$errors->get('asset')" class="mt-2" />
@@ -87,7 +87,29 @@
             document.addEventListener("DOMContentLoaded", () => {
                 const publishBtn = document.getElementById('publishBtn');
                 const overlay = document.getElementById('voteOverlay');
+                const form = document.getElementById('voteContestForm');
+                const vtInputs = document.querySelectorAll('.vte__input');
+                publishBtn.disabled = true;
+                publishBtn.classList.add('cursor-not-allowed', 'opacity-50');
+                // Función que valida campos
+                const validarFormulario = () => {
+                    // Comprueba si todos los campos tienen valor
+                    const todosLlenos = Array.from(vtInputs).every(input => input.value.trim() !== "");
+                    
+                    // Habilita o deshabilita el botón basado en el resultado
+                    if(!todosLlenos){
+                        publishBtn.disabled = true;
+                        publishBtn.classList.add('cursor-not-allowed', 'opacity-50');
+                    }else{
+                        publishBtn.disabled = false;
+                        publishBtn.classList.remove('cursor-not-allowed', 'opacity-50');
+                    }
+                };
 
+                // Escucha eventos en cada campo
+                vtInputs.forEach(input => {
+                    input.addEventListener('input', validarFormulario);
+                });
                 publishBtn.addEventListener('click', function(e){
                     overlay.classList.remove('hidden')
                 });

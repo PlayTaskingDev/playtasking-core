@@ -17,6 +17,13 @@ class StoreVoteContest extends FormRequest
         return true;
     }
 
+    public function attributes(): array
+{
+    return [
+        'title' => 'Descripción',
+    ];
+}
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -31,7 +38,7 @@ class StoreVoteContest extends FormRequest
 
         return [
             'vote_contest'  => ['required','exists:vote_contests,id'],
-            'title'         => ['required','regex:/^[A-Za-z0-9áéíóúÁÉÍÓÚÑñ,.;:!"¡?¿\(\)\' \-]+$/'],
+            'title'         => ['required','max:600','regex:/^[A-Za-z0-9áéíóúÁÉÍÓÚÑñ,.;:!"¡?¿\(\)\' \-]+$/'],
             'asset'         => ['required','max:' . $vote_contest->asset_kb_size,'mimes:' . $mimes]
         ];
     }

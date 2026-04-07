@@ -46,20 +46,22 @@
                                     <script src="https://player.vimeo.com/api/player.js" async></script>
                                 </div>
                             @endif
-                            @auth
-                                @if(auth()->user()->id == $user->contest_assets[0]->user_id)
-                                <form method="POST" action="{{ route('vote_contest.destroy', ['tenant' => tenant('id'), 'asset' => $user->contest_assets[0]]) }}">
-                                    @csrf
-                                    @method('delete')
-                                    <button class="p-3 absolute w-16 h-16 right-0 -top-0 rounded bg-red-800" 
-                                        onclick="return confirm('{{ __('Are you sure to delete this?') }}')">
-                                        <svg class="w-[32px] h-[32px] text-white dark:text-white font-bold" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                                            <path fill-rule="evenodd" d="M8.586 2.586A2 2 0 0 1 10 2h4a2 2 0 0 1 2 2v2h3a1 1 0 1 1 0 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V8a1 1 0 0 1 0-2h3V4a2 2 0 0 1 .586-1.414ZM10 6h4V4h-4v2Zm1 4a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Zm4 0a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Z" clip-rule="evenodd"/>
-                                        </svg>
-                                    </button>
-                                </form>
-                                @endif
-                            @endauth
+                            @if($vote_contest->show_ranking)
+                                @auth
+                                    @if(auth()->user()->id == $user->contest_assets[0]->user_id)
+                                    <form method="POST" action="{{ route('vote_contest.destroy', ['tenant' => tenant('id'), 'asset' => $user->contest_assets[0]]) }}">
+                                        @csrf
+                                        @method('delete')
+                                        <button class="p-3 absolute w-16 h-16 right-0 -top-0 rounded bg-red-800" 
+                                            onclick="return confirm('{{ __('Are you sure to delete this?') }}')">
+                                            <svg class="w-[32px] h-[32px] text-white dark:text-white font-bold" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                                <path fill-rule="evenodd" d="M8.586 2.586A2 2 0 0 1 10 2h4a2 2 0 0 1 2 2v2h3a1 1 0 1 1 0 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V8a1 1 0 0 1 0-2h3V4a2 2 0 0 1 .586-1.414ZM10 6h4V4h-4v2Zm1 4a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Zm4 0a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Z" clip-rule="evenodd"/>
+                                            </svg>
+                                        </button>
+                                    </form>
+                                    @endif
+                                @endauth
+                            @endif
                         </div>
                         @if ($vote_contest->show_ranking)
                             <div class="flex items-center justify-center mt-4">

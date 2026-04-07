@@ -162,9 +162,22 @@ class PanelVoteContestController extends Controller
 
     public function export($model_id)
     {
-       $rows_collection = DB::table("user_interactions as ui")->where('ui.model_id', $model_id)
+       $rows_collection = DB::table("user_interactions as ui")
+            ->where('ui.model_id', $model_id)
             ->join('users as u', 'u.id', '=', 'ui.user_id')
-            ->join('vote_contest_assets as vca', 'vca.vote_contest_id', '=', 'ui.model_id')
+
+            ->joinSub(
+                DB::table('vote_contest_assets')
+                    ->select('vote_contest_id', DB::raw('MIN(id) as id'))
+                    ->groupBy('vote_contest_id'),
+                'vca_min',
+                'vca_min.vote_contest_id',
+                '=',
+                'ui.model_id'
+            )
+
+            ->join('vote_contest_assets as vca', 'vca.id', '=', 'vca_min.id')
+
             ->selectRaw('
                 ui.model_id as game_id,
                 ui.model_title as game_title,
@@ -177,7 +190,7 @@ class PanelVoteContestController extends Controller
                 ui.hit_updated_at as hit_updated_at
             ')
             ->get();
-
+        dd($rows_collection);
         return Excel::download(
             new ContestInteractionsExport($rows_collection),
             'user_interactions_contests.xlsx'
