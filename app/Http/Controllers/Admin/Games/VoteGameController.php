@@ -202,7 +202,6 @@ class VoteGameController extends Controller
                 ui.hit_updated_at as hit_updated_at
             ')
             ->get();
-        dd($rows_collection);
         return Excel::download(
             new ContestInteractionsExport($rows_collection),
             'user_interactions_contests.xlsx'
