@@ -22,14 +22,12 @@ class ContestInteractionsExport implements FromCollection, WithHeadings
     public function headings(): array
     {
         return [
-            'Game ID',
-            'Contest',
+            'User ID',
             'User Name',
             'Email',
             'Description',
-            'Image',
-            'Hit Created At',
-            'Hit Updated At'
+            'Image URL',
+            'Submission Date'
         ];
     }
 }

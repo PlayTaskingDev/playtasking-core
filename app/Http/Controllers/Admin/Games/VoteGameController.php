@@ -174,32 +174,15 @@ class VoteGameController extends Controller
 
     public function export($model_id)
     {
-       $rows_collection = DB::table("user_interactions as ui")
-            ->where('ui.model_id', $model_id)
-            ->join('users as u', 'u.id', '=', 'ui.user_id')
-
-            ->joinSub(
-                DB::table('vote_contest_assets')
-                    ->select('vote_contest_id', DB::raw('MIN(id) as id'))
-                    ->groupBy('vote_contest_id'),
-                'vca_min',
-                'vca_min.vote_contest_id',
-                '=',
-                'ui.model_id'
-            )
-
-            ->join('vote_contest_assets as vca', 'vca.id', '=', 'vca_min.id')
-
+       $rows_collection = DB::table("vote_contest_assets as vca")->where('vca.vote_contest_id', $model_id)
+            ->join('users as u', 'u.id', '=', 'vca.user_id')
             ->selectRaw('
-                ui.model_id as game_id,
-                ui.model_title as game_title,
-                u.name as user_name,
-                u.email,
-                vca.title as description,
-                vca.asset_url as image,
-                u.created_at as user_created_at,
-                ui.hit_created_at as hit_created_at,
-                ui.hit_updated_at as hit_updated_at
+               u.id as user_id,
+               u.name as user_name,
+               u.email as user_email,
+               vca.title as description,
+               vca.asset_url as asset_url,
+               vca.created_at as submission_date
             ')
             ->get();
         return Excel::download(
