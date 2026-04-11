@@ -106,7 +106,6 @@ class PanelSmashGameController extends Controller
      */
     public function update(SaveSmashGameRequest $request, SmashGame $smash_game)
     {
-        dd($request);
         $data = $request->validated();
 
         if($request->file('featured_image')){

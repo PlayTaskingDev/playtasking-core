@@ -36,7 +36,6 @@ class SaveFlappyGameRequest extends FormRequest
             'end_date'          => ['required','date_format:Y-m-d H:i:s'],
             'gradient_1'        => ['required','string'],
             'gradient_2'        => ['required','string'],
-            'seconds'           => ['required','numeric'],
             'max_points'        => ['required','numeric'],
             'points_per_pipe' => ['required','numeric'],
             'featured_image'    => [Rule::requiredIf(!$this->id),'image:jpg,png,jpeg','max:600'],

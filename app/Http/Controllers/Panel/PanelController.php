@@ -29,9 +29,6 @@ class PanelController extends Controller
         foreach ($options as $k => $o){
             $settings[$o->option_name] = $o->option_value;
         }
-        //dd(json_decode(json_encode($settings)));
-        // $settings = Setting::first();
-        // dd($settings);
 
         $quizzes = Quiz::select(['id','title'])->get()->append('model_name');
         $memory_quizzes = MemoryQuiz::select(['id','title'])->get()->append('model_name');
