@@ -153,7 +153,7 @@
                 hideQuestion.classList.add('opacity-0');
 
                 
-                hideQuestion.style.display = 'none';
+                showQuestion.style.display = 'none';
                 //showQuestion.classList.remove('hidden');
                 showQuestion.classList.add('opacity-100');
                 showQuestion.classList.remove('opacity-0');
