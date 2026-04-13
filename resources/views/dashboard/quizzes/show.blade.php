@@ -147,11 +147,9 @@
                 var hideQuestionDataProperty = element.dataset.hidequestion;
                 var hideQuestion = document.getElementById(hideQuestionDataProperty);
 
-                hideQuestion.classList.add('hidden');
                 hideQuestion.classList.remove('opacity-1');
                 hideQuestion.classList.add('opacity-0');
 
-                showQuestion.classList.remove('hidden');
                 showQuestion.classList.add('opacity-1');
                 showQuestion.classList.remove('opacity-0');
             }
