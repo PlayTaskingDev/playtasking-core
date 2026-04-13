@@ -148,13 +148,13 @@
                 var hideQuestionDataProperty = element.dataset.hidequestion;
                 var hideQuestion = document.getElementById(hideQuestionDataProperty);
 
-                hideQuestion.style.display = 'block';
+                hideQuestion.style.display = 'none';
                 //hideQuestion.classList.add('hidden');
                 hideQuestion.classList.remove('opacity-100');
                 hideQuestion.classList.add('opacity-0');
 
                 
-                showQuestion.style.display = 'none';
+                showQuestion.style.display = 'block';
                 //showQuestion.classList.remove('hidden');
                 showQuestion.classList.add('opacity-100');
                 showQuestion.classList.remove('opacity-0');
