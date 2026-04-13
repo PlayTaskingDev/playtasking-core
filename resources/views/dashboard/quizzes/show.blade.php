@@ -53,7 +53,7 @@
                             {{$question->title}}
                         </p>
                             <div id="question_{{ $loop->iteration }}"
-                                {{ $loop->first ? '' : 'style="display: none;"' }}
+                                {{ $loop->first ? "" : "style='display: none;'" }}
                                 class="section-question grid gap-4 sm:grid-cols-1 {{ $loop->first ? '' : 'opacity-0' }}">
                                 <div>
                                     <ul
