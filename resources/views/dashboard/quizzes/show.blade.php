@@ -53,7 +53,7 @@
                             {{$question->title}}
                         </p>
                             <div id="question_{{ $loop->iteration }}"
-                                class="section-question grid gap-4 sm:grid-cols-1 {{ $loop->first ? '' : 'opacity-0' }}">
+                                class="section-question grid gap-4 sm:grid-cols-1 {{ $loop->first ? '' : 'opacity-0 hidden' }}">
                                 <div>
                                     <ul
                                         class="w-auto text-sm font-medium text-white dark:bg-gray-700 dark:border-gray-600 dark:text-white quiz-answers">
@@ -147,10 +147,15 @@
                 var hideQuestionDataProperty = element.dataset.hidequestion;
                 var hideQuestion = document.getElementById(hideQuestionDataProperty);
 
-                hideQuestion.classList.remove('opacity-1');
+                hideQuestion.style.display = 'block';
+                //hideQuestion.classList.add('hidden');
+                hideQuestion.classList.remove('opacity-100');
                 hideQuestion.classList.add('opacity-0');
 
-                showQuestion.classList.add('opacity-1');
+                
+                hideQuestion.style.display = 'none';
+                //showQuestion.classList.remove('hidden');
+                showQuestion.classList.add('opacity-100');
                 showQuestion.classList.remove('opacity-0');
             }
         </script>
