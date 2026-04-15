@@ -116,6 +116,9 @@ class QuizController extends Controller
             array_push($quiz_answers_array,$answer->id);
         }
         
+        sort($answers_array);
+        sort($quiz_answers_array);
+        
         // Compare responses
         if ($answers_array === $quiz_answers_array) {
             $hit = true;
