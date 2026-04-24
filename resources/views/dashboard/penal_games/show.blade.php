@@ -117,7 +117,7 @@
       width: 80px;
       left: 48%;
       transform: translateX(-50%);
-      bottom: 10px;
+      bottom: 50px;
       z-index: 5;
       transition: all 0.4s ease;
     }
