@@ -35,10 +35,10 @@
 
     .goalkeeper {
       position: absolute;
-      width: 120px; /* Position normale */
+      width: 90px;
       left: 48%;
-      transform: translateX(-50%);
-      bottom: 125px;
+      transform: translateX(-45%);
+      bottom: 175px;
       z-index: 2;
       transition: all 0.3s ease;
     }
