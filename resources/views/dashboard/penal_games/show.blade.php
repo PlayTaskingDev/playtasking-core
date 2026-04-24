@@ -12,12 +12,8 @@
     @section('header_scripts')
     <style>
     .scoreboard {
-      position: absolute;
-      top: 40px;
-      left: 20px;
       color: white;
       font-size: 24px;
-      font-family: Arial, sans-serif;
       z-index: 10;
     }
 
@@ -26,6 +22,7 @@
       width: 100%;
       height: 768px;
       overflow: hidden;
+      border-radius: 25px;
     }
 
     .background-penal {
@@ -192,9 +189,9 @@
                             </p>
 
                             {{-- Game --}}
-                            <div class="scoreboard" style="top: 40px;">
+                            <!--<div class="scoreboard" style="top: 40px;">
                               Marcación: <span id="score">0</span>
-                            </div>
+                            </div>-->
                             <div class="game-container">
                               <img src="/storage/dummy_assets/fondo-penal-game.webp" alt="Background" class="background-penal" />
                               <img src="https://i.imgur.com/aX1zBPZ.png" alt="Goalkeeper" class="goalkeeper" />
@@ -226,8 +223,9 @@
       const settingspzl = JSON.parse(document.getElementById('settingspzl').content)
       const ball = document.querySelector(".ball");
       const goalkeeper = document.querySelector(".goalkeeper");
-      const scoreDisplay = document.getElementById("score");
+      //const scoreDisplay = document.getElementById("score");
       let score = 0;
+      let isAnimating = false; // Flag para evitar múltiples clicks
 
       const startLeft = ball.offsetLeft;
       const startBottom = parseInt(window.getComputedStyle(ball).bottom);
@@ -240,9 +238,8 @@
         haut: "https://i.imgur.com/zH8ceJX.png" // also used for middle-center
       };
 
-      const hitSound = new Audio("ball-kick.wav");
-      const pointSound = new Audio("https://assets.codepen.io/1290466/flappy-bird-point.mp3");
-      const backgroundMusic = new Audio("playing.wav");
+      const hitSound = new Audio("/storage/dummy_assets/ball-kick.wav");
+      const backgroundMusic = new Audio("/storage/dummy_assets/playing.wav");
 
 
 
@@ -269,6 +266,8 @@
 
       document.querySelectorAll(".target-zone").forEach((zone, index) => {
         zone.addEventListener("click", (e) => {
+          // Evitar múltiples clicks mientras está en progreso
+          if (isAnimating) return;
           e.stopPropagation();
           
           hitSound.play();
@@ -284,6 +283,7 @@
 
       // Realistic ball animation with parabolic trajectory
       function animateBallRealistic(targetX, targetY) {
+        isAnimating = true; // Activar flag de animación
         const duration = 500; // Animation duration in ms
         const startTime = Date.now();
         const startX = parseInt(ball.style.left) || startLeft;
@@ -333,9 +333,32 @@
 
       // Continue the game logic after animation
       function continueGameLogic(clickX, clickY) {
-        const zoneId = Math.floor((clickY - 360) / 100) * 3 + Math.floor((clickX - 370) / 145);
+        // Define las posiciones de cada zona en píxeles
+        const zonePositions = {
+          0: { top: 360, left: 95, name: "haut-gauche" },      // top-left
+          1: { top: 360, left: 220, name: "haut-centre" },     // top-center
+          2: { top: 360, left: 330, name: "haut-droite" },     // top-right
+          3: { top: 425, left: 95, name: "milieu-gauche" },    // middle-left
+          4: { top: 425, left: 215, name: "milieu-centre" },   // middle-center
+          5: { top: 425, left: 330, name: "milieu-droite" },   // middle-right
+          6: { top: 490, left: 95, name: "bas-gauche" },       // bottom-left
+          8: { top: 490, left: 330, name: "bas-droite" }       // bottom-right (no 7)
+        };
+        
+        // Encontrar la zona más cercana
+        let zoneId = -1;
+        let minDistance = Infinity;
+        for (let id in zonePositions) {
+          const zone = zonePositions[id];
+          const distance = Math.abs(clickX - zone.left) + Math.abs(clickY - zone.top);
+          if (distance < minDistance) {
+            minDistance = distance;
+            zoneId = parseInt(id);
+          }
+        }
+        
         const willSave = Math.random() <= 0.6;
-        let effectiveZone = willSave ? Math.max(0, Math.min(8, zoneId)) : getRandomOtherZone(Math.max(0, Math.min(8, zoneId)));
+        let effectiveZone = willSave ? zoneId : getRandomOtherZone(zoneId);
 
         // Apply goalkeeper image
         let direction = "centre";
@@ -363,7 +386,20 @@
           score++;
           setTimeout(() => {
             showMessage(messagesGoal[Math.floor(Math.random() * messagesGoal.length)]);
-            scoreDisplay.textContent = score;
+            //scoreDisplay.textContent = score;
+             axios.post(settingspzl.f, {data: settingspzl.g,slug:settingspzl.j}, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                  })
+                  .then(function (response)
+                  {
+                      window.location = settingspzl.h;
+                  })
+                  .catch(function (error)
+                  {
+                      //console.log(error);
+                  });
           }, 100);
         }
 
@@ -374,11 +410,12 @@
           ball.style.transform = "translateX(-50%)";
           goalkeeper.className = "goalkeeper";
           goalkeeper.src = goalkeeperImages.centre;
+          isAnimating = false; // Desactivar flag de animación para permitir nuevo click
         }, 800);
       }
 
       function getRandomOtherZone(exclude) {
-        let otherZones = [0,1,2,3,4,5,6,7,8].filter(z => z !== exclude);
+        let otherZones = [0,1,2,3,4,5,6,8].filter(z => z !== exclude);
         return otherZones[Math.floor(Math.random() * otherZones.length)];
       }
 
