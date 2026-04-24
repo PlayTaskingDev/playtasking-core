@@ -160,7 +160,7 @@
     <div class="py-6">
         <div class="max-w-2xl mx-auto px-3 sm:px-6 lg:px-8">
             <div class="dark:bg-gray-800">
-                <div class="game-card rounded-lg dark:bg-gray-800 dark:border-gray-700 p-3">
+                <div class="game-card rounded-lg dark:bg-gray-800 dark:border-gray-700 p-2">
                     <div id="game-holder">
 
                         <x-campaign-menu :campaign-games="$campaign_games" :campaign-tickets="$campaign_tickets" :campaign-coupons="$campaign_coupons" :campaign-url="route('campaign.show', ['tenant' => tenant('id'), 'slug' => $penal_game->campaign->slug])" :active="'games'" />
@@ -196,9 +196,9 @@
                               Marcación: <span id="score">0</span>
                             </div>
                             <div class="game-container">
-                              <img src="/storage/dummy_assets/fondo-penal-game.webp" alt="Décor" class="background-penal" />
-                              <img src="https://i.imgur.com/aX1zBPZ.png" alt="Gardien" class="goalkeeper" />
-                              <img src="https://i.imgur.com/qarbcqB.png" alt="Ballon" class="ball" />
+                              <img src="/storage/dummy_assets/fondo-penal-game.webp" alt="Background" class="background-penal" />
+                              <img src="https://i.imgur.com/aX1zBPZ.png" alt="Goalkeeper" class="goalkeeper" />
+                              <img src="https://i.imgur.com/qarbcqB.png" alt="Ball" class="ball" />
                               <div class="goal-area"></div>
 
                               <!-- line 2 -->
@@ -211,7 +211,7 @@
                               <div class="target-zone clickable" data-zone="milieu-droite" style="top: 425px; left: 330px;"></div>
                               <!-- Line 2 -->
                               <div class="target-zone clickable" data-zone="bas-gauche" style="top: 490px; left: 95px;"></div>
-                              <div class="target-zone clickable" data-zone="bas-centre" style="top: 490px; left: 215px;"></div>
+                              <!--<div class="target-zone clickable" data-zone="bas-centre" style="top: 490px; left: 215px;"></div>-->
                               <div class="target-zone clickable" data-zone="bas-droite" style="top: 490px; left: 330px;"></div>
                             </div>
                             <div id="message" class="text-white text-center text-2xl text-shadow font-bold py-12"></div>
