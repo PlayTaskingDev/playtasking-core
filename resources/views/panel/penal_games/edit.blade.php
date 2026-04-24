@@ -1,25 +1,25 @@
 <x-panel-layout>
     <x-slot name="title">
-        {{ !is_null($flappy_game->title) ? $flappy_game->title : trans('Create') . '' . trans('Flappy Game') }}
+        {{ !is_null($penal_game->title) ? $penal_game->title : trans('Create') . '' . trans('Flappy Game') }}
     </x-slot>
     <x-slot name="description">
-        {{ $flappy_game->id == null ? '' : $flappy_game->description }}
+        {{ $penal_game->id == null ? '' : $penal_game->description }}
     </x-slot>
 
     <x-slot name="header">
         <h1 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ $flappy_game->id == null ? trans('Create') : trans('Edit') }} {{ __('Flappy Game') }}
+            {{ $penal_game->id == null ? trans('Create') : trans('Edit') }} {{ __('Flappy Game') }}
         </h1>
     </x-slot>
 
     <div class="py-6 mx-5">
         <div class="max-w-2xl mx-auto sm:px-6 lg:px-8 bg-white p-3 rounded shadow">
             <form method="POST" enctype="multipart/form-data"
-                action="{{ $flappy_game->id == null ? route('flappy_games.store', ['tenant' => tenant('id')]) : route('flappy_games.update', ['tenant' => tenant('id'), 'flappy_game' => $flappy_game]) }}">
+                action="{{ $penal_game->id == null ? route('penal_games.store', ['tenant' => tenant('id')]) : route('penal_games.update', ['tenant' => tenant('id'), 'penal_game' => $penal_game]) }}">
                 @csrf
-                @isset($flappy_game->id)
+                @isset($penal_game->id)
                     @method('PATCH')
-                    <input type="hidden" name="id" value="{{ $flappy_game->id }}">
+                    <input type="hidden" name="id" value="{{ $penal_game->id }}">
                 @endisset
 
                 <input type="hidden" name="content_type_id" value="{{ $content_type->id }}">
@@ -29,7 +29,7 @@
                         <option value="">{{__('Select')}}</option>
                         @if ($campaigns)
                             @foreach ($campaigns as $campaign)
-                                <option value="{{$campaign->id}}" {{(old('campaign_id') == $campaign->id ? 'selected' : (isset($flappy_game->campaign) && $flappy_game->campaign->id == $campaign->id ? 'selected' : ''))}}>{{$campaign->name}}</option>
+                                <option value="{{$campaign->id}}" {{(old('campaign_id') == $campaign->id ? 'selected' : (isset($penal_game->campaign) && $penal_game->campaign->id == $campaign->id ? 'selected' : ''))}}>{{$campaign->name}}</option>
                             @endforeach
                         @endif
                     </select>
@@ -39,22 +39,22 @@
                 <div class="my-5">
                     <x-input-label for="title" :value="__('Title')" />
                     <x-text-input id="title" class="block mt-1 w-full" type="text" name="title"
-                        :value="old('title', $flappy_game->title)" required autofocus autocomplete="title" />
+                        :value="old('title', $penal_game->title)" required autofocus autocomplete="title" />
                     <x-input-error :messages="$errors->get('title')" class="mt-2" />
                 </div>
 
                 <div class="my-5">
                     <x-input-label for="description" :value="__('Description')" />
                     <x-text-input id="description" class="block mt-1 w-full" type="text" name="description"
-                        :value="old('description', $flappy_game->description)" required autofocus autocomplete="description" />
+                        :value="old('description', $penal_game->description)" required autofocus autocomplete="description" />
                     <x-input-error :messages="$errors->get('description')" class="mt-2" />
                 </div>
 
                 <div class="my-5 grid grid-cols-2 gap-4">
                     <div>
                         <x-input-label for="featured_image" :value="__('Featured Image')" />
-                        @if (!is_null($flappy_game->id) && $flappy_game->featured_image)
-                            <img src="{{$flappy_game->featured_image}}" alt="{{__('Quiz Featured Image')}}" title="{{__('Quiz Featured Image')}}" class="my-5">
+                        @if (!is_null($penal_game->id) && $penal_game->featured_image)
+                            <img src="{{$penal_game->featured_image}}" alt="{{__('Quiz Featured Image')}}" title="{{__('Quiz Featured Image')}}" class="my-5">
                         @endif
                         <input
                             class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
@@ -66,8 +66,8 @@
                     </div>
                     <div>
                         <x-input-label for="featured_image_disabled" :value="__('Disabled Image')" />
-                        @if (!is_null($flappy_game->id) && $flappy_game->featured_image_disabled)
-                            <img src="{{$flappy_game->featured_image_disabled}}" alt="{{__('Quiz Disabled Image')}}" title="{{__('Quiz Disabled Image')}}" class="my-5">
+                        @if (!is_null($penal_game->id) && $penal_game->featured_image_disabled)
+                            <img src="{{$penal_game->featured_image_disabled}}" alt="{{__('Quiz Disabled Image')}}" title="{{__('Quiz Disabled Image')}}" class="my-5">
                         @endif
                         <input
                             class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
@@ -82,36 +82,36 @@
                 <div class="my-5">
                     <x-input-label for="slug" :value="__('Slug')" />
                     <x-text-input id="slug" class="block mt-1 w-full" type="text" name="slug"
-                        :value="old('slug', $flappy_game->slug)" required autofocus autocomplete="slug" />
+                        :value="old('slug', $penal_game->slug)" required autofocus autocomplete="slug" />
                     <x-input-error :messages="$errors->get('slug')" class="mt-2" />
                 </div>
 
                 <div class="my-5">
                     <x-input-label for="seconds" :value="__('Seconds')" />
                     <x-text-input id="seconds" class="block mt-1 w-full" type="number" name="seconds"
-                        :value="old('seconds', $flappy_game->seconds)" required autofocus autocomplete="seconds" />
+                        :value="old('seconds', $penal_game->seconds)" required autofocus autocomplete="seconds" />
                     <x-input-error :messages="$errors->get('seconds')" class="mt-2" />
                 </div>
 
                 <div class="my-5">
                     <x-input-label for="max_points" :value="__('Max Points')" />
                     <x-text-input id="max_points" class="block mt-1 w-full" type="number" name="max_points"
-                        :value="old('max_points', $flappy_game->max_points)" required autofocus autocomplete="max_points" />
+                        :value="old('max_points', $penal_game->max_points)" required autofocus autocomplete="max_points" />
                     <x-input-error :messages="$errors->get('max_points')" class="mt-2" />
                 </div>
 
                 <div class="my-5">
                     <x-input-label for="points_per_object" :value="__('Points per Object')" />
                     <x-text-input id="points_per_object" class="block mt-1 w-full" type="number" name="points_per_object"
-                        :value="old('points_per_object', $flappy_game->points_per_object)" required autofocus autocomplete="points_per_object" />
+                        :value="old('points_per_object', $penal_game->points_per_object)" required autofocus autocomplete="points_per_object" />
                     <x-input-error :messages="$errors->get('points_per_object')" class="mt-2" />
                 </div>
 
                 <div class="my-5 grid grid-cols-2 gap-4">
                     <div>
                         <x-input-label for="game_bg_image" :value="__('Game Background Image')" />
-                        @if (!is_null($flappy_game->id) && $flappy_game->game_bg_image)
-                            <img src="{{$flappy_game->game_bg_image}}" alt="{{__('Game Background Image')}}" title="{{__('Game Background Image')}}" class="my-5">
+                        @if (!is_null($penal_game->id) && $penal_game->game_bg_image)
+                            <img src="{{$penal_game->game_bg_image}}" alt="{{__('Game Background Image')}}" title="{{__('Game Background Image')}}" class="my-5">
                         @endif
                         <input
                             class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
@@ -143,7 +143,7 @@
                                 </svg>
                             </div>
                         </div>
-                        <input id="init_date" name="init_date" value="{{ old('init_date', $flappy_game->init_date) }}" type="text" 
+                        <input id="init_date" name="init_date" value="{{ old('init_date', $penal_game->init_date) }}" type="text" 
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="{{ __('Select date') }}">
                             
@@ -214,7 +214,7 @@
                                 </svg>
                             </div>
                         </div>
-                        <input id="end_date" name="end_date" value="{{ old('end_date', $flappy_game->end_date) }}" 
+                        <input id="end_date" name="end_date" value="{{ old('end_date', $penal_game->end_date) }}" 
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="{{ __('Select date') }}">
 
@@ -273,7 +273,7 @@
                     <div>
                         <x-input-label for="gradient_1" :value="__('Gradient Background 1')" />
                         <x-text-input id="gradient_1" class="block mt-1 w-full" type="text" name="gradient_1"
-                            :value="old('gradient_1', $flappy_game->gradient_1)" required autofocus autocomplete="gradient_1" />
+                            :value="old('gradient_1', $penal_game->gradient_1)" required autofocus autocomplete="gradient_1" />
                         <x-input-error :messages="$errors->get('gradient_1')" class="mt-2" />
                         <div id="gradient1"></div>
                         <div id="piker-viewer-1" class="block mt-1 w-full h-10 rounded"></div>
@@ -281,7 +281,7 @@
                     <div>
                         <x-input-label for="gradient_2" :value="__('Gradient Background 2')" />
                         <x-text-input id="gradient_2" class="block mt-1 w-full" type="text" name="gradient_2"
-                            :value="old('gradient_2', $flappy_game->gradient_2)" required autofocus autocomplete="gradient_2" />
+                            :value="old('gradient_2', $penal_game->gradient_2)" required autofocus autocomplete="gradient_2" />
                         <x-input-error :messages="$errors->get('gradient_2')" class="mt-2" />
                         <div id="gradient2"></div>
                         <div id="piker-viewer-2" class="block mt-1 w-full h-10 rounded"></div>
@@ -293,7 +293,7 @@
                     <div>
                         <x-input-label for="btn_background_color_1" :value="__('Gradient Button Background 1')" />
                         <x-text-input id="btn_background_color_1" class="block mt-1 w-full" type="text" name="btn_background_color_1"
-                            :value="old('btn_background_color_1', $flappy_game->btn_background_color_1)" required autofocus autocomplete="btn_background_color_1" />
+                            :value="old('btn_background_color_1', $penal_game->btn_background_color_1)" required autofocus autocomplete="btn_background_color_1" />
                         <x-input-error :messages="$errors->get('btn_background_color_1')" class="mt-2" />
                         <div id="btn_bg_color_1"></div>
                         <div id="piker-viewer-3" class="block mt-1 w-full h-10 rounded"></div>
@@ -301,7 +301,7 @@
                     <div>
                         <x-input-label for="btn_background_color_2" :value="__('Gradient Button Background 2')" />
                         <x-text-input id="btn_background_color_2" class="block mt-1 w-full" type="text" name="btn_background_color_2"
-                            :value="old('btn_background_color_2', $flappy_game->btn_background_color_2)" required autofocus autocomplete="btn_background_color_2" />
+                            :value="old('btn_background_color_2', $penal_game->btn_background_color_2)" required autofocus autocomplete="btn_background_color_2" />
                         <x-input-error :messages="$errors->get('btn_background_color_2')" class="mt-2" />
                         <div id="btn_bg_color_2"></div>
                         <div id="piker-viewer-4" class="block mt-1 w-full h-10 rounded"></div>
@@ -309,7 +309,7 @@
                 </div>
                 <div class="my-5 grid grid-cols-2 gap-4">
                     <div>
-                        <input id="btn_border" name="btn_border" type="checkbox" value="1" {{$flappy_game->btn_border ? 'checked' : ''}}
+                        <input id="btn_border" name="btn_border" type="checkbox" value="1" {{$penal_game->btn_border ? 'checked' : ''}}
                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                         <label for="btn_border"
                             class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ __('Has border') }}</label>
@@ -318,14 +318,14 @@
                         <div class="mt-3">
                             <x-input-label for="btn_border_color" :value="__('Button Border Color')" />
                             <x-text-input id="btn_border_color" class="block mt-1 w-full" type="text" name="btn_border_color"
-                                :value="old('btn_border_color', $flappy_game->btn_border_color)" required autofocus autocomplete="btn_border_color" />
+                                :value="old('btn_border_color', $penal_game->btn_border_color)" required autofocus autocomplete="btn_border_color" />
                             <x-input-error :messages="$errors->get('btn_border_color')" class="mt-2" />
                             <div id="btn_brd_color"></div>
                             <div id="piker-viewer-5" class="block mt-1 w-full h-10 rounded"></div>
                         </div>
                     </div>
                     <div>
-                        <input id="btn_shadow" name="btn_shadow" type="checkbox" value="1" {{$flappy_game->btn_shadow ? 'checked' : ''}}
+                        <input id="btn_shadow" name="btn_shadow" type="checkbox" value="1" {{$penal_game->btn_shadow ? 'checked' : ''}}
                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                         <label for="btn_shadow"
                             class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ __('Has shadow') }}</label>
@@ -334,7 +334,7 @@
                         <div class="mt-3">
                             <x-input-label for="btn_text_color" :value="__('Button Text Color')" />
                             <x-text-input id="btn_text_color" class="block mt-1 w-full" type="text" name="btn_text_color"
-                                :value="old('btn_text_color', $flappy_game->btn_text_color)" required autofocus autocomplete="btn_text_color" />
+                                :value="old('btn_text_color', $penal_game->btn_text_color)" required autofocus autocomplete="btn_text_color" />
                             <x-input-error :messages="$errors->get('btn_text_color')" class="mt-2" />
                             <div id="btn_txt_color"></div>
                             <div id="piker-viewer-6" class="block mt-1 w-full h-10 rounded"></div>
@@ -345,13 +345,13 @@
                     <div>
                         <x-input-label for="btn_text_active" :value="__('Text Active')" />
                         <x-text-input id="btn_text_active" class="block mt-1 w-full" type="text" name="btn_text_active"
-                            :value="old('btn_text_active', $flappy_game->btn_text_active)" required autofocus autocomplete="btn_text_active" />
+                            :value="old('btn_text_active', $penal_game->btn_text_active)" required autofocus autocomplete="btn_text_active" />
                         <x-input-error :messages="$errors->get('btn_text_active')" class="mt-2" />
                     </div>
                     <div>
                         <x-input-label for="btn_text_inactive" :value="__('Text Inactive')" />
                         <x-text-input id="btn_text_inactive" class="block mt-1 w-full" type="text" name="btn_text_inactive"
-                            :value="old('btn_text_inactive', $flappy_game->btn_text_inactive)" required autofocus autocomplete="btn_text_inactive" />
+                            :value="old('btn_text_inactive', $penal_game->btn_text_inactive)" required autofocus autocomplete="btn_text_inactive" />
                         <x-input-error :messages="$errors->get('btn_text_inactive')" class="mt-2" />
                     </div>
                 </div>
@@ -359,9 +359,9 @@
                 <h3 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight mb-5">{{__('Banner settings')}}</h3>
                 <div class="my-5">
                     <x-input-label for="game_banner" :value="__('Section banner')" />
-                    @if ($flappy_game->game_banner)
+                    @if ($penal_game->game_banner)
                         <div id="delete_image_holder" class="relative">
-                            <img src="{{$flappy_game->game_banner}}" alt="{{__('Banner Image')}}" title="{{__('Banner Image')}}" class="my-5 w-full">
+                            <img src="{{$penal_game->game_banner}}" alt="{{__('Banner Image')}}" title="{{__('Banner Image')}}" class="my-5 w-full">
                             <x-delete-image :element="'delete_image_holder'"></x-delete-image>
                         </div>
                         <input type="hidden" id="delete_image_holder_hidden" name="delete_image_holder_hidden" value="0">
@@ -378,18 +378,18 @@
                 <div class="my-5">
                     <x-input-label for="game_banner_url" :value="__('Banner URL (Image)')" />
                     <x-text-input id="game_banner_url" class="block mt-1 w-full" type="text" name="game_banner_url"
-                        :value="old('game_banner_url', $flappy_game->game_banner_url)" autofocus autocomplete="game_banner_url" />
+                        :value="old('game_banner_url', $penal_game->game_banner_url)" autofocus autocomplete="game_banner_url" />
                     <x-input-error :messages="$errors->get('game_banner_url')" class="mt-2" />
                 </div>
                 <div class="my-5">
                     <x-input-label for="game_banner_video" :value="__('Video')" />
-                    @if (!is_null($flappy_game->id) && $flappy_game->game_banner_video)
+                    @if (!is_null($penal_game->id) && $penal_game->game_banner_video)
                     <div class="aspect-w-16 aspect-h-9 mb-6">
-                        <iframe src="{{$flappy_game->game_banner_video}}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <iframe src="{{$penal_game->game_banner_video}}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                     </div>
                     @endif
                     <x-text-input id="game_banner_video" class="block mt-1 w-full" type="text" name="game_banner_video"
-                        :value="old('game_banner_video', $flappy_game->game_banner_video)" autofocus autocomplete="game_banner_video" />
+                        :value="old('game_banner_video', $penal_game->game_banner_video)" autofocus autocomplete="game_banner_video" />
                     <x-input-error :messages="$errors->get('game_banner_video')" class="mt-2" />
                     <div class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="game_banner_help">
                         {{__('If a video URL is set, it has precedence over the image.')}}<br>
@@ -401,8 +401,8 @@
                 <div class="my-5 grid grid-cols-2 gap-4">
                     <div>
                         <x-input-label for="failed_image" :value="__('Failed Image')" />
-                        @if (!is_null($flappy_game->id) && $flappy_game->failed_image)
-                            <img src="{{$flappy_game->failed_image}}" alt="{{__('Quiz Failed Image')}}" title="{{__('Quiz Failed Image')}}" class="my-5">
+                        @if (!is_null($penal_game->id) && $penal_game->failed_image)
+                            <img src="{{$penal_game->failed_image}}" alt="{{__('Quiz Failed Image')}}" title="{{__('Quiz Failed Image')}}" class="my-5">
                         @endif
                         <input
                             class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
@@ -422,22 +422,22 @@
         </div>
     </div>
 
-    @if (!is_null($flappy_game->id))
+    @if (!is_null($penal_game->id))
         <div class="py-6 mx-5">
             <div class="max-w-2xl mx-auto sm:px-6 lg:px-8 bg-white p-3 rounded shadow">
                 <div class="flex justify-between">
                     <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight mb-5">
                         {{ __('Award') }}
                     </h2>
-                    @if (is_null($flappy_game->award))
-                        <a href="{{ route('awards.create', ['tenant' => tenant('id'), 'awardable_id' => $flappy_game, 'awardable_type' => 'App\Models\SmashGame' ]) }}"
+                    @if (is_null($penal_game->award))
+                        <a href="{{ route('awards.create', ['tenant' => tenant('id'), 'awardable_id' => $penal_game, 'awardable_type' => 'App\Models\PenalGame' ]) }}"
                             class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
                             {{ __('Create') }} {{ __('Award') }}
                         </a>
                     @endif
 
                 </div>
-                @if (!is_null($flappy_game->award))
+                @if (!is_null($penal_game->award))
                     <div class="relative overflow-x-auto shadow-md rounded-lg">
                         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                             <thead
@@ -454,10 +454,10 @@
                             <tbody>
                                 <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
                                     <th scope="row" class="px-6 py-4">
-                                        {!!$flappy_game->award->title!!}
+                                        {!!$penal_game->award->title!!}
                                     </th>
                                     <td class="px-6 py-4">
-                                        <a href="{{ route('awards.edit', ['tenant' => tenant('id'), 'award' => $flappy_game->award]) }}"
+                                        <a href="{{ route('awards.edit', ['tenant' => tenant('id'), 'award' => $penal_game->award]) }}"
                                             class="font-medium text-blue-600 dark:text-blue-500 hover:underline">{{ __('Edit') }}</a>
                                     </td>
                                 </tr>
@@ -473,7 +473,7 @@
         <script>
             document.addEventListener("DOMContentLoaded", () => {
                 const gradient1 = new ColorPicker({
-                    color: '{{$flappy_game->gradient_1}}',
+                    color: '{{$penal_game->gradient_1}}',
                     background: '#fff',
                     el: document.getElementById('gradient1'),
                     width: 250,
@@ -490,7 +490,7 @@
                 });
 
                 const gradient2 = new ColorPicker({
-                    color: '{{$flappy_game->gradient_2}}',
+                    color: '{{$penal_game->gradient_2}}',
                     background: '#fff',
                     el: document.getElementById('gradient2'),
                     width: 250,
@@ -507,7 +507,7 @@
                 });
 
                 const gradient3 = new ColorPicker({
-                    color: '{{$flappy_game->btn_background_color_1}}',
+                    color: '{{$penal_game->btn_background_color_1}}',
                     background: '#fff',
                     el: document.getElementById('btn_bg_color_1'),
                     width: 250,
@@ -524,7 +524,7 @@
                 });
 
                 const gradient4 = new ColorPicker({
-                    color: '{{$flappy_game->btn_background_color_2}}',
+                    color: '{{$penal_game->btn_background_color_2}}',
                     background: '#fff',
                     el: document.getElementById('btn_bg_color_2'),
                     width: 250,
@@ -541,7 +541,7 @@
                 });
 
                 const gradient5 = new ColorPicker({
-                    color: '{{$flappy_game->btn_border_color}}',
+                    color: '{{$penal_game->btn_border_color}}',
                     background: '#fff',
                     el: document.getElementById('btn_brd_color'),
                     width: 250,
@@ -558,7 +558,7 @@
                 });
 
                 const gradient6 = new ColorPicker({
-                    color: '{{$flappy_game->btn_text_color}}',
+                    color: '{{$penal_game->btn_text_color}}',
                     background: '#fff',
                     el: document.getElementById('btn_txt_color'),
                     width: 250,

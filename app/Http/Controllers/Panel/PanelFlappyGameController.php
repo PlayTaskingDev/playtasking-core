@@ -21,7 +21,7 @@ class PanelFlappyGameController extends Controller
         $flappy_games = FlappyGame::all();
 
         return view('panel.flappy_games.index', [
-            'title'         => 'Panel | ' . trans('Catch Games'),
+            'title'         => 'Panel | ' . trans('Flappy Games'),
             'description'   => 'Admin Panel',
             'flappy_games'   => $flappy_games
         ]);
@@ -78,7 +78,7 @@ class PanelFlappyGameController extends Controller
 
         FlappyGame::create($data);
 
-        return redirect(route('flappy_games.index', ['tenant' => tenant('id')]))->with('status', trans('Catch Game saved successful'));
+        return redirect(route('flappy_games.index', ['tenant' => tenant('id')]))->with('status', trans('Flappy Game saved successful'));
     }
 
     /**
@@ -148,7 +148,7 @@ class PanelFlappyGameController extends Controller
         $flappy_game->fill($data);
         $flappy_game->save();
 
-        return redirect(route('flappy_games.index', ['tenant' => tenant('id')]))->with('status', trans('Catch Game saved successful'));
+        return redirect(route('flappy_games.index', ['tenant' => tenant('id')]))->with('status', trans('Flappy Game saved successful'));
     }
 
     /**
@@ -176,6 +176,6 @@ class PanelFlappyGameController extends Controller
 
         $flappy_game->delete();
 
-        return redirect(route('flappy_games.index', ['tenant' => tenant('id')]))->with('status', trans('Catch Game deleted successful'));
+        return redirect(route('flappy_games.index', ['tenant' => tenant('id')]))->with('status', trans('Flappy Game deleted successful'));
     }
 }

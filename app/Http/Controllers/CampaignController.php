@@ -83,6 +83,10 @@ class CampaignController extends Controller
                         'flappy_games' => function($q) use ($now)
                             {
                                 $q->where([['init_date','<',$now],['end_date','>',$now]]);
+                            },
+                        'penal_games' => function($q) use ($now)
+                            {
+                                $q->where([['init_date','<',$now],['end_date','>',$now]]);
                             }
                     ])
                     ->where([['slug', $slug],['active',true],['init_date','<',$now],['end_date','>',$now]])

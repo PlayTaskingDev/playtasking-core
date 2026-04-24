@@ -7,7 +7,7 @@
     </x-slot>
     <x-slot name="header">
         <h1 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Flappy Games') }}
+            {{ __('Penal Games') }}
         </h1>
     </x-slot>
 
@@ -19,12 +19,12 @@
                         role="alert" />
                 @endif
                 <div class="grid justify-items-end">
-                    <a href="{{ route('flappy_games.create', ['tenant' => tenant('id')]) }}"
+                    <a href="{{ route('penal_games.create', ['tenant' => tenant('id')]) }}"
                         class="text-black bg-white hover:bg-blue-300 focus:ring-4 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 mb-5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-                        {{ __('Create') }} {{ __('Smash Game') }}
+                        {{ __('Create') }} {{ __('Penal Game') }}
                     </a>
                 </div>
-                @if ($flappy_games->isNotEmpty())
+                @if ($penal_games->isNotEmpty())
                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 table-fixed">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
@@ -46,31 +46,31 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($flappy_games as $flappy_game)
+                        @foreach ($penal_games as $penal_game)
                             <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
                                 <th scope="row" class="px-6 py-4">
-                                    {{ $flappy_game->title }}
+                                    {{ $penal_game->title }}
                                 </th>
                                 <td class="px-6 py-4 hidden sm:table-cell">
-                                    {{ $flappy_game->description }}
+                                    {{ $penal_game->description }}
                                 </td>
                                 <td class="px-6 py-4 hidden sm:table-cell">
-                                    {{ $flappy_game->only_date }}
+                                    {{ $penal_game->only_date }}
                                 </td>
                                 <td
-                                    class="px-6 py-4 font-bold {{ $flappy_game->is_valid ? 'text-green-500' : 'text-red-500' }} hidden sm:table-cell">
-                                    {{ $flappy_game->is_valid ? trans('Yes') : trans('No') }}
+                                    class="px-6 py-4 font-bold {{ $penal_game->is_valid ? 'text-green-500' : 'text-red-500' }} hidden sm:table-cell">
+                                    {{ $penal_game->is_valid ? trans('Yes') : trans('No') }}
                                 </td>
                                 <td class="px-6 py-4 grid grid-cols-3 gap-2 justify-items-center">
-                                    <a href="{{ route('flappy_games.edit', ['tenant' => tenant('id'), 'flappy_game' => $flappy_game]) }}"
+                                    <a href="{{ route('penal_games.edit', ['tenant' => tenant('id'), 'penal_game' => $penal_game]) }}"
                                         class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
                                         {{ __('Edit') }}
                                     </a>
-                                    <a href="{{ route('panel.export_user_interactions', ['tenant' => tenant('id'), 'table_name' => $flappy_game->table_name, 'model_id' => $flappy_game->id]) }}"
+                                    <a href="{{ route('panel.export_user_interactions', ['tenant' => tenant('id'), 'table_name' => $penal_game->table_name, 'model_id' => $penal_game->id]) }}"
                                         class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
                                         {{ __('Export') }}
                                     </a>
-                                    <form method="post" action="{{ route('flappy_games.destroy', ['tenant' => tenant('id'), 'flappy_game' => $flappy_game]) }}">
+                                    <form method="post" action="{{ route('penal_games.destroy', ['tenant' => tenant('id'), 'penal_game' => $penal_game]) }}">
                                         @csrf
                                         @method('delete')
                                         <button type="submit" class="font-medium text-red-600 dark:text-red-500 hover:underline" onclick="return confirm('{{ __('Are you sure to delete this?') }}')">

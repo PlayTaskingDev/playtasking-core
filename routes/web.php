@@ -31,6 +31,7 @@ use App\Http\Controllers\Panel\PanelCatchGameController;
 use App\Http\Controllers\Panel\PanelCatchObjectController;
 use App\Http\Controllers\Panel\PanelSmashGameController;
 use App\Http\Controllers\Panel\PanelFlappyGameController;
+use App\Http\Controllers\Panel\PanelPenalGameController;
 use App\Http\Controllers\Panel\PanelSmashObjectController;
 use App\Http\Controllers\Panel\PanelClickWinController;
 use App\Http\Controllers\Panel\PanelCodeController;
@@ -46,6 +47,7 @@ use App\Http\Controllers\Panel\TicketQuestionController;
 use App\Http\Controllers\Admin\DynamicsController;
 use App\Http\Controllers\Admin\CampaignsController;
 use App\Http\Controllers\FlappyGameController;
+use App\Http\Controllers\PenalGameController;
 use App\Http\Controllers\PuzzleController;
 use App\Http\Controllers\RankingController;
 use App\Http\Controllers\ShareQuizController;
@@ -161,6 +163,13 @@ Route::group([
                 ->middleware('ajax_quiz.complete')->name('flappy_game.complete');
         });
 
+        Route::prefix('penal-games')->group(function () {
+            Route::get('/', [PenalGameController::class, 'index'])->name('penal_game.index');
+            Route::get('/{slug}', [PenalGameController::class, 'show'])->name('penal_game.show');
+            Route::post('/penal-games-complete', [PenalGameController::class, 'penal_game_complete'])
+                ->middleware('ajax_quiz.complete')->name('penal_game.complete');
+        });
+
         Route::prefix('compartir')->group(function () {
             Route::get('/', [ShareQuizController::class, 'share_quiz_index'])->name('share_quiz.index');
             Route::get('/{slug}', [ShareQuizController::class, 'share_quiz_show'])->name('share_quiz.show');
@@ -267,6 +276,7 @@ Route::group([
         Route::resource('catch_objects', PanelCatchObjectController::class);
         Route::resource('smash_games', PanelSmashGameController::class);
         Route::resource('flappy_games', PanelFlappyGameController::class);
+        Route::resource('penal_games', PanelPenalGameController::class);
         Route::resource('smash_objects', PanelSmashObjectController::class);
         Route::resource('media_elements', PanelMediaElementController::class);
         Route::get('ticketQuestion/get-codes-sample', [TicketQuestionController::class, 'download_sample'])->name('tickets.questions.sample');
@@ -337,6 +347,9 @@ Route::group([
         Route::resource('clickwingames',App\Http\Controllers\Admin\Games\ClickWinGameController::class);
         // Game - Flappy Game
         Route::resource('flappygames',App\Http\Controllers\Admin\Games\FlappyGameController::class);
+
+        // Game - Pennal Game
+        Route::resource('penalgames',App\Http\Controllers\Admin\Games\PenalGameController::class);
         Route::resource('clickwingames',App\Http\Controllers\Admin\Games\ClickWinGameController::class);
         // Game - Share
         Route::resource('sharegames',App\Http\Controllers\Admin\Games\ShareGameController::class);
