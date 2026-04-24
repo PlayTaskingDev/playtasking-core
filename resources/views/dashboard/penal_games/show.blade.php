@@ -202,17 +202,17 @@
                               <div class="goal-area"></div>
 
                               <!-- line 2 -->
-                              <div class="target-zone clickable" data-zone="haut-gauche" style="top: 360px; left: 100px;"></div>
+                              <div class="target-zone clickable" data-zone="haut-gauche" style="top: 360px; left: 95px;"></div>
                               <div class="target-zone clickable" data-zone="haut-centre" style="top: 360px; left: 220px;"></div>
-                              <div class="target-zone clickable" data-zone="haut-droite" style="top: 360px; left: 350px;"></div>
+                              <div class="target-zone clickable" data-zone="haut-droite" style="top: 360px; left: 330px;"></div>
                               <!-- line 1 -->
-                              <div class="target-zone clickable" data-zone="milieu-gauche" style="top: 425px; left: 100px;"></div>
-                              <div class="target-zone clickable" data-zone="milieu-centre" style="top: 425px; left: 220px;"></div>
-                              <div class="target-zone clickable" data-zone="milieu-droite" style="top: 425px; left: 350px;"></div>
+                              <div class="target-zone clickable" data-zone="milieu-gauche" style="top: 425px; left: 95px;"></div>
+                              <div class="target-zone clickable" data-zone="milieu-centre" style="top: 425px; left: 215px;"></div>
+                              <div class="target-zone clickable" data-zone="milieu-droite" style="top: 425px; left: 330px;"></div>
                               <!-- Line 2 -->
-                              <div class="target-zone clickable" data-zone="bas-gauche" style="top: 490px; left: 100px;"></div>
-                              <div class="target-zone clickable" data-zone="bas-centre" style="top: 490px; left: 220px;"></div>
-                              <div class="target-zone clickable" data-zone="bas-droite" style="top: 490px; left: 350px;"></div>
+                              <div class="target-zone clickable" data-zone="bas-gauche" style="top: 490px; left: 95px;"></div>
+                              <div class="target-zone clickable" data-zone="bas-centre" style="top: 490px; left: 215px;"></div>
+                              <div class="target-zone clickable" data-zone="bas-droite" style="top: 490px; left: 330px;"></div>
                             </div>
                             <div id="message" class="text-white text-center text-2xl text-shadow font-bold py-12"></div>
                         </div>
