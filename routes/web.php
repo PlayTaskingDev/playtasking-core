@@ -388,7 +388,7 @@ Route::group([
             Route::resource('ticketanswers', App\Http\Controllers\Admin\TicketAnswerController::class);
 
          // Pages
-        Route::resource('pages', App\Http\Controllers\Admin\PageController::class);
+        Route::resource('pages', App\Http\Controllers\Admin\PageController::class)->name('v2.pages');
         // Resources
         Route::resource('resources', App\Http\Controllers\Admin\ResourcesController::class);
         // options
