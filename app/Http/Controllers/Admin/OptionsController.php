@@ -39,6 +39,9 @@ class OptionsController extends Controller
         if( !$request->has('ranking_enabled') ){
             $request['ranking_enabled'] = false;
         }
+        if( !$request->has('autologin') ){
+            $request['autologin'] = false;
+        }
         if( !$request->has('ranking_enabled_games') ){
             $request['ranking_enabled_games'] = false;
         }

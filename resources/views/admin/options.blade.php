@@ -66,6 +66,7 @@
                     <section class="max-w-full w-[600px] space-y-6 transition-all ease-in duration-200" id="general" role="tabpanel" aria-labelledby="general-tab">
                         <x-ui.forms.input-switch label="App Enabled" name="app_active" value="1" switcher="{{ $settings->app_active }}"/>
                         <x-ui.forms.input-switch label="Ranking Enabled" name="ranking_enabled" value="1" switcher="{{ $settings->ranking_enabled }}" />
+                        <x-ui.forms.input-switch label="Autologin" name="autologin" value="1" switcher="{{ $settings->autologin }}" />
                         <x-ui.forms.input-text label="Nombre del Sitio" name="app_name" value="{{$settings->app_name}}"  placeholder="PlayTasking" />
                         <x-ui.forms.input-text label="Descripción" name="app_description" value="{{$settings->app_description}}"  placeholder="El Mejor Portal donde Siempre Ganas" />
                         <x-ui.forms.input-text label="Google Gtag ID" name="ga4_id" value="{{$settings->ga4_id}}" placeholder="G4-1234-12132" />
@@ -122,6 +123,7 @@
                         <x-ui.forms.input-switch label="Agregar Campo Ciudad" name="allow_city" value="1" switcher="{{ $settings->allow_city }}"/>
                         <x-ui.forms.input-switch label="Permitir registro con redes sociales" name="social_login_active" value="1" switcher="{{ $settings->social_login_active }}"/>
                         <x-ui.forms.input-switch label="Solicitar ID de miembros" name="members_number" value="1" switcher="{{ $settings->members_number }}"/>
+                        <x-ui.forms.input-switch label="Agregar campo Teléfono" name="enable_phone" value="1" switcher="{{ $settings->enable_phone }}" />
                         <x-ui.forms.input-text label="Members legend" name="members_legend" value="{{$settings->members_legend}}"  placeholder="" />
                         <x-ui.forms.input-text label="Members placeholder" name="members_placeholder" value="{{$settings->members_placeholder}}"  placeholder="" />
                         <x-ui.forms.input-text label="Members URL" name="members_url" value="{{$settings->members_url}}"  placeholder="" />

@@ -60,4 +60,21 @@ class RegisteredUserController extends Controller
 
         return redirect()->route('welcome', ['tenant' => tenant('id')]);
     }
+
+    public function autologin(Request $request): RedirectResponse {
+
+        
+        $user = User::create([
+            'name'              => 'User' . get_app_setting('app_name'),
+            'email'             => 'auto_' . uniqid() . '@playtasking.com',
+            'phone'             => '',
+            'members_number'    => '',
+            'password'          => Hash::make('PlayTaskingAutologinPassword123!'),
+        ]);
+        event(new Registered($user));
+
+        Auth::login($user);
+
+        return redirect()->route('welcome', ['tenant' => tenant('id')]);
+    }
 }
