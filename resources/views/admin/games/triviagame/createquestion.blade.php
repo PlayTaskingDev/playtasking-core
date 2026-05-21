@@ -22,7 +22,7 @@
 @section('content')
     <div class="py-6 mx-5">
         <div class="max-w-2xl mx-auto sm:px-6 lg:px-8 bg-white p-3 rounded shadow">
-            <form method="POST"
+            <form method="POST" enctype="multipart/form-data"
             action="{{ $question->id == null ? route('triviagamequestions.store', ['tenant' => tenant('id')]) : route('triviagamequestions.update', ['tenant' => tenant('id'), 'triviagamequestion' => $question]) }}">
             @csrf
             @isset($question->id)
@@ -38,6 +38,19 @@
                 <x-text-input id="title" class="block mt-1 w-full" type="text" name="title"
                 :value="old('title', $question->title)" required autofocus autocomplete="title" />
                 <x-input-error :messages="$errors->get('title')" class="mt-2" />
+            </div>
+            <div class="my-5">
+                <x-input-label for="featured_image" :value="__('Featured Image')" />
+                @if (!is_null($question->id) && $question->featured_image)
+                    <img src="{{$question->featured_image}}" alt="{{__('Question Featured Image')}}" title="{{__('Question Featured Image')}}" class="my-5">
+                @endif
+                <input
+                class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                aria-describedby="featured_image_help" id="featured_image" name="featured_image" type="file">
+                <x-input-error class="mt-2" :messages="$errors->get('featured_image')" />
+                <div class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="featured_image_help">
+                    {{__('Image must be less than 2MB and JPG or PNG format.')}}
+                </div>
             </div>
 
             <div class="flex my-5">

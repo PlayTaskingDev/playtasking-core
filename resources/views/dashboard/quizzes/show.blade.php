@@ -8,8 +8,8 @@
 
     <div class="py-6">
         <div class="max-w-2xl mx-auto px-3 sm:px-6 lg:px-8">
-            <div class="dark:bg-gray-800 overflow-hidden">
-                <div class="game-card rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 p-3 p-3">
+            <div class=" overflow-hidden">
+                <div class="game-card rounded-lg shadow p-3">
 
                     <x-campaign-menu :campaign-games="$campaign_games" :campaign-tickets="$campaign_tickets" :campaign-coupons="$campaign_coupons" :campaign-url="route('campaign.show', ['tenant' => tenant('id'), 'slug' => $quiz->campaign->slug])" :active="'games'" />
                            
@@ -39,11 +39,10 @@
                         <img src="{{ $quiz->brief_image }}" alt="{{ $quiz->title }}" class="mx-auto w-full max-w-lg px-1">
                         @else
                             <h2
-                                class="font-semibold text-2xl dark:text-gray-200 leading-tight pb-5 pt-5 uppercase game-heading">
+                                class="font-semibold text-2xl leading-tight pb-5 pt-5 uppercase game-heading">
                                 {{ __('Quiz') }}
                             </h2>
-                            <hr style="background-color: {{get_app_setting('header_background_color')}}; height:2px;">
-                            <p class="font-bold mb-5 mt-5">
+                            <p class="font-bold mb-5 mt-5 game-description">
                                 {{ $quiz->description }}
                             </p>
                         @endif
@@ -53,23 +52,23 @@
                             <div id="question_{{ $loop->iteration }}"
                                style="{{ !$loop->first ? 'display:none;' : '' }}"
                                 class="section-question grid gap-4 sm:grid-cols-1 {{ $loop->first ? '' : 'opacity-0' }}">
-                                <p class="font-bold mb-5 text-xl">
+                                <p class="font-bold mb-5 text-xl question-title">
                                     {{$question->title}}
                                 </p>
+                                 <img src="{{$question->featured_image}}" alt="" class="w-full rounded mb-5">
                                 <div>
-                                    <ul
-                                        class="w-auto text-sm font-medium text-white dark:bg-gray-700 dark:border-gray-600 dark:text-white quiz-answers">
+                                    <ul class="w-auto grid grid-cols-2 gap-4 text-sm font-medium quiz-answers">
                                         @foreach ($question->answers as $answer)
-                                            <li class="w-full dark:border-gray-600 py-3">
+                                            <li class="w-full py-3 rounded-3xl bg-gray-100 text-black ">
                                                 <div
-                                                    class="{{ !is_null($answer->featured_image) ? 'checkbox-group' : '' }} p-0">
+                                                    class="{{ !is_null($answer->featured_image) ? 'checkbox-group' : '' }} p-4 py-0 w-full flex">
                                                     <input id="answer_{{ $answer->id }}" type="radio"
                                                         value="{{ $answer->id }}"
                                                         name="answers[{{ $question->id }}][answer]"
-                                                        class="w-4 h-4 my-3 mr-5 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                                                        class="w-4 h-4 my-3 mr-5 bg-gray-100 checked:ring-black checked:ring-offset-2 border-gray-300 ring-black focus:ring-3 focus:ring-black focus:bg-black"
                                                         required>
                                                     <label for="answer_{{ $answer->id }}"
-                                                        class="w-full py-3 ml-2 text-sm font-medium text-white dark:text-gray-300">{{ $answer->title }}
+                                                        class="w-full py-3 ml-2 text-sm font-medium ">{{ $answer->title }}
                                                     </label>
                                                 </div>
                                                 @if (!is_null($answer->featured_image))

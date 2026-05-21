@@ -261,7 +261,7 @@ Route::group([
     Route::middleware(['auth', 'role:admin'])->prefix('panel')->group(function () {
         Route::get('/', [PanelController::class, 'index'])->name('panel.index');
         Route::post('/save_settings', [PanelController::class, 'save_settings'])->name('panel.settings.save');
-        Route::resource('pages', PanelPageController::class);
+        //Route::resource('pages', PanelPageController::class);
         Route::resource('quizzes', PanelQuizController::class);
         Route::resource('memory_quizzes', PanelMemoryQuizController::class);
         Route::resource('share_quizzes', PanelShareQuizController::class);
@@ -388,7 +388,7 @@ Route::group([
             Route::resource('ticketanswers', App\Http\Controllers\Admin\TicketAnswerController::class);
 
          // Pages
-        Route::resource('pages', App\Http\Controllers\Admin\PageController::class)->name('v2.pages');
+        Route::resource('pages', App\Http\Controllers\Admin\PageController::class);
         // Resources
         Route::resource('resources', App\Http\Controllers\Admin\ResourcesController::class);
         // options
