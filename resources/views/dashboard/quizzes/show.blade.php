@@ -55,7 +55,10 @@
                                 <p class="font-bold mb-5 text-xl question-title">
                                     {{$question->title}}
                                 </p>
-                                 <img src="{{$question->featured_image}}" alt="" class="w-full rounded mb-5">
+                                @if ($question->feature_image)
+                                    <img src="{{$question->featured_image}}" alt="" class="w-full rounded mb-5">
+                                @endif
+                                 
                                 <div>
                                     <ul class="w-auto grid grid-cols-2 gap-4 text-sm font-medium quiz-answers">
                                         @foreach ($question->answers as $answer)
