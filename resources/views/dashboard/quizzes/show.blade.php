@@ -40,7 +40,7 @@
                         @else
                             <h2
                                 class="font-semibold text-2xl leading-tight pb-5 pt-5 uppercase game-heading">
-                                {{ __('Quiz') }}
+                                {{ $quiz->title }}
                             </h2>
                             <p class="font-bold mb-5 mt-5 game-description">
                                 {{ $quiz->description }}
