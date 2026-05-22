@@ -61,11 +61,11 @@
                                         @foreach ($question->answers as $answer)
                                             <li class="w-full py-3 rounded-3xl bg-gray-100 text-black ">
                                                 <div
-                                                    class="{{ !is_null($answer->featured_image) ? 'checkbox-group' : '' }} p-4 py-0 w-full flex">
+                                                    class="{{ !is_null($answer->featured_image) ? 'checkbox-group' : '' }} px-4 py-0 w-full flex items-center">
                                                     <input id="answer_{{ $answer->id }}" type="radio"
                                                         value="{{ $answer->id }}"
                                                         name="answers[{{ $question->id }}][answer]"
-                                                        class="w-4 h-4 my-3 mr-5 bg-gray-100 checked:ring-black checked:ring-offset-2 border-gray-300 ring-black focus:ring-3 focus:ring-black focus:bg-black"
+                                                        class="w-4 h-4 my-3 mr-5 bg-gray-100 active:bg-black checked:ring-black checked:bg-black border-gray-300 ring-black focus:ring-2 focus:ring-black focus:bg-black"
                                                         required>
                                                     <label for="answer_{{ $answer->id }}"
                                                         class="w-full py-3 ml-2 text-sm font-medium ">{{ $answer->title }}
