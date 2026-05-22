@@ -55,7 +55,7 @@
                                 <p class="font-bold mb-5 text-xl question-title">
                                     {{$question->title}}
                                 </p>
-                                @if ($question->feature_image)
+                                @if (!empty($question->featured_image))
                                     <img src="{{$question->featured_image}}" alt="" class="w-full rounded mb-5">
                                 @endif
                                  
