@@ -126,6 +126,7 @@ Route::group([
             Route::get('/', [QuizController::class, 'quiz_index'])->name('quiz.index');
             Route::get('/{slug}', [QuizController::class, 'quiz_show'])->name('quiz.show');
             Route::post('/quiz_evaluate', [QuizController::class, 'quiz_evaluate'])->name('quiz.evaluate');
+            Route::post('/quiz_timer_out', [QuizController::class, 'quiz_timer_out'])->name('quiz.timer_out');
         });
 
         Route::prefix('memoramas')->group(function () {

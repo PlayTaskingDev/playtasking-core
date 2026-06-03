@@ -36,7 +36,7 @@
                         <input type="hidden" name="quid" value="{{ $quiz->id }}">
 
                         @if (!is_null($quiz->brief_image))
-                        <img src="{{ $quiz->brief_image }}" alt="{{ $quiz->title }}" class="mx-auto w-full max-w-lg px-1">
+                            <img src="{{ $quiz->brief_image }}" alt="{{ $quiz->title }}" class="mx-auto w-full max-w-lg px-1">
                         @else
                             <h2
                                 class="font-semibold text-2xl leading-tight pb-5 pt-5 uppercase game-heading">
@@ -52,9 +52,14 @@
                             <div id="question_{{ $loop->iteration }}"
                                style="{{ !$loop->first ? 'display:none;' : '' }}"
                                 class="section-question grid gap-4 sm:grid-cols-1 {{ $loop->first ? '' : 'opacity-0' }}">
-                                <p class="font-bold mb-5 text-xl question-title">
+                                <p class="font-bold mb-3 text-xl question-title">
                                     {{$question->title}}
                                 </p>
+                                @if ($quiz->enable_chronometer)
+                                    <div class="text-lg font-bold text-center mb-3">
+                                        <span class="label-time-remaining">Tiempo restante:</span> <span id="timer_{{ str_replace('-', '', $question->id) }}" class="timer">{{ $quiz->seconds }}</span> segundos
+                                    </div>
+                                @endif
                                 @if (!empty($question->featured_image))
                                     <img src="{{$question->featured_image}}" alt="" class="w-full rounded mb-5">
                                 @endif
@@ -161,6 +166,41 @@
                 //showQuestion.classList.remove('hidden');
                 showQuestion.classList.add('opacity-100');
                 showQuestion.classList.remove('opacity-0');
+            }
+            function initChronometerIfEnabled(){
+                @if ($quiz->enable_chronometer)
+                    axios.post('{{ route('game.start', ['tenant' => tenant('id')]) }}')
+                            .then(({ data }) => {
+                            
+                            });
+                    const quizSeconds = {{ $quiz->seconds }};
+                    @foreach ($quiz->questions as $question)
+                        let timer{{ str_replace('-', '', $question->id) }} = quizSeconds;
+                        timerInterval = setInterval(() => {
+                            if (timer{{ str_replace('-', '', $question->id) }} > 0) {
+                                timer{{ str_replace('-', '', $question->id) }}--;
+                                document.getElementById('timer_{{ str_replace('-', '', $question->id) }}').innerText = timer{{ str_replace('-', '', $question->id) }};
+                            }else{
+                                clearInterval(timerInterval);
+                                
+                                let form = document.querySelector('.quiz-container');
+                                form.action = "{{ route('quiz.timer_out', ['tenant' => tenant('id')]) }}";
+                                const input = document.createElement("input");
+                                input.type = "hidden";
+                                input.name = "timer_out_{{ $question->id }}";
+                                input.value = "true";
+                                form.appendChild(input);
+                                form.submit();
+                                //handleTimeout();
+                            }
+                        }, 1000);
+                    @endforeach
+                @endif
+            }
+             if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initChronometerIfEnabled);
+            } else {
+                initChronometerIfEnabled();
             }
         </script>
     @endsection

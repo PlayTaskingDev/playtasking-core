@@ -143,7 +143,6 @@ class TriviaGameController extends Controller
         if (isset(($data['delete_image_holder_hidden'])) && $data['delete_image_holder_hidden'] == true) {
             $quiz->game_banner = null;
         }
-
         if( !$request->has('btn_border') ){
             $data['btn_border'] = false;
         }

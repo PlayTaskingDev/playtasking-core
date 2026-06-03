@@ -64,17 +64,15 @@ class QuizController extends Controller
 
     public function quiz_evaluate(Request $request)
     {
+        
         $rules = [
             'answers.*.answer'  => ['required','exists:answers,id'],
             'quid'              => ['required','exists:quizzes,id']
         ];
-
         $validator = validator($request->all(), $rules);
-
         if ($validator->fails()) {
             return back()->with('status', 'error');
         }
-
         $data = $validator->validated();
 
         $quiz = Quiz::whereId($data['quid'])->with(
@@ -100,10 +98,8 @@ class QuizController extends Controller
                 'model' => $quiz
             ]);
         }
-
         // Convert to a less complex array the responses ID
         $answers_array = [];
-
         foreach ($data['answers'] as $request_answers_array) {
             foreach ($request_answers_array as $answer_id) {
                 array_push($answers_array,$answer_id);
@@ -127,23 +123,8 @@ class QuizController extends Controller
         }
         
         // Attach user to quiz with hit or not
-        DB::table('award_user')->insert([
-            'model_id'      => $data['quid'],
-            'award_id'     => $quiz->award->id,
-            'user_id'       => Auth::user()->id,
-            'model_type'    => 'App\Models\Quiz',
-            'hit'           => $hit,
-            'created_at'    => Carbon::now(),
-            'updated_at'    => Carbon::now()
-        ]);
-
-        $user_interaction = UserInteraction::create([
-            'model_id' => $quiz->id,
-            'model_title' => $quiz->title,
-            'user_id' => Auth::user()->id,
-            'hit_created_at' => Carbon::now(),
-            'hit_updated_at' => Carbon::now(),
-        ]);
+        $user_interaction = $this->attach_user_to_quiz($data, $quiz, $hit);
+        
 
         if ($hit === true) {
             $award_code = AwardCode::where([['award_id',$quiz->award->id],['active',false]])->first();
@@ -169,5 +150,36 @@ class QuizController extends Controller
             ]);
         }
         
+    }
+
+    public function quiz_timer_out(Request $request){
+        $quiz = Quiz::whereId($request->input('quid'))->with('award')->first();
+        $this->attach_user_to_quiz($request->all(), $quiz, false);
+        return redirect()->route('game.failed', [
+                'tenant' => tenant('id'), 
+                'model_type' =>  $quiz->award->model_type, 
+                'model' => $quiz
+            ]);
+    }
+
+    public function attach_user_to_quiz($data, $quiz, $hit){
+        DB::table('award_user')->insert([
+            'model_id'      => $data['quid'],
+            'award_id'     => $quiz->award->id,
+            'user_id'       => Auth::user()->id,
+            'model_type'    => 'App\Models\Quiz',
+            'hit'           => $hit,
+            'created_at'    => Carbon::now(),
+            'updated_at'    => Carbon::now()
+        ]);
+
+        $user_interaction = UserInteraction::create([
+            'model_id' => $quiz->id,
+            'model_title' => $quiz->title,
+            'user_id' => Auth::user()->id,
+            'hit_created_at' => Carbon::now(),
+            'hit_updated_at' => Carbon::now(),
+        ]);
+        return $user_interaction;
     }
 }
