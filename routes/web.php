@@ -382,7 +382,7 @@ Route::group([
         Route::get('get-codes-sample', [App\Http\Controllers\Admin\AwardCodesController::class, 'download_sample'])->name('awards.codes.sample');
         Route::post('import-codes', [App\Http\Controllers\Admin\AwardCodesController::class, 'import'])->name('awards.codes.import');
         // Tickets
-        Route::resource('tickets', App\Http\Controllers\Admin\TicketController::class);
+        //Route::resource('tickets', App\Http\Controllers\Admin\TicketController::class);
             // Tickets Questions
             Route::resource('ticketquestions', App\Http\Controllers\Admin\TicketQuestionController::class);
              // Tickets Answers

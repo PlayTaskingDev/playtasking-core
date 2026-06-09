@@ -49,6 +49,10 @@ class OptionsController extends Controller
             $request['ranking_enabled_tickets'] = false;
         }
 
+        if( !$request->has('ocr_ticket_active') ){
+            $request['ocr_ticket_active'] = false;
+        }
+
         if( !$request->has('members_number') ){
             $request['members_number'] = false;
         }

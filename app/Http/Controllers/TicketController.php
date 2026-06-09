@@ -63,6 +63,15 @@ class TicketController extends Controller
         if($ticket){
             return redirect()->route('tickets.saved', ['tenant' => tenant('id')])->with('status','duplicated');
         }
+        // OCR
+        $binary_image = $data['ticket']->get();
+        $mime_type = $data['ticket']->getClientMimeType();
+        try {
+            $ocr_data = $this->ocr_scan($binary_image,$mime_type);
+        } catch (\Throwable $th) {
+            return redirect()->route('tickets.ocr.saved', ['tenant' => tenant('id')])->with('status','error');
+        }
+        dd($ocr_data);
 
         $campaign = $this->get_current_campaign();
         $user = Auth::user();

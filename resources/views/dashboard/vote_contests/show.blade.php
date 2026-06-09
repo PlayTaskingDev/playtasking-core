@@ -428,6 +428,7 @@
                                     <x-ui.forms.input-text-area label="{{ __('Description') }}" class="vte__input" cols="2" name="title" placeholder="" maxlength="600" charcount="true" value="" />
                                 </div>
                             @endif
+                            {{-- UPLOAD COMPONENT --}}
                             <div class="mt-3">
                                     <div id="uploadArea" class="upload-area">
                                         <!-- Header -->
@@ -568,9 +569,6 @@
                 });
             });
 
-            // Design By
-            // - https://dribbble.com/shots/13992184-File-Uploader-Drag-Drop
-
             // Select Upload-Area
             const uploadArea = document.querySelector('#uploadArea')
 
@@ -581,7 +579,7 @@
             const loadingText = document.querySelector('#loadingText');
 
             // Slect File Input 
-            const fileInput = document.querySelector('#asset');
+            const fileInput = document.querySelector('#ticket');
 
             // Select Preview Image
             const previewImage = document.querySelector('#previewImage');
