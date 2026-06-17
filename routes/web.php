@@ -81,7 +81,6 @@ use Stancl\Tenancy\Middleware\InitializeTenancyByPath;
 // }
 
 Route::group([
-    'prefix' => '/{tenant}',
     'middleware' => [InitializeTenancyByDomain::class],
 ], function () {
     require __DIR__ . '/auth.php';

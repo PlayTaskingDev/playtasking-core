@@ -24,7 +24,6 @@ return [
         'cinepolisgaming.com',
         'beneficioscalimax.com',
         '34.68.206.75',
-        'sabordepelicula.com',
     ],
 
     /**
