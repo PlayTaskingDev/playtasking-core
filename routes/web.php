@@ -82,7 +82,7 @@ foreach (config('tenancy.central_domains') as $domain) {
 
 Route::group([
     'prefix' => '/{tenant}',
-    'middleware' => [InitializeTenancyByDomain::class],
+    'middleware' => [InitializeTenancyByPath::class],
 ], function () {
     require __DIR__ . '/auth.php';
 
