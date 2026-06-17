@@ -53,7 +53,6 @@ class QuizController extends Controller
         $campaign_games = $this->has_content_type($quiz->campaign->id, 'games');
         $campaign_tickets = $this->has_content_type($quiz->campaign->id, 'tickets');
         $campaign_coupons = $this->has_content_type($quiz->campaign->id, 'coupons');
-
         return view('dashboard.quizzes.show', [
             'quiz'              => $quiz,
             'campaign_games'    => $campaign_games,
@@ -124,6 +123,8 @@ class QuizController extends Controller
         
         // Attach user to quiz with hit or not
         $user_interaction = $this->attach_user_to_quiz($data, $quiz, $hit);
+        session()->forget('game_start');
+        session()->forget('game_duration');
         
 
         if ($hit === true) {

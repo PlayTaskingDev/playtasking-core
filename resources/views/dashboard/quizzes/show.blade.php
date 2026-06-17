@@ -169,32 +169,34 @@
             }
             function initChronometerIfEnabled(){
                 @if ($quiz->enable_chronometer)
-                    axios.post('{{ route('game.start', ['tenant' => tenant('id')]) }}')
+                    let quizSeconds = {{ $quiz->seconds }};
+                    axios.post('{{ route('game.start', ['tenant' => tenant('id')]) }}', {seconds: quizSeconds })
                             .then(({ data }) => {
-                            
+                                quizSeconds = data.remaining;
+                                console.log('Game started, remaining seconds: ' + quizSeconds);
+                                @foreach ($quiz->questions as $question)
+                                    let timer{{ str_replace('-', '', $question->id) }} = quizSeconds;
+                                    timerInterval = setInterval(() => {
+                                        if (timer{{ str_replace('-', '', $question->id) }} > 0) {
+                                            timer{{ str_replace('-', '', $question->id) }}--;
+                                            document.getElementById('timer_{{ str_replace('-', '', $question->id) }}').innerText = timer{{ str_replace('-', '', $question->id) }};
+                                        }else if(timer{{ str_replace('-', '', $question->id) }} <= 0){
+                                            clearInterval(timerInterval);
+                                            
+                                            let form = document.querySelector('.quiz-container');
+                                            form.action = "{{ route('quiz.timer_out', ['tenant' => tenant('id')]) }}";
+                                            const input = document.createElement("input");
+                                            input.type = "hidden";
+                                            input.name = "timer_out_{{ $question->id }}";
+                                            input.value = "true";
+                                            form.appendChild(input);
+                                            form.submit();
+                                            //handleTimeout();
+                                        }
+                                    }, 1000);
+                                @endforeach
                             });
-                    const quizSeconds = {{ $quiz->seconds }};
-                    @foreach ($quiz->questions as $question)
-                        let timer{{ str_replace('-', '', $question->id) }} = quizSeconds;
-                        timerInterval = setInterval(() => {
-                            if (timer{{ str_replace('-', '', $question->id) }} > 0) {
-                                timer{{ str_replace('-', '', $question->id) }}--;
-                                document.getElementById('timer_{{ str_replace('-', '', $question->id) }}').innerText = timer{{ str_replace('-', '', $question->id) }};
-                            }else{
-                                clearInterval(timerInterval);
-                                
-                                let form = document.querySelector('.quiz-container');
-                                form.action = "{{ route('quiz.timer_out', ['tenant' => tenant('id')]) }}";
-                                const input = document.createElement("input");
-                                input.type = "hidden";
-                                input.name = "timer_out_{{ $question->id }}";
-                                input.value = "true";
-                                form.appendChild(input);
-                                form.submit();
-                                //handleTimeout();
-                            }
-                        }, 1000);
-                    @endforeach
+                    
                 @endif
             }
              if (document.readyState === 'loading') {

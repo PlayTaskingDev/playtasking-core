@@ -111,13 +111,52 @@ class CampaignController extends Controller
         
     }
 
-    public function record_game_start(Request $request)
-    {
-        // Format: 2025-08-02 20:15:37.123456
-        $ts = Carbon::now()->format('Y-m-d H:i:s.u');
-        $request->session()->put('game_start', $ts);
+    // public function record_game_start(Request $request)
+    // {
+    //     // Format: 2025-08-02 20:15:37.123456
+    //     $ts = Carbon::now()->format('Y-m-d H:i:s.u');
+    //     $request->session()->put('game_start', $ts);
 
-        return response()->json(['game_start' => $ts]);
+    //     return response()->json(['game_start' => $ts]);
+    // }
+
+    public function record_game_start(Request $request)
+{
+    $duration = $request['seconds'] ?? 60; 
+
+    if ($request->session()->has('game_start')) {
+
+        $start = Carbon::parse(
+            $request->session()->get('game_start')
+        );
+
+        $savedDuration = $request->session()->get('game_duration');
+
+        $elapsed = $start->diffInSeconds(now());
+
+        $remaining = max(0, $savedDuration - $elapsed);
+
+
+
+        return response()->json([
+            'already_started' => true,
+            'started_at' => $start,
+            'elapsed' => $elapsed,
+            'remaining' => (int) $remaining,
+        ]);
     }
+
+    $now = Carbon::now()->format('Y-m-d H:i:s.u');
+
+    $request->session()->put('game_start', $now);
+    $request->session()->put('game_duration', $duration);
+
+    return response()->json([
+        'already_started' => false,
+        'started_at' => $now,
+        'elapsed' => 0,
+        'remaining' => $duration,
+    ]);
+}
 
 }
