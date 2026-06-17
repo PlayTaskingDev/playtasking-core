@@ -17,13 +17,14 @@ return [
      * Only relevant if you're using the domain or subdomain identification middleware.
      */
     'central_domains' => [
-        // '127.0.0.1',
-        // 'localhost',
-        // 'cinepolisentraalmasalla.com',
-        // 'tskg.app',
-        // 'cinepolisgaming.com',
-        // 'beneficioscalimax.com',
-        // '34.68.206.75',
+        '127.0.0.1',
+        'localhost',
+        'cinepolisentraalmasalla.com',
+        'tskg.app',
+        'cinepolisgaming.com',
+        'beneficioscalimax.com',
+        '34.68.206.75',
+        'sabordepelicula.com',
     ],
 
     /**
