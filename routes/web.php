@@ -72,13 +72,13 @@ use Stancl\Tenancy\Middleware\InitializeTenancyByPath;
 
 // routes/web.php, api.php or any other central route files you have
 
-foreach (config('tenancy.central_domains') as $domain) {
-    Route::domain($domain)->group(function () {
-        Route::get('/', function () {
-            return redirect('/promo');
-        });
-    });
-}
+// foreach (config('tenancy.central_domains') as $domain) {
+//     Route::domain($domain)->group(function () {
+//         Route::get('/', function () {
+//             return redirect('/promo');
+//         });
+//     });
+// }
 
 Route::group([
     'prefix' => '/{tenant}',
