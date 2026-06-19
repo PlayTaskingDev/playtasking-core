@@ -93,6 +93,7 @@ class QuizController extends Controller
         // Check if user has been participated and failed
         $has_paticipated = $this->check_participation($model_id = $quiz->id,$model_type = 'App\Models\Quiz',$user_id = Auth::user()->id);
         if (!is_null($has_paticipated)) {
+            dd($has_paticipated);
             session()->forget('game_start');
             session()->forget('game_duration');
             return redirect()->route('game.failed', [
