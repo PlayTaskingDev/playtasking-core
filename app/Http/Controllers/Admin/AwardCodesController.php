@@ -17,6 +17,7 @@ class AwardCodesController extends Controller
     {
         $awards = Award::with(['awardable'])->withCount(['codes_available','codes_delivered'])->orderBy('created_at','desc')->get();
 
+        dd($awards);
         return response()->view('admin.awardcodes.list',[
             'title'         => 'Panel | ' . trans('Award Codes'),
             'description'   => 'Admin Panel',
