@@ -18,7 +18,7 @@ class AwardCodesController extends Controller
         $awards = Award::with(['awardable'])->withCount(['codes_available','codes_delivered'])->orderBy('created_at','desc')->get();
         foreach ($awards as $award) {
 
-    if (!$award->awardable) {
+    if ($award->awardable == null) {
 
         dump([
             'award_id' => $award->id,
