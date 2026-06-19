@@ -20,7 +20,7 @@ class AwardCodesController extends Controller
 
     if ($award->awardable == null) {
 
-        dump([
+        dd([
             'award_id' => $award->id,
             'awardable_id' => $award->awardable_id,
             'awardable_type' => $award->awardable_type,
