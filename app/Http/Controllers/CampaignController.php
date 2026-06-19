@@ -136,8 +136,6 @@ class CampaignController extends Controller
 
         $remaining = max(0, $savedDuration - $elapsed);
 
-
-
         return response()->json([
             'already_started' => true,
             'started_at' => $start,

@@ -56,7 +56,7 @@
                                     {{$question->title}}
                                 </p>
                                 @if ($quiz->enable_chronometer)
-                                    <div class="text-lg font-bold text-center mb-3">
+                                    <div id="chronometer" class="text-lg font-bold text-center mb-3">
                                         <span class="label-time-remaining">Tiempo restante:</span> <span id="timer_{{ str_replace('-', '', $question->id) }}" class="timer">{{ $quiz->seconds }}</span> segundos
                                     </div>
                                 @endif

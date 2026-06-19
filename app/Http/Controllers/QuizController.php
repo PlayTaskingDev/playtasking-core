@@ -85,12 +85,16 @@ class QuizController extends Controller
         // Check if user has been participated and won
         $has_paticipated = $this->check_participation($model_id = $quiz->id,$model_type = 'App\Models\Quiz',$user_id = Auth::user()->id,$hit = true);
         if (!is_null($has_paticipated)) {
+            session()->forget('game_start');
+            session()->forget('game_duration');
             return redirect(route('dashboard.awards.show', ['tenant' => tenant('id'), 'award' => $quiz->award]));
         }
 
         // Check if user has been participated and failed
         $has_paticipated = $this->check_participation($model_id = $quiz->id,$model_type = 'App\Models\Quiz',$user_id = Auth::user()->id);
         if (!is_null($has_paticipated)) {
+            session()->forget('game_start');
+            session()->forget('game_duration');
             return redirect()->route('game.failed', [
                 'tenant' => tenant('id'), 
                 'model_type' =>  $quiz->award->model_type, 
