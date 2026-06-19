@@ -93,7 +93,6 @@ class QuizController extends Controller
         // Check if user has been participated and failed
         $has_paticipated = $this->check_participation($model_id = $quiz->id,$model_type = 'App\Models\Quiz',$user_id = Auth::user()->id);
         if (!is_null($has_paticipated)) {
-            dd($has_paticipated);
             session()->forget('game_start');
             session()->forget('game_duration');
             return redirect()->route('game.failed', [
@@ -161,6 +160,8 @@ class QuizController extends Controller
     public function quiz_timer_out(Request $request){
         $quiz = Quiz::whereId($request->input('quid'))->with('award')->first();
         $this->attach_user_to_quiz($request->all(), $quiz, false);
+        session()->forget('game_start');
+        session()->forget('game_duration');
         return redirect()->route('game.failed', [
                 'tenant' => tenant('id'), 
                 'model_type' =>  $quiz->award->model_type, 
