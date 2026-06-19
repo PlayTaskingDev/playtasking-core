@@ -182,15 +182,15 @@
                                             document.getElementById('timer_{{ str_replace('-', '', $question->id) }}').innerText = timer{{ str_replace('-', '', $question->id) }};
                                         }else if(timer{{ str_replace('-', '', $question->id) }} <= 0){
                                             clearInterval(timerInterval);
-                                            console.log('Time is up for question {{ $question->id }}');
-                                            // let form = document.querySelector('.quiz-container');
-                                            // form.action = "{{ route('quiz.timer_out', ['tenant' => tenant('id')]) }}";
-                                            // const input = document.createElement("input");
-                                            // input.type = "hidden";
-                                            // input.name = "timer_out_{{ $question->id }}";
-                                            // input.value = "true";
-                                            // form.appendChild(input);
-                                            // form.submit();
+                                            
+                                            let form = document.querySelector('.quiz-container');
+                                            form.action = "{{ route('quiz.timer_out', ['tenant' => tenant('id')]) }}";
+                                            const input = document.createElement("input");
+                                            input.type = "hidden";
+                                            input.name = "timer_out_{{ $question->id }}";
+                                            input.value = "true";
+                                            form.appendChild(input);
+                                            form.submit();
                                             //handleTimeout();
                                         }
                                     }, 1000);
