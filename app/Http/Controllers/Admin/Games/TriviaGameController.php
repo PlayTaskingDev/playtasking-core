@@ -70,6 +70,9 @@ class TriviaGameController extends Controller
         if($request->file('failed_image')){
             $data['failed_image'] = $this->uploadImage('gcs','quizzes',$request->file('failed_image'));
         }
+        if($request->file('failed_image_out_time')){
+            $data['failed_image_out_time'] = $this->uploadImage('gcs','quizzes',$request->file('failed_image_out_time'));
+        }
 
         if($request->file('game_banner')){
             $data['game_banner'] = $this->uploadImage('gcs','quizzes',$request->file('game_banner'));
@@ -133,6 +136,10 @@ class TriviaGameController extends Controller
 
         if($request->file('failed_image')){
             $data['failed_image'] = $this->uploadImage('gcs','quizzes',$request->file('failed_image'));
+        }
+
+        if($request->file('failed_image_out_time')){
+            $data['failed_image_out_time'] = $this->uploadImage('gcs','quizzes',$request->file('failed_image_out_time'));
         }
 
         if($request->file('game_banner')){

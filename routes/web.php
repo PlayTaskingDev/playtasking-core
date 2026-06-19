@@ -241,7 +241,7 @@ Route::group([
 
         Route::prefix('premios')->group(function () {
             Route::get('/beneficios-agotados', [AwardController::class, 'out_of_coupons'])->name('game.out_of_coupons');
-            Route::get('/fallaste/{model_type}/{model}', [AwardController::class, 'game_failed'])->name('game.failed');
+            Route::get('/fallaste/{model_type}/{model}/{out_time?}', [AwardController::class, 'game_failed'])->name('game.failed');
             /* Route::resource('awards', AwardController::class)->names([
                 'show'  => 'dashboard.awards.show',
                 'index' => 'dashboard.awards.index'

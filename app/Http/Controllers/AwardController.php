@@ -107,7 +107,7 @@ class AwardController extends Controller
         }
     }
 
-    public function game_failed($model_type, $model)
+    public function game_failed($model_type, $model, $out_time = false)
     {
         $model_classname = 'App\\Models\\' . Str::ucfirst($model_type);
         $model = $model_classname::find($model);
@@ -116,13 +116,13 @@ class AwardController extends Controller
         $campaign_games = $this->has_content_type($campaign->id, 'games');
         $campaign_tickets = $this->has_content_type($campaign->id, 'tickets');
         $campaign_coupons = $this->has_content_type($campaign->id, 'coupons');
-        
         return view('dashboard.awards.loser', [
             'model'             => $model,
             'campaign'          => $campaign,
             'campaign_games'    => $campaign_games,
             'campaign_tickets'  => $campaign_tickets,
             'campaign_coupons'  => $campaign_coupons,
+            'out_time'          => $out_time
         ]);
     }
 

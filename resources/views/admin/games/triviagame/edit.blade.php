@@ -2,7 +2,7 @@
 @extends('layouts.v2.app')
 
 <x-slot name="title">
-    {{ !is_null($quiz->title) ? $quiz->title : trans('Create') . '' . trans('Smash Game') }}
+    {{ !is_null($quiz->title) ? $quiz->title : trans('Create') . '' . trans('Trivia Game') }}
 </x-slot>
 <x-slot name="description">
     {{ $quiz->id == null ? '' : $quiz->description }}
@@ -16,7 +16,7 @@
     <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
         <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
             <h2 class="text-xl font-semibold text-gray-800 dark:text-white/90">
-            {{ $quiz->id == null ? trans('Create') : trans('Edit') }} {{ __('Smash Game') }}
+            {{ $quiz->id == null ? trans('Create') : trans('Edit') }} {{ __('Trivia Game') }}
             </h2>
             <nav>
             <ol class="flex items-center gap-1.5">
@@ -29,7 +29,7 @@
                 </a>
                 </li>
                 <li class="text-sm text-gray-800 dark:text-white/90">
-                {{ !is_null($quiz->title) ? $quiz->title : trans('Create') . '' . trans('Smash Game') }}
+                {{ !is_null($quiz->title) ? $quiz->title : trans('Create') . '' . trans('Trivia Game') }}
                 </li>
             </ol>
             </nav>
@@ -92,8 +92,9 @@
                                 <h2 class="mt-6 text-lg col-span-2 font-semibold text-gray-800 dark:text-white/90">Trivia Game Settings</h2>
                                 <x-ui.forms.input-switch label="{{ __('Enable Chronometer') }}" name="enable_chronometer" value="1" switcher="{{ $quiz->enable_chronometer }}"/>
                                 <x-ui.forms.input-number label="{{ __('Seconds') }}" name="seconds" placeholder="" :value="$quiz->seconds" data-field="campaign.seconds" />
-                                <x-ui.forms.input-text label="{{ __('Failed Response') }}" name="failed_response" placeholder="" :value="$quiz->failed_response" />
+                                <x-ui.forms.input-text cols="2" label="{{ __('Failed Response') }}" name="failed_response" placeholder="" :value="$quiz->failed_response" />
                                 <x-ui.forms.input-file label="{{ __('Failed Image') }}" dummy_img="/storage/dummy_assets/600x200.png" name="failed_image" placeholder="" :value="$quiz->failed_image" data-field="campaign.failed_image" />
+                                <x-ui.forms.input-file label="{{ __('Failed Image Out Time') }}" dummy_img="/storage/dummy_assets/600x200.png" name="failed_image_out_time" placeholder="" :value="$quiz->failed_image_out_time" data-field="campaign.failed_image_out_time" />
 
                                 <div id="question_container" class="py-6 mx-5 col-span-2">
                                     <div class="flex justify-between">

@@ -165,7 +165,8 @@ class QuizController extends Controller
         return redirect()->route('game.failed', [
                 'tenant' => tenant('id'), 
                 'model_type' =>  $quiz->award->model_type, 
-                'model' => $quiz
+                'model' => $quiz,
+                'out_time' => true
             ]);
     }
 

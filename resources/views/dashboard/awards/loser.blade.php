@@ -22,7 +22,11 @@
                             {{ $model->failed_response }}
                         </p>
                     </div>
-                    <img class="rounded-t-lg w-full" src="{{ $model->failed_image }}" alt="{{ $model->title }}" />
+                    @if($out_time)
+                        <img class="rounded-t-lg w-full" src="{{ $model->failed_image_out_time }}" alt="{{ $model->title }}" />
+                    @else
+                        <img class="rounded-t-lg w-full" src="{{ $model->failed_image }}" alt="{{ $model->title }}" />
+                    @endif
                 </div>
             </div>
         </div>
