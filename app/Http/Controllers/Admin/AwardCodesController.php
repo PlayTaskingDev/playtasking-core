@@ -17,10 +17,18 @@ class AwardCodesController extends Controller
     {
         $awards = Award::with(['awardable'])->withCount(['codes_available','codes_delivered'])->orderBy('created_at','desc')->get();
         foreach ($awards as $award) {
-            if($award->awardable->title == null){
-                dd($award->awardable);
-            }
-        }
+
+    if (!$award->awardable) {
+
+        dump([
+            'award_id' => $award->id,
+            'awardable_id' => $award->awardable_id,
+            'awardable_type' => $award->awardable_type,
+        ]);
+
+    }
+
+}
         return response()->view('admin.awardcodes.list',[
             'title'         => 'Panel | ' . trans('Award Codes'),
             'description'   => 'Admin Panel',
