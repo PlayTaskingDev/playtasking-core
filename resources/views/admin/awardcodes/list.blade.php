@@ -41,9 +41,6 @@
                     <td class="px-5 py-4 sm:px-6" colspan="1">
                     <div class="flex items-center gap-3">
                         <div class="w-full">
-                           @php
-                                dd($award->awardable);
-                           @endphp
                             <span class="block font-medium text-gray-800 text-theme-sm dark:text-white/90" >{{ $award->awardable->title ? $award->awardable->title : 'OCR Tickets' }}</span>
                         </div>
                     </div>
