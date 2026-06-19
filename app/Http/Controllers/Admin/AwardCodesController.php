@@ -16,19 +16,7 @@ class AwardCodesController extends Controller
     public function index()
     {
         $awards = Award::with(['awardable'])->withCount(['codes_available','codes_delivered'])->orderBy('created_at','desc')->get();
-        foreach ($awards as $award) {
 
-    if ($award->awardable == null) {
-
-        dd([
-            'award_id' => $award->id,
-            'awardable_id' => $award->awardable_id,
-            'awardable_type' => $award->awardable_type,
-        ]);
-
-    }
-
-}
         return response()->view('admin.awardcodes.list',[
             'title'         => 'Panel | ' . trans('Award Codes'),
             'description'   => 'Admin Panel',
