@@ -85,6 +85,7 @@ class PuzzleController extends Controller
 
         $puzzle = Puzzle::with('award')->findOrFail($data['data']);
 
+        dd($puzzle);
         // Check if user is out of time
         $is_out_of_time = $this->out_of_time_validation(session('game_start'), $puzzle->seconds);
         if ($is_out_of_time) {
