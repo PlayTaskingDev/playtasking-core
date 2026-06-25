@@ -153,9 +153,10 @@
                     <x-ui.forms.input-color label="{{ __('Button Border Color') }}" name="btn_border_color" placeholder="" :value="$puzzle->btn_border_color" data-field="campaign.btn_border_color" />
                     <x-ui.forms.input-color label="{{ __('Button Text Color') }}" name="btn_text_color" placeholder="" :value="$puzzle->btn_text_color" data-field="campaign.btn_text_color" />
                     <x-ui.forms.input-switch label="{{ __('Has shadow') }}" name="btn_shadow" placeholder="" :value="$puzzle->btn_shadow" data-field="campaign.btn_shadow" />
-                    <x-ui.forms.input-text label="{{ __('Text Active') }}" name="btn_text_active" placeholder="" :value="$puzzle->btn_text_active" data-field="campaign.btn_text_active" />
+                        <x-ui.forms.input-switch label="{{ __('Has Border') }}" name="btn_border" placeholder="" :value="$puzzle->btn_border" data-field="campaign.btn_border" />
+                    <x-ui.forms.input-text label="{{ __('Text Active') }}" name="btn_text_active" placeholder="" :value="$puzzle->btn_text_active ?? 'Jugar Ahora'" data-field="campaign.btn_text_active" />
                     <x-ui.forms.input-switch label="{{ __('Enable Button Shadow') }}" name="btn_enable_shadow" placeholder="" :value="$puzzle->btn_enable_shadow" data-field="campaign.btn_enable_shadow" />
-                    <x-ui.forms.input-text label="{{ __('Text Inactive') }}" name="btn_text_inactive" placeholder="" :value="$puzzle->btn_text_inactive" data-field="campaign.btn_text_inactive" />
+                    <x-ui.forms.input-text label="{{ __('Text Inactive') }}" name="btn_text_inactive" placeholder="" :value="$puzzle->btn_text_inactive ?? 'Ver Resultado'" data-field="campaign.btn_text_inactive" />
                 </div>
                 <div class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/3">
                     <h2 class="mb-5 text-lg font-semibold text-gray-800 dark:text-white/90">Card Settings</h2>

@@ -185,8 +185,8 @@ class QuizController extends Controller
             'model_id' => $quiz->id,
             'model_title' => $quiz->title,
             'user_id' => Auth::user()->id,
-            'hit_created_at' => Carbon::now(),
-            'hit_updated_at' => Carbon::now(),
+            'hit_created_at' => session('game_start'),
+            'hit_updated_at' => Carbon::now()->format('Y-m-d H:i:s.u'),
         ]);
         return $user_interaction;
     }

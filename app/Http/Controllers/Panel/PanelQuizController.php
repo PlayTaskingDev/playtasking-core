@@ -58,7 +58,6 @@ class PanelQuizController extends Controller
     public function store(SaveQuizRequest $request)
     {
         $data = $request->all();
-        dd($data);
         if($request->file('featured_image')){
             $data['featured_image'] = $this->uploadImage('gcs','quizzes',$request->file('featured_image'));
         }
@@ -125,8 +124,6 @@ class PanelQuizController extends Controller
     {
         $data = $request->all();
 
-        dd($data);
-
         if($request->file('featured_image')){
             $data['featured_image'] = $this->uploadImage('gcs','quizzes',$request->file('featured_image'));
         }
@@ -138,7 +135,6 @@ class PanelQuizController extends Controller
         if($request->file('failed_image')){
             $data['failed_image'] = $this->uploadImage('gcs','quizzes',$request->file('failed_image'));
         }
-        dd($data);
         if($request->file('failed_image_out_time')){
             $data['failed_image_out_time'] = $this->uploadImage('gcs','quizzes',$request->file('failed_image_out_time'));
         }
