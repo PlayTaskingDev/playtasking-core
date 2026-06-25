@@ -151,6 +151,7 @@ class CampaignController extends Controller
 
     return response()->json([
         'already_started' => false,
+        'game_start' => $now,
         'started_at' => $now,
         'elapsed' => 0,
         'remaining' => $duration,
