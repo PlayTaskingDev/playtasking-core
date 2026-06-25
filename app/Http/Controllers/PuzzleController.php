@@ -78,6 +78,8 @@ class PuzzleController extends Controller
         $validator = validator($request->all(), $rules);
 
         if ($validator->fails()) {
+            session()->forget('game_start');
+            session()->forget('game_duration');
             return response()->json(['status' => 'error'], 422);
         }
 
@@ -95,6 +97,8 @@ class PuzzleController extends Controller
         // Check if user has been participated and won
         $has_paticipated = $this->check_participation($model_id = $puzzle->id,$model_type = 'App\Models\Puzzle',$user_id = Auth::user()->id,$hit = true);
         if (!is_null($has_paticipated)) {
+            session()->forget('game_start');
+            session()->forget('game_duration');
             return redirect(route('dashboard.awards.show', ['tenant' => tenant('id'), 'award' => $puzzle->award]));
         }
 
@@ -128,12 +132,19 @@ class PuzzleController extends Controller
             $user_interaction->code = $award_code->code;
             $user_interaction->save();
             session()->forget('game_start');
+            session()->forget('game_duration');
         } else {
+            session()->forget('game_start');
+            session()->forget('game_duration');
             return redirect()->route('game.out_of_coupons', ['tenant' => tenant('id')]);
         }
         if ($query) {
+            session()->forget('game_start');
+            session()->forget('game_duration');
             return response()->json(['status' => 'success'], 200);
         } else {
+            session()->forget('game_start');
+            session()->forget('game_duration');
             return response()->json(['status' => 'error'], 400);
         }
     }
