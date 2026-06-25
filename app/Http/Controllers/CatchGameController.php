@@ -82,6 +82,8 @@ class CatchGameController extends Controller
         $validator = validator($request->all(), $rules);
 
         if ($validator->fails()) {
+            session()->forget('game_start');
+            session()->forget('game_duration');
             return response()->json(['status' => 'error'], 422);
         }
 
@@ -90,6 +92,8 @@ class CatchGameController extends Controller
 
         // Check the signature to validate corrrect game
         if (!hash_equals($this->signature_hash($catch_game_data->id.$data['slug'].$catch_game_data->award->id), $data['data']) ){
+            session()->forget('game_start');
+            session()->forget('game_duration');
             return redirect()->route('campaign.splash', ['tenant' => tenant('id')]);
         }
         $catch_game = CatchGame::with('award')->findOrFail($catch_game_data->id);
@@ -105,6 +109,8 @@ class CatchGameController extends Controller
         // Check if user has been participated and won
         $has_paticipated = $this->check_participation($model_id = $catch_game->id,$model_type = 'App\Models\CatchGame',$user_id = Auth::user()->id,$hit = true);
         if (!is_null($has_paticipated)) {
+            session()->forget('game_start');
+            session()->forget('game_duration');
             return redirect(route('dashboard.awards.show', ['tenant' => tenant('id'), 'award' => $catch_game->award]));
         }
         // Attach user to quiz with hit
@@ -137,13 +143,20 @@ class CatchGameController extends Controller
             $user_interaction->code = $award_code->code;
             $user_interaction->save();
             session()->forget('game_start');
+            session()->forget('game_duration');
         } else {
+            session()->forget('game_start');
+            session()->forget('game_duration');
             return redirect()->route('game.out_of_coupons', ['tenant' => tenant('id')]);
         }
         
         if ($query) {
+            session()->forget('game_start');
+            session()->forget('game_duration');
             return response()->json(['status' => 'success'], 200);
         } else {
+            session()->forget('game_start');
+            session()->forget('game_duration');
             return response()->json(['status' => 'error'], 400);
         }
     }
