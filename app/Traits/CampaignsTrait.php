@@ -117,7 +117,8 @@ trait CampaignsTrait
     public function out_of_time_validation($game_start, $max_time_seconds)
     {
         $game_start_time = Carbon::createFromFormat('Y-m-d H:i:s.u', $game_start);
-        
+        session()->forget('game_start');
+        session()->forget('game_duration');
         return $game_start_time->diffInSeconds(Carbon::now()) > $max_time_seconds;
     }
 

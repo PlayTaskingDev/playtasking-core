@@ -86,7 +86,6 @@ class PuzzleController extends Controller
         $puzzle = Puzzle::with('award')->findOrFail($data['data']);
         // Check if user is out of time
         $is_out_of_time = $this->out_of_time_validation(session('game_start'), $puzzle->seconds);
-        dd($is_out_of_time);
         if ($is_out_of_time) {
             return redirect()->route('campaign.splash', ['tenant' => tenant('id')]);
         }
