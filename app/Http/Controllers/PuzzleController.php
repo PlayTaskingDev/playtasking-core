@@ -84,6 +84,7 @@ class PuzzleController extends Controller
         $data = $validator->validated();
 
         $puzzle = Puzzle::with('award')->findOrFail($data['data']);
+        dd($puzzle);
 
         // Check if user is out of time
         $is_out_of_time = $this->out_of_time_validation(session('game_start'), $puzzle->seconds);
@@ -108,7 +109,6 @@ class PuzzleController extends Controller
             'updated_at'    => Carbon::now()
         ]);
 
-        dd($query);
         $user_interaction = UserInteraction::create([
             'model_id' => $puzzle->id,
             'model_title' => $puzzle->title,
