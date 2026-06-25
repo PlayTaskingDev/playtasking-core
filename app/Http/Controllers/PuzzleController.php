@@ -108,6 +108,7 @@ class PuzzleController extends Controller
             'updated_at'    => Carbon::now()
         ]);
 
+        dd($query);
         $user_interaction = UserInteraction::create([
             'model_id' => $puzzle->id,
             'model_title' => $puzzle->title,
@@ -130,7 +131,6 @@ class PuzzleController extends Controller
         } else {
             return redirect()->route('game.out_of_coupons', ['tenant' => tenant('id')]);
         }
-        dd($query);
         if ($query) {
             return response()->json(['status' => 'success'], 200);
         } else {
