@@ -122,6 +122,7 @@ class CampaignController extends Controller
 
     public function record_game_start(Request $request)
 {
+    dd($request);
     $duration = $request['seconds'] ?? 60; 
 
     if ($request->session()->has('game_start')) {
