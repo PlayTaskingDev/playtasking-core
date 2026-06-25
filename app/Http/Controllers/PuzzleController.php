@@ -130,7 +130,7 @@ class PuzzleController extends Controller
         } else {
             return redirect()->route('game.out_of_coupons', ['tenant' => tenant('id')]);
         }
-        
+        dd($query);
         if ($query) {
             return response()->json(['status' => 'success'], 200);
         } else {
