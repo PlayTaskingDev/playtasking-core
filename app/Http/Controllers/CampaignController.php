@@ -120,9 +120,7 @@ class CampaignController extends Controller
     //     return response()->json(['game_start' => $ts]);
     // }
 
-    public function record_game_start(Request $request)
-{
-    dd($request);
+    public function record_game_start(Request $request){
     $duration = $request['seconds'] ?? 60; 
 
     if ($request->session()->has('game_start')) {

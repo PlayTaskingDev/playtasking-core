@@ -33,6 +33,8 @@ class MemoryQuizController extends Controller
                 ['end_date','>',$today]
             ])->firstOrFail();
 
+        session()->forget('game_start');
+        session()->forget('game_duration');
         // Check if user has been participated
         $has_paticipated = $this->check_participation($model_id = $memory_quiz->id,$model_type = 'App\Models\MemoryQuiz',$user_id = Auth::user()->id);
 

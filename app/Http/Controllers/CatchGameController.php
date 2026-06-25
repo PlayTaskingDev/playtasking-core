@@ -39,6 +39,8 @@ class CatchGameController extends Controller
             'i' => route('game.start', ['tenant' => tenant('id')]),
             'j' => $slug
         ];
+            session()->forget('game_start');
+            session()->forget('game_duration');
 
         
         // Check if user has been participated

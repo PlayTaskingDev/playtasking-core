@@ -40,6 +40,8 @@ class SmashGameController extends Controller
             'j' => $slug
         ];
 
+        session()->forget('game_start');
+        session()->forget('game_duration');
         
         // Check if user has been participated
         $has_paticipated = $this->check_participation($model_id = $smash_game->id,$model_type = 'App\Models\SmashGame',$user_id = Auth::user()->id);
