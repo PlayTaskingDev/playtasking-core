@@ -97,6 +97,8 @@ class CatchGameController extends Controller
         // Check if user is out of time
         $is_out_of_time = $this->out_of_time_validation(session('game_start'), $catch_game->seconds);
         if ($is_out_of_time) {
+            session()->forget('game_start');
+            session()->forget('game_duration');
             return redirect()->route('campaign.splash', ['tenant' => tenant('id')]);
         }
 
