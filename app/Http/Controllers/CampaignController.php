@@ -23,7 +23,6 @@ class CampaignController extends Controller
         $active_campaign = Campaign::with(['campaign_splash_page','content_types'])
             ->where([['active',true],['init_date','<',$now],['end_date','>',$now]])
             ->first();
-
         if (!is_null($active_campaign)) {
             return view('dashboard.campaigns.splash', [
                 'active_campaign'   => $active_campaign,

@@ -16,7 +16,7 @@
             width: 100%;
             background-color: #fff;
             border-radius: 18px;
-            padding: 2rem 1.875rem 5rem 1.875rem;
+            padding: 2rem 1.875rem 3rem 1.875rem;
             text-align: center;
             margin-top: 10px;
         }

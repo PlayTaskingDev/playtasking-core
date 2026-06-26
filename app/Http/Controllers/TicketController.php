@@ -36,7 +36,7 @@ class TicketController extends Controller
                 $q->inRandomOrder();
             }])->inRandomOrder()->limit(1)->first();
         }
-        
+
         return view('dashboard.tickets.create', [
             'campaign'          => $campaign,
             'campaign_games'    => $campaign_games,
@@ -52,7 +52,7 @@ class TicketController extends Controller
     {
         $data = $request->validated();
 
-        // Validate if ticket has registered 
+        // Validate if ticket has registered
         $ticket = Ticket::where([
                 ['transaction_number',$data['transaction_number']],
                 //['transaction_date',$data['transaction_date']],
@@ -63,15 +63,15 @@ class TicketController extends Controller
         if($ticket){
             return redirect()->route('tickets.saved', ['tenant' => tenant('id')])->with('status','duplicated');
         }
-        // OCR
-        $binary_image = $data['ticket']->get();
-        $mime_type = $data['ticket']->getClientMimeType();
-        try {
-            $ocr_data = $this->ocr_scan($binary_image,$mime_type);
-        } catch (\Throwable $th) {
-            return redirect()->route('tickets.ocr.saved', ['tenant' => tenant('id')])->with('status','error');
-        }
-        dd($ocr_data);
+        // // OCR
+        // $binary_image = $data['ticket']->get();
+        // $mime_type = $data['ticket']->getClientMimeType();
+        // try {
+        //     $ocr_data = $this->ocr_scan($binary_image,$mime_type);
+        // } catch (\Throwable $th) {
+        //     return redirect()->route('tickets.ocr.saved', ['tenant' => tenant('id')])->with('status','error');
+        // }
+        // dd($ocr_data);
 
         $campaign = $this->get_current_campaign();
         $user = Auth::user();
@@ -86,7 +86,7 @@ class TicketController extends Controller
        } catch (\Throwable $th) {
             return redirect()->route('tickets.saved', ['tenant' => tenant('id')]);
        }
-        
+
         // Validate response
         if (get_app_setting('tickets_quiz_validation')) {
             $ticket_question = TicketQuestion::whereId($data['quid'])->with([

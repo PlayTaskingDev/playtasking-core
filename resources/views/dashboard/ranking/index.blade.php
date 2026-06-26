@@ -32,7 +32,7 @@
                                     }">
                                     
                                         <!-- Buttons -->
-                                        <div class="flex justify-center">
+                                        <div id="tabsButtonsRanking" class="flex justify-center">
                                             <div
                                                 role="tablist"
                                                 class="max-[480px]:max-w-[180px] inline-flex flex-wrap justify-center bg-slate-200 rounded-[20px] p-1 mb-4 min-[480px]:mb-6"
