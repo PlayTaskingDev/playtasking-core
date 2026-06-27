@@ -59,19 +59,10 @@ class TicketController extends Controller
                 //['store',$data['store']],
                 //['transaction_amount',$data['amount']],
             ])->first();
-
         if($ticket){
             return redirect()->route('tickets.saved', ['tenant' => tenant('id')])->with('status','duplicated');
         }
-        // // OCR
-        // $binary_image = $data['ticket']->get();
-        // $mime_type = $data['ticket']->getClientMimeType();
-        // try {
-        //     $ocr_data = $this->ocr_scan($binary_image,$mime_type);
-        // } catch (\Throwable $th) {
-        //     return redirect()->route('tickets.ocr.saved', ['tenant' => tenant('id')])->with('status','error');
-        // }
-        // dd($ocr_data);
+
 
         $campaign = $this->get_current_campaign();
         $user = Auth::user();
@@ -80,10 +71,11 @@ class TicketController extends Controller
         try {
            /* $request_file_name = Str::uuid();
            $ticket_info = Filepond::field($data['ticket'])->moveTo(tenant('id') . '/tickets/' . $request_file_name); */
-
-           $ticket_info = $this->uploadImage('gcs','tickets',$request->file('ticket'));
-           $ticket = $this->create_ticket($data,$ticket_info,$points,$campaign->id,$user->id);
+            $data['store'] = $data['store'] ?? env('APP_NAME');
+            $ticket_info = $this->uploadImage('gcs','tickets',$request->file('ticket'));
+            $ticket = $this->create_ticket($data,$ticket_info,$points,$campaign->id,$user->id);
        } catch (\Throwable $th) {
+            dd($th);
             return redirect()->route('tickets.saved', ['tenant' => tenant('id')]);
        }
 
