@@ -75,7 +75,6 @@ class TicketController extends Controller
             $ticket_info = $this->uploadImage('gcs','tickets',$request->file('ticket'));
             $ticket = $this->create_ticket($data,$ticket_info,$points,$campaign->id,$user->id);
        } catch (\Throwable $th) {
-            dd($th);
             return redirect()->route('tickets.saved', ['tenant' => tenant('id')]);
        }
 
