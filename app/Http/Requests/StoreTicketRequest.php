@@ -44,4 +44,10 @@ class StoreTicketRequest extends FormRequest
             'quid'                  => [Rule::requiredIf(fn () => get_app_setting('tickets_quiz_validation')),'exists:ticket_questions,id'],
         ];
     }
+     public function messages(): array
+    {
+        return [
+            'amount' => 'Compra mínima de $230 pesos.',
+        ];
+    }
 }
