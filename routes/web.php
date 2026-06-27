@@ -249,6 +249,8 @@ Route::group([
             Route::get('awards/{award}/{code_id?}', [AwardController::class, 'show'])->name('dashboard.awards.show');
             Route::get('awards', [AwardController::class, 'index'])->name('dashboard.awards.index');
         });
+
+       
     });
 
     Route::middleware(['auth','app_active'])->group(function () {

@@ -323,12 +323,14 @@
                                 datepicker-autohide datepicker-format="yyyy-mm-dd" datepicker-min-date="{{$init_date}}" datepicker-max-date="{{$today}}" />
                             <x-input-error :messages="$errors->get('transaction_date')" class="mt-2" />
                         </div>
-                        <div class="mt-3">
-                            <x-input-label for="store" :value="__('Store')" />
-                            <x-text-input id="store" class="block mt-1 w-full text-black" type="text" name="store"
-                                :value="old('store')" required autofocus autocomplete="store" />
-                            <x-input-error :messages="$errors->get('store')" class="mt-2" />
-                        </div>
+                        @if (false)
+                            <div class="mt-3">
+                                <x-input-label for="store" :value="__('Store')" />
+                                <x-text-input id="store" class="block mt-1 w-full text-black" type="text" name="store"
+                                    :value="old('store')" required autofocus autocomplete="store" />
+                                <x-input-error :messages="$errors->get('store')" class="mt-2" />
+                            </div>
+                        @endif
                         <div class="mt-3">
                             <x-input-label for="amount" :value="__('Amount')" />
                             <x-text-input id="amount" class="block mt-1 w-full text-black" type="text" name="amount"

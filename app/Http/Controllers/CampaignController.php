@@ -24,6 +24,7 @@ class CampaignController extends Controller
             ->where([['active',true],['init_date','<',$now],['end_date','>',$now]])
             ->first();
         if (!is_null($active_campaign)) {
+
             return view('dashboard.campaigns.splash', [
                 'active_campaign'   => $active_campaign,
             ]);
