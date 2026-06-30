@@ -14,9 +14,9 @@ return [
     */
 
     'reset'         => '¡Tu contraseña fue cambiada!',
-    'sent'          => 'Te hemos enviado un correo con el enlace para cambiar tu contraseña.',
+    'sent'          => 'Te hemos enviado un correo con el enlace para cambiar tu contraseña. Si no recibiste el correo, por favor revisa tu carpeta de spam.',
     'throttled'     => 'Por favor, espera antes de intentar de nuevo.',
     'token'         => 'Token inválido.',
-    'user'          => 'Te hemos enviado un correo con el enlace para cambiar tu contraseña.',
+    'user'          => 'Te hemos enviado un correo con el enlace para cambiar tu contraseña. Si no recibiste el correo, por favor revisa tu carpeta de spam.',
 
 ];
