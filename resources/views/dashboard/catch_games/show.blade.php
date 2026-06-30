@@ -61,7 +61,7 @@
     <div class="py-6">
         <div class="max-w-2xl mx-auto px-3 sm:px-6 lg:px-8">
             <div class="dark:bg-gray-800">
-                <div class="game-card rounded-lg dark:bg-gray-800 dark:border-gray-700">
+                <div class="game-card rounded-lg dark:bg-gray-800 dark:border-gray-700 p-3">
                     <div id="game-holder">
 
                         <x-campaign-menu :campaign-games="$campaign_games" :campaign-tickets="$campaign_tickets" :campaign-coupons="$campaign_coupons" :campaign-url="route('campaign.show', ['tenant' => tenant('id'), 'slug' => $catch_game->campaign->slug])" :active="'games'" />

@@ -9,10 +9,12 @@
     <div class="py-6">
         <div class="max-w-2xl mx-auto px-3 sm:px-6 lg:px-8">
             <div class="dark:bg-gray-800 overflow-hidden">
-                <h1 class="font-semibold text-2xl dark:text-gray-200 leading-tight pb-5 text-white text-center uppercase">
+                @if(get_app_setting('autologin') != true)
+                    <h1 class="font-semibold text-2xl dark:text-gray-200 leading-tight pb-5 text-white text-center uppercase">
                     {{__('Hi')}}, {{auth()->user()->name}}
-                </h1>
-                <div class="game-card rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 p-6">
+                    </h1>
+                @endif
+                <div class="game-card rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 p-3 p-6">
                     @if ($active_campaign->campaign_splash_page->featured_video_url)
                     <div class="aspect-w-16 aspect-h-9 mb-6">
                         <iframe class="w-full aspect-video rounded-lg shadow-lg" src="{{$active_campaign->campaign_splash_page->featured_video_url}}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -27,10 +29,22 @@
                         {!! $active_campaign->campaign_splash_page->instructions !!}
                     </div>
                     <div class="my-6 text-center">
-                        <x-primary-link href="{{ route('campaign.show', ['tenant' => tenant('id'), 'slug' => $active_campaign->slug]) }}"
-                            class="w-full block">
-                            {{ __('Start') }}
-                        </x-primary-link>
+                        @if ($active_campaign->content_types->contains('system_name', 'games') && ($active_campaign->content_types->contains('system_name', 'tickets') || $active_campaign->content_types->contains('system_name', 'coupons')))
+                             <x-primary-link href="{{ route('campaign.show', ['tenant' => tenant('id'), 'slug' => $active_campaign->slug]) }}"
+                                class="w-full block">
+                                {{ __('Start') }}
+                            </x-primary-link>
+                        @elseif ($active_campaign->content_types->contains('system_name', 'tickets') && !$active_campaign->content_types->contains('system_name', 'games') && !$active_campaign->content_types->contains('system_name', 'coupons'))
+                            <x-primary-link href="{{ route('ticketsdash.create', ['tenant' => tenant('id')]) }}"
+                                    class="w-full block">
+                                    {{ __('Start') }}
+                            </x-primary-link>
+                        @elseif ($active_campaign->content_types->contains('system_name', 'coupons') && !$active_campaign->content_types->contains('system_name', 'games') && !$active_campaign->content_types->contains('system_name', 'tickets'))
+                            <x-primary-link href="{{ route('coupons.capture', ['tenant' => tenant('id')]) }}"
+                                    class="w-full block">
+                                    {{ __('Start') }}
+                            </x-primary-link>
+                        @endif
                     </div>
                     @if (false) {{-- Disabled for now AlbertoPaz--}}
                         @foreach ($active_campaign->content_types as $content_type)

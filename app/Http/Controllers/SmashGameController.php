@@ -40,6 +40,8 @@ class SmashGameController extends Controller
             'j' => $slug
         ];
 
+        session()->forget('game_start');
+        session()->forget('game_duration');
         
         // Check if user has been participated
         $has_paticipated = $this->check_participation($model_id = $smash_game->id,$model_type = 'App\Models\SmashGame',$user_id = Auth::user()->id);
@@ -82,6 +84,8 @@ class SmashGameController extends Controller
         $validator = validator($request->all(), $rules);
 
         if ($validator->fails()) {
+            session()->forget('game_start');
+            session()->forget('game_duration');
             return response()->json(['status' => 'error'], 422);
         }
 
@@ -90,6 +94,8 @@ class SmashGameController extends Controller
 
         // Check the signature to validate corrrect game
         if (!hash_equals($this->signature_hash($smash_game_data->id.$data['slug'].$smash_game_data->award->id), $data['data']) ){
+            session()->forget('game_start');
+            session()->forget('game_duration');
             return redirect()->route('campaign.splash', ['tenant' => tenant('id')]);
         }
         $smash_game = SmashGame::with('award')->findOrFail($smash_game_data->id);
@@ -97,12 +103,16 @@ class SmashGameController extends Controller
         // Check if user is out of time
         $is_out_of_time = $this->out_of_time_validation(session('game_start'), $smash_game->seconds);
         if ($is_out_of_time) {
+            session()->forget('game_start');
+            session()->forget('game_duration');
             return redirect()->route('campaign.splash', ['tenant' => tenant('id')]);
         }
 
         // Check if user has been participated and won
         $has_paticipated = $this->check_participation($model_id = $smash_game->id,$model_type = 'App\Models\SmashGame',$user_id = Auth::user()->id,$hit = true);
         if (!is_null($has_paticipated)) {
+            session()->forget('game_start');
+            session()->forget('game_duration');
             return redirect(route('dashboard.awards.show', ['tenant' => tenant('id'), 'award' => $smash_game->award]));
         }
         // Attach user to quiz with hit
@@ -135,13 +145,20 @@ class SmashGameController extends Controller
             $user_interaction->code = $award_code->code;
             $user_interaction->save();
             session()->forget('game_start');
+            session()->forget('game_duration');
         } else {
+            session()->forget('game_start');
+            session()->forget('game_duration');
             return redirect()->route('game.out_of_coupons', ['tenant' => tenant('id')]);
         }
         
         if ($query) {
+            session()->forget('game_start');
+            session()->forget('game_duration');
             return response()->json(['status' => 'success'], 200);
         } else {
+            session()->forget('game_start');
+            session()->forget('game_duration');
             return response()->json(['status' => 'error'], 400);
         }
     }

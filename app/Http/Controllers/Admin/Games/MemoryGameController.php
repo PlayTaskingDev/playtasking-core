@@ -165,8 +165,9 @@ class MemoryGameController extends Controller
      * @param  \App\Models\MemoryQuiz  $memoryQuiz
      * @return \Illuminate\Http\Response
      */
-    public function destroy(MemoryQuiz $memoryQuiz)
+    public function destroy($id)
     {
+        $memoryQuiz = MemoryQuiz::findOrFail($id);
         $memoryQuiz->load(['memory_cards','award','coupons']);
 
         if ($memoryQuiz->memory_cards && $memoryQuiz->memory_cards->isNotEmpty()) {

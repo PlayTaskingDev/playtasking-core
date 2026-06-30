@@ -301,6 +301,14 @@ class OptionsTableSeeder extends Seeder
                 [
                     'option_name'    => 'social_login_active',
                     'option_value'   =>  false,
+                ],
+                [
+                    'option_name'    => 'enable_phone',
+                    'option_value'   => '0',
+                ],
+                [
+                    'option_name'    => 'autologin',
+                    'option_value'   => '0',
                 ]
                 
             ]

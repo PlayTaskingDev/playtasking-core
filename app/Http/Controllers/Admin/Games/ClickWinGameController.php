@@ -149,8 +149,9 @@ class ClickWinGameController extends Controller
      * @param  \App\Models\ShareQuiz  $click_win
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ClickWin $click_win)
+    public function destroy($id)
     {
+        $click_win = ClickWin::findOrFail($id);
         $click_win->load(['award']);
 
         if ($click_win->award) {

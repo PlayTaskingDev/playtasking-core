@@ -29,6 +29,7 @@ class SaveVoteContestRequest extends FormRequest
             'content_type_id'   => ['required','exists:content_types,id'],
             'title'             => ['required','regex:/^[A-Za-z0-9áéíóúÁÉÍÓÚÑñ,.;:!"¡?¿#\(\)\' \-]+$/'],
             'description'       => ['required','regex:/^[A-Za-z0-9áéíóúÁÉÍÓÚÑñ,.;:!"¡?¿#\(\)\' \-]+$/'],
+            'show_ranking'      => ['nullable','boolean'],
             'featured_image'    => [Rule::requiredIf(!$this->id),'image:jpg,png,jpeg','max:600'],
             'featured_image_disabled'   => [Rule::requiredIf(!$this->id),'image:jpg,png,jpeg','max:600'],
             'slug'              => [

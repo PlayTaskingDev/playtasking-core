@@ -30,6 +30,8 @@ use App\Http\Controllers\Panel\PanelCampaignSplashPageController;
 use App\Http\Controllers\Panel\PanelCatchGameController;
 use App\Http\Controllers\Panel\PanelCatchObjectController;
 use App\Http\Controllers\Panel\PanelSmashGameController;
+use App\Http\Controllers\Panel\PanelFlappyGameController;
+use App\Http\Controllers\Panel\PanelPenalGameController;
 use App\Http\Controllers\Panel\PanelSmashObjectController;
 use App\Http\Controllers\Panel\PanelClickWinController;
 use App\Http\Controllers\Panel\PanelCodeController;
@@ -44,7 +46,8 @@ use App\Http\Controllers\Panel\TicketQuestionController;
 //New Admin V2
 use App\Http\Controllers\Admin\DynamicsController;
 use App\Http\Controllers\Admin\CampaignsController;
-
+use App\Http\Controllers\FlappyGameController;
+use App\Http\Controllers\PenalGameController;
 use App\Http\Controllers\PuzzleController;
 use App\Http\Controllers\RankingController;
 use App\Http\Controllers\ShareQuizController;
@@ -123,6 +126,7 @@ Route::group([
             Route::get('/', [QuizController::class, 'quiz_index'])->name('quiz.index');
             Route::get('/{slug}', [QuizController::class, 'quiz_show'])->name('quiz.show');
             Route::post('/quiz_evaluate', [QuizController::class, 'quiz_evaluate'])->name('quiz.evaluate');
+            Route::post('/quiz_timer_out', [QuizController::class, 'quiz_timer_out'])->name('quiz.timer_out');
         });
 
         Route::prefix('memoramas')->group(function () {
@@ -151,6 +155,20 @@ Route::group([
             Route::get('/{slug}', [SmashGameController::class, 'show'])->name('smash_game.show');
             Route::post('/smash-game-complete', [SmashGameController::class, 'smash_game_complete'])
                 ->middleware('ajax_quiz.complete')->name('smash_game.complete');
+        });
+
+        Route::prefix('flappy-games')->group(function () {
+            Route::get('/', [FlappyGameController::class, 'index'])->name('flappy_game.index');
+            Route::get('/{slug}', [FlappyGameController::class, 'show'])->name('flappy_game.show');
+            Route::post('/flappy-games-complete', [FlappyGameController::class, 'flappy_game_complete'])
+                ->middleware('ajax_quiz.complete')->name('flappy_game.complete');
+        });
+
+        Route::prefix('penal-games')->group(function () {
+            Route::get('/', [PenalGameController::class, 'index'])->name('penal_game.index');
+            Route::get('/{slug}', [PenalGameController::class, 'show'])->name('penal_game.show');
+            Route::post('/penal-games-complete', [PenalGameController::class, 'penal_game_complete'])
+                ->middleware('ajax_quiz.complete')->name('penal_game.complete');
         });
 
         Route::prefix('compartir')->group(function () {
@@ -223,7 +241,7 @@ Route::group([
 
         Route::prefix('premios')->group(function () {
             Route::get('/beneficios-agotados', [AwardController::class, 'out_of_coupons'])->name('game.out_of_coupons');
-            Route::get('/fallaste/{model_type}/{model}', [AwardController::class, 'game_failed'])->name('game.failed');
+            Route::get('/fallaste/{model_type}/{model}/{out_time?}', [AwardController::class, 'game_failed'])->name('game.failed');
             /* Route::resource('awards', AwardController::class)->names([
                 'show'  => 'dashboard.awards.show',
                 'index' => 'dashboard.awards.index'
@@ -231,6 +249,8 @@ Route::group([
             Route::get('awards/{award}/{code_id?}', [AwardController::class, 'show'])->name('dashboard.awards.show');
             Route::get('awards', [AwardController::class, 'index'])->name('dashboard.awards.index');
         });
+
+       
     });
 
     Route::middleware(['auth','app_active'])->group(function () {
@@ -244,7 +264,7 @@ Route::group([
     Route::middleware(['auth', 'role:admin'])->prefix('panel')->group(function () {
         Route::get('/', [PanelController::class, 'index'])->name('panel.index');
         Route::post('/save_settings', [PanelController::class, 'save_settings'])->name('panel.settings.save');
-        Route::resource('pages', PanelPageController::class);
+        //Route::resource('pages', PanelPageController::class);
         Route::resource('quizzes', PanelQuizController::class);
         Route::resource('memory_quizzes', PanelMemoryQuizController::class);
         Route::resource('share_quizzes', PanelShareQuizController::class);
@@ -258,6 +278,8 @@ Route::group([
         Route::resource('catch_games', PanelCatchGameController::class);
         Route::resource('catch_objects', PanelCatchObjectController::class);
         Route::resource('smash_games', PanelSmashGameController::class);
+        Route::resource('flappy_games', PanelFlappyGameController::class);
+        Route::resource('penal_games', PanelPenalGameController::class);
         Route::resource('smash_objects', PanelSmashObjectController::class);
         Route::resource('media_elements', PanelMediaElementController::class);
         Route::get('ticketQuestion/get-codes-sample', [TicketQuestionController::class, 'download_sample'])->name('tickets.questions.sample');
@@ -265,6 +287,7 @@ Route::group([
         Route::post('ticketQuestion/import', [TicketQuestionController::class, 'import'])->name('tickets.questions.import');
         Route::resource('ticketQuestion',TicketQuestionController::class);
         Route::resource('ticketAnswer', PanelTicketAnswerController::class);
+        Route::get('vote_contest/{model_id}/export', [PanelVoteContestController::class, 'export'])->name('panel.vote_contest.export');
         Route::resource('vote_contest', PanelVoteContestController::class)->names(
             [
                 'index'     => 'panel.vote_contest.index',
@@ -325,6 +348,12 @@ Route::group([
             Route::resource('catchgameobjects',App\Http\Controllers\Admin\Games\CatchGameObjectController::class);
         // Game - Click Win
         Route::resource('clickwingames',App\Http\Controllers\Admin\Games\ClickWinGameController::class);
+        // Game - Flappy Game
+        Route::resource('flappygames',App\Http\Controllers\Admin\Games\FlappyGameController::class);
+
+        // Game - Pennal Game
+        Route::resource('penalgames',App\Http\Controllers\Admin\Games\PenalGameController::class);
+        Route::resource('clickwingames',App\Http\Controllers\Admin\Games\ClickWinGameController::class);
         // Game - Share
         Route::resource('sharegames',App\Http\Controllers\Admin\Games\ShareGameController::class);
         // Game - Memory
@@ -344,6 +373,7 @@ Route::group([
             // Game - Trivia Answer
             Route::resource('triviagameanswers',App\Http\Controllers\Admin\Games\TriviaGameAnswerController::class);
         // Game - Vote
+        Route::get('votegames/{model_id}/export', [App\Http\Controllers\Admin\Games\VoteGameController::class, 'export'])->name('votegames.export');
         Route::resource('votegames',App\Http\Controllers\Admin\Games\VoteGameController::class);
         // Awards
         Route::resource('v2awards', App\Http\Controllers\Admin\AwardsController::class);
@@ -354,7 +384,7 @@ Route::group([
         Route::get('get-codes-sample', [App\Http\Controllers\Admin\AwardCodesController::class, 'download_sample'])->name('awards.codes.sample');
         Route::post('import-codes', [App\Http\Controllers\Admin\AwardCodesController::class, 'import'])->name('awards.codes.import');
         // Tickets
-        Route::resource('tickets', App\Http\Controllers\Admin\TicketController::class);
+        //Route::resource('tickets', App\Http\Controllers\Admin\TicketController::class);
             // Tickets Questions
             Route::resource('ticketquestions', App\Http\Controllers\Admin\TicketQuestionController::class);
              // Tickets Answers

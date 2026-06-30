@@ -24,8 +24,9 @@ class SaveQuestionRequest extends FormRequest
     public function rules()
     {
         return [
-            'title'     => ['required','regex:/^[A-Za-z0-9áéíóúÁÉÍÓÚÑñ,.;:!"¡?¿#\(\)\' \-]+$/'],
+            'title'     => ['required','regex:/^[A-Za-z0-9áéíóúÁÉÍÓÚÑñ,.;:®!"¡?¿#\(\)\' \-]+$/'],
             'quiz_id'   => ['required','exists:quizzes,id'],
+            'featured_image'=> ['image:jpg,png,jpeg','max:600'],
         ];
     }
 }

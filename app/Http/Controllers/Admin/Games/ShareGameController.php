@@ -161,8 +161,9 @@ class ShareGameController extends Controller
      * @param  \App\Models\ShareQuiz  $shareQuiz
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ShareQuiz $shareQuiz)
+    public function destroy($id)
     {
+        $shareQuiz = ShareQuiz::findOrFail($id);
         $shareQuiz->load(['award']);
 
         if ($shareQuiz->award) {

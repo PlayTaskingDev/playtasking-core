@@ -96,6 +96,14 @@ class Campaign extends Model
     {
         return $this->hasMany(SmashGame::class);
     }
+    public function flappy_games()
+    {
+        return $this->hasMany(FlappyGame::class);
+    }
+    public function penal_games()
+    {
+        return $this->hasMany(PenalGame::class);
+    }
 
     public function code()
     {

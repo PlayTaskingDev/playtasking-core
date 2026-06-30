@@ -32,7 +32,6 @@ class AwardModelPolicy
     public function view(User $user, Award $award)
     {
         $model = $award->awardable;
-
         $query = DB::table('award_user')->where([['model_id',$model->id],['model_type',$award->awardable_type],['user_id',$user->id],['hit',true]])->first();
 
         if(is_null($query)){

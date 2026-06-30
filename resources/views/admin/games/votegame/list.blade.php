@@ -68,7 +68,7 @@
                             <x-heroicon-o-pencil-square class="w-5"/>
                             {{ __('Edit') }}
                             </a>
-                            <a href="{{ route('panel.export_user_interactions', ['tenant' => tenant('id'), 'table_name' => $votegame->table_name, 'model_id' => $votegame->id]) }}"
+                            <a href="{{ route('votegames.export', ['tenant' => tenant('id'), 'model_id' => $votegame->id]) }}"
                                 class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 rounded-lg transition-colors">
                                 {{ __('Export') }}
                             </a>

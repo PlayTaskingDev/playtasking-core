@@ -70,6 +70,9 @@ class TriviaGameController extends Controller
         if($request->file('failed_image')){
             $data['failed_image'] = $this->uploadImage('gcs','quizzes',$request->file('failed_image'));
         }
+        if($request->file('failed_image_out_time')){
+            $data['failed_image_out_time'] = $this->uploadImage('gcs','quizzes',$request->file('failed_image_out_time'));
+        }
 
         if($request->file('game_banner')){
             $data['game_banner'] = $this->uploadImage('gcs','quizzes',$request->file('game_banner'));
@@ -135,6 +138,10 @@ class TriviaGameController extends Controller
             $data['failed_image'] = $this->uploadImage('gcs','quizzes',$request->file('failed_image'));
         }
 
+        if($request->file('failed_image_out_time')){
+            $data['failed_image_out_time'] = $this->uploadImage('gcs','quizzes',$request->file('failed_image_out_time'));
+        }
+
         if($request->file('game_banner')){
             $data['game_banner'] = $this->uploadImage('gcs','quizzes',$request->file('game_banner'));
         }
@@ -143,7 +150,6 @@ class TriviaGameController extends Controller
         if (isset(($data['delete_image_holder_hidden'])) && $data['delete_image_holder_hidden'] == true) {
             $quiz->game_banner = null;
         }
-
         if( !$request->has('btn_border') ){
             $data['btn_border'] = false;
         }
@@ -164,8 +170,9 @@ class TriviaGameController extends Controller
      * @param  \App\Models\Quiz  $quiz
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Quiz $quiz)
+    public function destroy($id)
     {
+        $quiz = Quiz::findOrFail($id);
         $quiz->load(['questions','answers','award','coupons']);
 
         if ($quiz->answers && $quiz->answers->isNotEmpty()) {

@@ -143,8 +143,9 @@ class SmashGameController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(SmashGame $smash_game)
+    public function destroy($id)
     {
+        $smash_game = SmashGame::findOrFail($id);
         $smash_game->load(['smash_objects','award','coupons']);
 
         if ($smash_game->memory_cards && $smash_game->memory_cards->isNotEmpty()) {

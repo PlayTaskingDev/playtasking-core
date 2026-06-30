@@ -11,10 +11,6 @@ use App\Traits\CampaignsTrait;
 use App\Traits\UploadImageTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Codesmiths\LaravelOcrSpace\OcrSpaceOptions;
-use Codesmiths\LaravelOcrSpace\Facades\OcrSpace;
-use Codesmiths\LaravelOcrSpace\Enums\Language;
-use Codesmiths\LaravelOcrSpace\Enums\OcrSpaceEngine;
 use Illuminate\Support\Facades\DB;
 
 class OcrTicketController extends Controller
@@ -134,20 +130,7 @@ class OcrTicketController extends Controller
         return redirect(route('dashboard.awards.show', ['tenant' => tenant('id'), 'award' => $setting->award]))->with('coupon_success',true);
     }
 
-    private function ocr_scan($binary_image,$mime_type)
-    {
-        $options = OcrSpaceOptions::make()
-            ->fileType($mime_type)
-            ->language(Language::Spanish)
-            ->OCREngine(OcrSpaceEngine::Engine2);;
-
-        $result = OcrSpace::parseBinaryImage(
-            $binary_image,
-            $options,
-        );
-
-        return $result;
-    }
+    
 
     public function saved()
     {

@@ -64,8 +64,9 @@
                 <div class="flex-1 max-w-full md:max-w-fit rounded-2xl border border-gray-200 bg-white p-6 mt-2">
                     {{-- General Options --}}
                     <section class="max-w-full w-[600px] space-y-6 transition-all ease-in duration-200" id="general" role="tabpanel" aria-labelledby="general-tab">
-                        <x-ui.forms.input-switch label="App Enabled" name="app_active" switcher="{{ $settings->app_active }}"/>
-                        <x-ui.forms.input-switch label="Ranking Enabled" name="ranking_enabled" switcher="{{ $settings->ranking_enabled }}" />
+                        <x-ui.forms.input-switch label="App Enabled" name="app_active" value="1" switcher="{{ $settings->app_active }}"/>
+                        <x-ui.forms.input-switch label="Ranking Enabled" name="ranking_enabled" value="1" switcher="{{ $settings->ranking_enabled }}" />
+                        <x-ui.forms.input-switch label="Autologin" name="autologin" value="1" switcher="{{ $settings->autologin }}" />
                         <x-ui.forms.input-text label="Nombre del Sitio" name="app_name" value="{{$settings->app_name}}"  placeholder="PlayTasking" />
                         <x-ui.forms.input-text label="Descripción" name="app_description" value="{{$settings->app_description}}"  placeholder="El Mejor Portal donde Siempre Ganas" />
                         <x-ui.forms.input-text label="Google Gtag ID" name="ga4_id" value="{{$settings->ga4_id}}" placeholder="G4-1234-12132" />
@@ -119,9 +120,10 @@
                     {{-- End Inicio Options --}}
                     {{-- Registro Options --}}
                     <section class="max-w-full w-[600px] space-y-6" id="registro" role="tabpanel" aria-labelledby="registro-tab">
-                        <x-ui.forms.input-switch label="Agregar Campo Ciudad" name="allow_city" switcher="{{ $settings->allow_city }}"/>
-                        <x-ui.forms.input-switch label="Permitir registro con redes sociales" name="social_login_active" switcher="{{ $settings->social_login_active }}"/>
-                        <x-ui.forms.input-switch label="Solicitar ID de miembros" name="members_number" switcher="{{ $settings->members_number }}"/>
+                        <x-ui.forms.input-switch label="Agregar Campo Ciudad" name="allow_city" value="1" switcher="{{ $settings->allow_city }}"/>
+                        <x-ui.forms.input-switch label="Permitir registro con redes sociales" name="social_login_active" value="1" switcher="{{ $settings->social_login_active }}"/>
+                        <x-ui.forms.input-switch label="Solicitar ID de miembros" name="members_number" value="1" switcher="{{ $settings->members_number }}"/>
+                        <x-ui.forms.input-switch label="Agregar campo Teléfono" name="enable_phone" value="1" switcher="{{ $settings->enable_phone }}" />
                         <x-ui.forms.input-text label="Members legend" name="members_legend" value="{{$settings->members_legend}}"  placeholder="" />
                         <x-ui.forms.input-text label="Members placeholder" name="members_placeholder" value="{{$settings->members_placeholder}}"  placeholder="" />
                         <x-ui.forms.input-text label="Members URL" name="members_url" value="{{$settings->members_url}}"  placeholder="" />
@@ -140,15 +142,15 @@
                     {{-- End Campañas Options --}}
                     {{-- Tickets Options --}}
                     <section class="max-w-full w-[700px] space-y-6" id="tickets" role="tabpanel" aria-labelledby="tickets-tab">
-                        <x-ui.forms.input-switch label="Ranking Tickets Enabled" name="ranking_enabled_tickets" switcher="{{ $settings->ranking_enabled_tickets }}"/>
+                        <x-ui.forms.input-switch label="Ranking Tickets Enabled" name="ranking_enabled_tickets" value="1" switcher="{{ $settings->ranking_enabled_tickets }}"/>
                         <h6 class="mb-2 text-sm font-bold text-black dark:text-white">
                         {{ __('Module type') }}
                         </h6>
                         <div  x-data="{ isTrivia: {{ $settings->ocr_ticket_active }} }">
-                            <x-ui.forms.input-switch label="Trivia/OCR" model="isTrivia" name="ocr_ticket_active" switcher="{{ $settings->ocr_ticket_active }}"/>
+                            <x-ui.forms.input-switch label="Trivia/OCR" model="isTrivia" name="ocr_ticket_active" value="1" switcher="{{ $settings->ocr_ticket_active }}"/>
                             <div x-show="!isTrivia" class="mt-4 p-4 border border-gray-400 rounded-lg space-y-6">
                                 <x-ui.forms.input-text label="Points per ticket" name="tickets_points" value="{{$settings->tickets_points}}"  placeholder="" />
-                                <x-ui.forms.input-switch label="Ticket quiz validation enabled" name="tickets_quiz_validation" switcher="{{ $settings->tickets_quiz_validation }}"/>
+                                <x-ui.forms.input-switch label="Ticket quiz validation enabled" name="tickets_quiz_validation" value="1" switcher="{{ $settings->tickets_quiz_validation }}"/>
                             </div>
                             <div x-show="isTrivia" class="mt-4 p-4 border border-gray-400 rounded-lg">
                                 <x-ui.forms.input-text-area label="__('Use breaklines to separate phrases')" name="ocr_ticket_phrases" value="{{$settings->ocr_ticket_phrases}}"  placeholder="" />

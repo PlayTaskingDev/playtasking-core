@@ -21,7 +21,7 @@
                 class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 content-start dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-5">
                 @foreach ($quizzes as $quiz)
                     <div
-                        class="game-card rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                        class="game-card rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 p-3">
                         @if ($user_quizzes->contains($quiz->id))
                             <img class="rounded-t-lg" src="{{ $quiz->featured_image }}" alt="{{ $quiz->title }}" />
                         @else

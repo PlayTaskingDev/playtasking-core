@@ -29,6 +29,40 @@ class OptionsController extends Controller
 
     public function save(Request $request)
     {
+        if( !$request->has('social_login_active') ){
+            $request['social_login_active'] = false;
+        }
+
+        if( !$request->has('app_active') ){
+            $request['app_active'] = false;
+        }
+        if( !$request->has('ranking_enabled') ){
+            $request['ranking_enabled'] = false;
+        }
+        if( !$request->has('autologin') ){
+            $request['autologin'] = false;
+        }
+        if( !$request->has('ranking_enabled_games') ){
+            $request['ranking_enabled_games'] = false;
+        }
+        if( !$request->has('ranking_enabled_tickets') ){
+            $request['ranking_enabled_tickets'] = false;
+        }
+
+        if( !$request->has('ocr_ticket_active') ){
+            $request['ocr_ticket_active'] = false;
+        }
+
+        if( !$request->has('members_number') ){
+            $request['members_number'] = false;
+        }
+        if( !$request->has('allow_city') ){
+            $request['allow_city'] = false;
+        }
+
+        if( !$request->has('cards_shadow') ){
+            $request['cards_shadow'] = false;
+        }
         foreach($request->all() as $k => $v){
         if($k !== '_token'){
             if(!is_string($v) && (!empty($v) && $v->isFile())){

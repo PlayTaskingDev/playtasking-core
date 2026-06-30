@@ -145,8 +145,9 @@ class PuzzleGameController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Puzzle $puzzle)
+    public function destroy($id)
     {
+        $puzzle = Puzzle::findOrFail($id);
         $puzzle->delete();
 
         return redirect(route('puzzlegames.index', ['tenant' => tenant('id')]))->with('status', trans('Puzzle deleted successful'));

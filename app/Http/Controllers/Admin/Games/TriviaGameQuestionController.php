@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Question;
 use Illuminate\Http\Request;
 use App\Http\Requests\Panel\SaveQuestionRequest;
+use App\Traits\UploadImageTrait;
 
 class TriviaGameQuestionController extends Controller
 {
+    use UploadImageTrait;
     /**
      * Display a listing of the resource.
      *
@@ -43,6 +45,9 @@ class TriviaGameQuestionController extends Controller
     public function store(SaveQuestionRequest $request)
     {
         $data = $request->all();
+        if($request->file('featured_image')){
+            $data['featured_image'] = $this->uploadImage('gcs','questions',$request->file('featured_image'));
+        }
 
         $question = Question::create($data);
 
@@ -84,11 +89,13 @@ class TriviaGameQuestionController extends Controller
     public function update($id, SaveQuestionRequest $request)
     {
         $data = $request->all();
+        if($request->file('featured_image')){ 
+            $data['featured_image'] = $this->uploadImage('gcs','questions',$request->file('featured_image'));
+        }
         $question = Question::findOrFail($id);
         $question->fill($data);
         $question->save();
-
-        return redirect(route('triviagamequestions.edit', ['tenant' => tenant('id'), 'question' => $question]))->with('status', trans('Question saved successful'));
+        return redirect(route('triviagamequestions.edit', ['tenant' => tenant('id'), 'triviagamequestion' => $question]))->with('status', trans('Question saved successful'));
     }
 
     /**

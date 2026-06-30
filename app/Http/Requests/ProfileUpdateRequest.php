@@ -21,7 +21,7 @@ class ProfileUpdateRequest extends FormRequest
             'email'             => ['email', 'max:255', Rule::unique(User::class)->ignore($this->user()->id)],
             'avatar'            => ['image:jpg,png,jpeg','max:2500'],
             'phone'             => ['nullable', 'digits:10'],
-            'members_number'    => [Rule::requiredIf(get_app_setting('members_number')), 'string', 'max:16'],
+            'members_number'    => [Rule::requiredIf((bool)get_app_setting('members_number')), 'string', 'max:16'],
         ];
     }
 }

@@ -42,6 +42,7 @@ class SaveQuizRequest extends FormRequest
             'gradient_2'        => ['required','string'],
             'failed_response'   => ['required','regex:/^[A-Za-z0-9áéíóúÁÉÍÓÚÑñ,.;:!"¡?¿#\(\)\' \-]+$/'],
             'failed_image'      => [Rule::requiredIf(!$this->id),'image:jpg,png,jpeg','max:600'],
+            'failed_image_out_time' => ['nullable','image:jpg,png,jpeg','max:600'],
             'delete_image_holder_hidden'  => ['nullable','boolean'],
             'game_banner'       => ['nullable','image:jpg,png,jpeg','max:600'],
             'game_banner_url'   => ['nullable','url'],

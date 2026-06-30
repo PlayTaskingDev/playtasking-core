@@ -182,10 +182,10 @@
     "Posting completed.": "Enlace compartido.",
     "Email confirmation": "Confirma tu email",
     "So sorry": "Lo sentimos :(",
-    "Transaction number": "#Tira",
-    "Transaction date": "Fecha del ticket",
-    "Store": "#Ticket",
-    "Amount": "Monto total del ticket",
+    "Transaction number": "No. Transacción:",
+    "Transaction date": "Fecha:",
+    "Store": "No. de Cine",
+    "Amount": "Monto del ticket:",
     "Enter the total amount without commas or points.": "Ingresa el monto total sin comas, puntos o cualquier otro signo.",
     "Add image or photo": "Sube una imagen o foto",
     "Ticket image": "Imagen del ticket",
@@ -284,5 +284,6 @@
     "Game Time Ranking":"Mejores en Tiempo de Juego",
     "Choose Game":"Elige un Juego",
     "Select City": "Ingresa Ciudad",
-    "There are no matches!": "No hay Coincidencias"
+    "There are no matches!": "No hay Coincidencias",
+    "Points": "Puntos"
 }

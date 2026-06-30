@@ -91,6 +91,16 @@
                                 </x-nav-link>
                             </li>
                             <li>
+                                <x-nav-link :href="route('flappy_games.index', ['tenant' => tenant('id')])" :active="request()->routeIs('flappy_games.index')" class="py-2">
+                                    {{ __('Flappy Games') }}
+                                </x-nav-link>
+                            </li>
+                            <li>
+                                <x-nav-link :href="route('penal_games.index', ['tenant' => tenant('id')])" :active="request()->routeIs('penal_games.index')" class="py-2">
+                                    {{ __('Penal Games') }}
+                                </x-nav-link>
+                            </li>
+                            <li>
                                 <x-nav-link :href="route('smash_games.index', ['tenant' => tenant('id')])" :active="request()->routeIs('smash_games.index')" class="py-2">
                                     {{ __('Smash Games') }}
                                 </x-nav-link>
@@ -246,6 +256,12 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('smash_games.index', ['tenant' => tenant('id')])" :active="request()->routeIs('smash_games.index')" class="flex items-center">
                 {{ __('Smash Games') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('flappy_games.index', ['tenant' => tenant('id')])" :active="request()->routeIs('flappy_games.index')" class="flex items-center">
+                {{ __('Flappy Games') }}
+            </x-responsive-nav-link>
+             <x-responsive-nav-link :href="route('penal_games.index', ['tenant' => tenant('id')])" :active="request()->routeIs('penal_games.index')" class="flex items-center">
+                {{ __('Penal Games') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('code.index', ['tenant' => tenant('id')])" :active="request()->routeIs('code.index')" class="flex items-center">
                 {{ __('Coupons') }}

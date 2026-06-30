@@ -58,7 +58,6 @@ class PanelQuizController extends Controller
     public function store(SaveQuizRequest $request)
     {
         $data = $request->all();
-
         if($request->file('featured_image')){
             $data['featured_image'] = $this->uploadImage('gcs','quizzes',$request->file('featured_image'));
         }
@@ -69,6 +68,9 @@ class PanelQuizController extends Controller
 
         if($request->file('failed_image')){
             $data['failed_image'] = $this->uploadImage('gcs','quizzes',$request->file('failed_image'));
+        }
+        if($request->file('failed_image_out_time')){
+            $data['failed_image_out_time'] = $this->uploadImage('gcs','quizzes',$request->file('failed_image_out_time'));
         }
 
         if($request->file('game_banner')){
@@ -102,7 +104,7 @@ class PanelQuizController extends Controller
         $campaigns = Campaign::all();
         $content_type = ContentType::where('system_name','games')->first();
         $time_slots = get_time_slots();
-
+        dd($quiz);
         return view('panel.quizzes.edit', [
             'quiz'          => $quiz->load('questions','award','campaign'),
             'campaigns'     => $campaigns,
@@ -133,7 +135,9 @@ class PanelQuizController extends Controller
         if($request->file('failed_image')){
             $data['failed_image'] = $this->uploadImage('gcs','quizzes',$request->file('failed_image'));
         }
-
+        if($request->file('failed_image_out_time')){
+            $data['failed_image_out_time'] = $this->uploadImage('gcs','quizzes',$request->file('failed_image_out_time'));
+        }
         if($request->file('game_banner')){
             $data['game_banner'] = $this->uploadImage('gcs','quizzes',$request->file('game_banner'));
         }

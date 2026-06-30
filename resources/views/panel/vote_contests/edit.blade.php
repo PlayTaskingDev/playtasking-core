@@ -74,6 +74,16 @@
                     <x-input-error :messages="$errors->get('description')" class="mt-2" />
                 </div>
 
+                <div class="my-5">
+                    <input id="show_ranking" name="show_ranking" type="checkbox" value="1" {{$vote_contest->show_ranking ? 'checked' : ''}}
+                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                    <label for="show_ranking"
+                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ __('Show Ranking') }}</label>
+                    
+                </div>
+
+                
+
                 <div class="my-5 grid grid-cols-2 gap-4">
                     <div>
                         <x-input-label for="featured_image" :value="__('Featured Image')" />

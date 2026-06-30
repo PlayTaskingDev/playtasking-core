@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers\Panel;
 
+
+use App\Exports\ContestInteractionsExport;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests\Panel\SaveVoteContestRequest;
 use App\Models\Campaign;
 use App\Models\ContentType;
 use App\Models\VoteContest;
 use Illuminate\Http\Request;
 use App\Traits\UploadImageTrait;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PanelVoteContestController extends Controller
 {
@@ -138,10 +142,42 @@ class PanelVoteContestController extends Controller
 
         $data['asset_kb_size'] = intval($data['asset_kb_size']) * 1000;
 
+        if( !$request->has('show_ranking') ){
+            $data['show_ranking'] = false;
+        }
+
+        if( !$request->has('btn_border') ){
+            $data['btn_border'] = false;
+        }
+
+        if( !$request->has('btn_shadow') ){
+            $data['btn_shadow'] = false;
+        }
+
         $voteContest->fill($data);
         $voteContest->save();
 
         return redirect(route('panel.vote_contest.index', ['tenant' => tenant('id')]))->with('status', trans('Vote contest saved successful'));
+    }
+
+    public function export($model_id)
+    {
+        $rows_collection = DB::table("vote_contest_assets as vca")->where('vca.vote_contest_id', $model_id)
+            ->join('users as u', 'u.id', '=', 'vca.user_id')
+            ->selectRaw('
+               u.id as user_id,
+               u.name as user_name,
+               u.email as user_email,
+               vca.title as description,
+               vca.asset_url as asset_url,
+               vca.created_at as submission_date
+            ')
+            ->get();
+        return Excel::download(
+            new ContestInteractionsExport($rows_collection),
+            'user_interactions_contests.xlsx'
+        );
+
     }
 
     /**

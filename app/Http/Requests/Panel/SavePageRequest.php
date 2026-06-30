@@ -34,7 +34,7 @@ class SavePageRequest extends FormRequest
             ],
             'icon'          => ['image:jpg,png,jpeg','max:2000'],
             'content'       => ['required','string'],
-            'active'        => ['boolean']
+            'active'        => ['boolean','accepted']
         ];
     }
 }

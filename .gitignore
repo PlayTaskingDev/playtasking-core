@@ -2,7 +2,6 @@
 /public/build
 /public/hot
 /public/.htaccess
-/public/storage
 /storage/*.key
 /vendor
 .env

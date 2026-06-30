@@ -11,13 +11,7 @@
     </h1>
 </x-slot>
 @section('content')
-    @if (session('status'))
-        <x-v2.ui.alert
-        variant="success"
-        title="{{ session('status') }}"
-        :showLink="false"
-        />
-    @endif
+
     <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
         <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
             <h2 class="text-xl font-semibold text-gray-800 dark:text-white/90">
@@ -80,6 +74,7 @@
                                 @endisset
 
                                 <h2 class="mt-6 text-lg col-span-2 font-semibold text-gray-800 dark:text-white/90">Page Details</h2>
+                                <x-ui.forms.input-text label="{{ __('Title') }}" cols="2" name="title" placeholder="" :value="$page->title" data-field="page.title" />
                                 <x-ui.forms.input-text label="{{ __('Description') }}" cols="2" name="description" placeholder="" :value="$page->description" data-field="page.description" />
                                 <x-ui.forms.input-text label="{{ __('Slug') }}" cols="2" name="slug" placeholder="" :value="$page->slug" data-field="page.slug" />
                                 <x-ui.forms.input-area-tinymce label="Texto de {{ $page->title }}" cols="2" name="content" value="{!! $page->content !!}" />
@@ -91,7 +86,7 @@
                 <div class="space-y-6 lg:col-span-4 2xl:col-span-3">
                     <div class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/3">
                         <h2 class="mb-5 text-lg font-semibold text-gray-800 dark:text-white/90">Page Configuration</h2>
-                        <x-ui.forms.input-switch label="{{ __('Active') }}" name="active" placeholder="" :value="$page->active" data-field="page.active" />
+                        <x-ui.forms.input-switch label="{{ __('Active') }}" name="active" placeholder="" value="1" switcher="{{ $page->active }}" data-field="page.active" />
                     </div>
                     <div class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/3 space-y-3">
                         <h2 class="mb-5 text-lg font-semibold text-gray-800 dark:text-white/90">Page Settings</h2>

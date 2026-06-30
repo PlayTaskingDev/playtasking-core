@@ -23,8 +23,8 @@ class CampaignController extends Controller
         $active_campaign = Campaign::with(['campaign_splash_page','content_types'])
             ->where([['active',true],['init_date','<',$now],['end_date','>',$now]])
             ->first();
-
         if (!is_null($active_campaign)) {
+
             return view('dashboard.campaigns.splash', [
                 'active_campaign'   => $active_campaign,
             ]);
@@ -80,6 +80,14 @@ class CampaignController extends Controller
                             {
                                 $q->where([['init_date','<',$now],['end_date','>',$now]]);
                             },
+                        'flappy_games' => function($q) use ($now)
+                            {
+                                $q->where([['init_date','<',$now],['end_date','>',$now]]);
+                            },
+                        'penal_games' => function($q) use ($now)
+                            {
+                                $q->where([['init_date','<',$now],['end_date','>',$now]]);
+                            }
                     ])
                     ->where([['slug', $slug],['active',true],['init_date','<',$now],['end_date','>',$now]])
                     ->first();
@@ -103,13 +111,51 @@ class CampaignController extends Controller
         
     }
 
-    public function record_game_start(Request $request)
-    {
-        // Format: 2025-08-02 20:15:37.123456
-        $ts = Carbon::now()->format('Y-m-d H:i:s.u');
-        $request->session()->put('game_start', $ts);
+    // public function record_game_start(Request $request)
+    // {
+    //     // Format: 2025-08-02 20:15:37.123456
+    //     $ts = Carbon::now()->format('Y-m-d H:i:s.u');
+    //     $request->session()->put('game_start', $ts);
 
-        return response()->json(['game_start' => $ts]);
+    //     return response()->json(['game_start' => $ts]);
+    // }
+
+    public function record_game_start(Request $request){
+    $duration = $request['seconds'] ?? 60; 
+
+    if ($request->session()->has('game_start')) {
+
+        $start = Carbon::parse(
+            $request->session()->get('game_start')
+        );
+
+        $savedDuration = $request->session()->get('game_duration');
+
+        $elapsed = $start->diffInSeconds(now());
+
+        $remaining = max(0, $savedDuration - $elapsed);
+
+        return response()->json([
+            'already_started' => true,
+            'game_start' => $start,
+            'started_at' => $start,
+            'elapsed' => $elapsed,
+            'remaining' => (int) $remaining,
+        ]);
     }
+
+    $now = Carbon::now()->format('Y-m-d H:i:s.u');
+
+    $request->session()->put('game_start', $now);
+    $request->session()->put('game_duration', $duration);
+
+    return response()->json([
+        'already_started' => false,
+        'game_start' => $now,
+        'started_at' => $now,
+        'elapsed' => 0,
+        'remaining' => $duration,
+    ]);
+}
 
 }

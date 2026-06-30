@@ -2,7 +2,7 @@
 @extends('layouts.v2.app')
 
 <x-slot name="title">
-    {{ !is_null($quiz->title) ? $quiz->title : trans('Create') . '' . trans('Smash Game') }}
+    {{ !is_null($quiz->title) ? $quiz->title : trans('Create') . '' . trans('Trivia Game') }}
 </x-slot>
 <x-slot name="description">
     {{ $quiz->id == null ? '' : $quiz->description }}
@@ -16,7 +16,7 @@
     <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
         <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
             <h2 class="text-xl font-semibold text-gray-800 dark:text-white/90">
-            {{ $quiz->id == null ? trans('Create') : trans('Edit') }} {{ __('Smash Game') }}
+            {{ $quiz->id == null ? trans('Create') : trans('Edit') }} {{ __('Trivia Game') }}
             </h2>
             <nav>
             <ol class="flex items-center gap-1.5">
@@ -29,7 +29,7 @@
                 </a>
                 </li>
                 <li class="text-sm text-gray-800 dark:text-white/90">
-                {{ !is_null($quiz->title) ? $quiz->title : trans('Create') . '' . trans('Smash Game') }}
+                {{ !is_null($quiz->title) ? $quiz->title : trans('Create') . '' . trans('Trivia Game') }}
                 </li>
             </ol>
             </nav>
@@ -81,6 +81,7 @@
                                 <x-ui.forms.input-select label="{{ __('Campaign') }}" :options="$campaigns" name="campaign_id" placeholder="" :value="($quiz->campaign->id ?? null)" data-field="campaign.campaign_id" />
                                 <x-ui.forms.input-text label="{{ __('Title') }}" name="title" placeholder="" :value="$quiz->title" data-field="campaign.title" />
                                 <x-ui.forms.input-text label="{{ __('Description') }}" cols="2" name="description" placeholder="" :value="$quiz->description" data-field="campaign.description" />
+                                <x-ui.forms.input-text label="{{ __('Slug') }}" cols="2" name="slug" placeholder="" :value="$quiz->slug" data-field="campaign.slug" />
                                 <x-ui.forms.input-file label="{{ __('Image On') }}" dummy_img="/storage/dummy_assets/600x200.png" name="featured_image" placeholder="" :value="$quiz->featured_image" data-field="campaign.featured_image" />
                                 <x-ui.forms.input-file label="{{ __('Image Off') }}" dummy_img="/storage/dummy_assets/600x200.png" name="featured_image_disabled" placeholder="" :value="$quiz->featured_image_disabled" data-field="campaign.featured_image_disabled" />
                                 <h2 class="mt-6 text-lg col-span-2 font-semibold text-gray-800 dark:text-white/90">Top Banner Settings</h2>
@@ -89,9 +90,11 @@
                                 <x-ui.forms.input-text label="{{ __('Video') }}" name="game_banner_video" placeholder="" :value="$quiz->game_banner_video" data-field="campaign.game_banner_video" />
 
                                 <h2 class="mt-6 text-lg col-span-2 font-semibold text-gray-800 dark:text-white/90">Trivia Game Settings</h2>
-                                <x-ui.forms.input-text label="{{ __('Slug') }}" name="slug" placeholder="" :value="$quiz->slug" data-field="campaign.slug" />
-                                <x-ui.forms.input-text label="{{ __('Failed Response') }}" name="failed_response" placeholder="" :value="$quiz->failed_response" data-field="campaign.failed_response" />
+                                <x-ui.forms.input-switch label="{{ __('Enable Chronometer') }}" name="enable_chronometer" value="1" switcher="{{ $quiz->enable_chronometer }}"/>
+                                <x-ui.forms.input-number label="{{ __('Seconds') }}" name="seconds" placeholder="" :value="$quiz->seconds" data-field="campaign.seconds" />
+                                <x-ui.forms.input-text cols="2" label="{{ __('Failed Response') }}" name="failed_response" placeholder="" :value="$quiz->failed_response" />
                                 <x-ui.forms.input-file label="{{ __('Failed Image') }}" dummy_img="/storage/dummy_assets/600x200.png" name="failed_image" placeholder="" :value="$quiz->failed_image" data-field="campaign.failed_image" />
+                                <x-ui.forms.input-file label="{{ __('Failed Image Out Time') }}" dummy_img="/storage/dummy_assets/600x200.png" name="failed_image_out_time" placeholder="" :value="$quiz->failed_image_out_time" data-field="campaign.failed_image_out_time" />
 
                                 <div id="question_container" class="py-6 mx-5 col-span-2">
                                     <div class="flex justify-between">
@@ -189,11 +192,11 @@
                     <h2 class="mb-5 text-lg font-semibold text-gray-800 dark:text-white/90">Button Settings</h2>
                     <x-ui.forms.input-color label="{{ __('Gradient Button Background 1') }}" name="btn_background_color_1" placeholder="" :value="$quiz->btn_background_color_1" data-field="campaign.btn_background_color_1" />
                     <x-ui.forms.input-color label="{{ __('Gradient Button Background 2') }}" name="btn_background_color_2" placeholder="" :value="$quiz->btn_background_color_2" data-field="campaign.btn_background_color_2" />
+                    <x-ui.forms.input-switch label="{{ __('Has border') }}" name="btn_border" value="1" switcher="{{ $quiz->btn_border }}"/>
                     <x-ui.forms.input-color label="{{ __('Button Border Color') }}" name="btn_border_color" placeholder="" :value="$quiz->btn_border_color" data-field="campaign.btn_border_color" />
                     <x-ui.forms.input-color label="{{ __('Button Text Color') }}" name="btn_text_color" placeholder="" :value="$quiz->btn_text_color" data-field="campaign.btn_text_color" />
-                    <x-ui.forms.input-switch label="{{ __('Has shadow') }}" name="btn_shadow" placeholder="" :value="$quiz->btn_shadow" data-field="campaign.btn_shadow" />
+                    <x-ui.forms.input-switch label="{{ __('Has shadow') }}" name="btn_shadow" value="1" switcher="{{ $quiz->btn_shadow }}"/>
                     <x-ui.forms.input-text label="{{ __('Text Active') }}" name="btn_text_active" placeholder="" :value="$quiz->btn_text_active" data-field="campaign.btn_text_active" />
-                    <x-ui.forms.input-switch label="{{ __('Enable Button Shadow') }}" name="btn_enable_shadow" placeholder="" :value="$quiz->btn_enable_shadow" data-field="campaign.btn_enable_shadow" />
                     <x-ui.forms.input-text label="{{ __('Text Inactive') }}" name="btn_text_inactive" placeholder="" :value="$quiz->btn_text_inactive" data-field="campaign.btn_text_inactive" />
                 </div>
                 <div class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/3">

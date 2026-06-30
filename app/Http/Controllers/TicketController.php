@@ -36,7 +36,7 @@ class TicketController extends Controller
                 $q->inRandomOrder();
             }])->inRandomOrder()->limit(1)->first();
         }
-        
+
         return view('dashboard.tickets.create', [
             'campaign'          => $campaign,
             'campaign_games'    => $campaign_games,
@@ -52,17 +52,17 @@ class TicketController extends Controller
     {
         $data = $request->validated();
 
-        // Validate if ticket has registered 
+        // Validate if ticket has registered
         $ticket = Ticket::where([
                 ['transaction_number',$data['transaction_number']],
                 //['transaction_date',$data['transaction_date']],
                 //['store',$data['store']],
                 //['transaction_amount',$data['amount']],
             ])->first();
-
         if($ticket){
             return redirect()->route('tickets.saved', ['tenant' => tenant('id')])->with('status','duplicated');
         }
+
 
         $campaign = $this->get_current_campaign();
         $user = Auth::user();
@@ -71,13 +71,13 @@ class TicketController extends Controller
         try {
            /* $request_file_name = Str::uuid();
            $ticket_info = Filepond::field($data['ticket'])->moveTo(tenant('id') . '/tickets/' . $request_file_name); */
-
-           $ticket_info = $this->uploadImage('gcs','tickets',$request->file('ticket'));
-           $ticket = $this->create_ticket($data,$ticket_info,$points,$campaign->id,$user->id);
+            $data['store'] = $data['store'] ?? env('APP_NAME');
+            $ticket_info = $this->uploadImage('gcs','tickets',$request->file('ticket'));
+            $ticket = $this->create_ticket($data,$ticket_info,$points,$campaign->id,$user->id);
        } catch (\Throwable $th) {
             return redirect()->route('tickets.saved', ['tenant' => tenant('id')]);
        }
-        
+
         // Validate response
         if (get_app_setting('tickets_quiz_validation')) {
             $ticket_question = TicketQuestion::whereId($data['quid'])->with([

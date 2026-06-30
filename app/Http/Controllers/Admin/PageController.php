@@ -96,7 +96,7 @@ class PageController extends Controller
             return Page::whereActive(true)->orderBy('id','desc')->get();
         });
 
-        return redirect(route('pages.index', ['tenant' => tenant('id')]))->with('status', trans('Page saved successful'));
+        return redirect(route('pages.edit', ['tenant' => tenant('id'), 'page' => $page]))->with('status', trans('Page saved successful'));
     }
 
     /**

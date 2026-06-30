@@ -9,7 +9,7 @@
     <div class="py-6">
         <div class="max-w-2xl mx-auto px-3 sm:px-6 lg:px-8">
             <div class="dark:bg-gray-800 overflow-hidden">
-                <div class="game-card rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 p-3">
+                <div class="game-card rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 p-3 p-3">
 
                     <x-campaign-menu :campaign-games="$campaign_games" :campaign-tickets="$campaign_tickets" :campaign-coupons="$campaign_coupons" :campaign-url="route('campaign.show', ['tenant' => tenant('id'), 'slug' => $campaign->slug])" :active="'games'" />
 
@@ -216,6 +216,54 @@
                                         <a href="{{route('smash_game.show', ['tenant' => tenant('id'), 'slug' => $smash_game->slug])}}" 
                                             class="rounded-full px-5 py-2.5 me-2 mb-3 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 font-bold {{ $smash_game->btn_shadow ? 'buttons-shadow' : '' }}" style="{{ $smash_game->btn_border ? 'border: 2px solid ' . $smash_game->btn_border_color . ';' : '' }} {{ $smash_game->btn_text_color ? 'color: ' . $smash_game->btn_text_color . ';' : '' }}background: {{ $smash_game->btn_background_color_1 . '; background: linear-gradient(135deg, ' . $smash_game->btn_background_color_1 . ' 0%, ' . $smash_game->btn_background_color_2 . ' 85%);' }}">
                                             {{$user_games && $user_games->contains($smash_game->id) ? $smash_game->btn_text_inactive : $smash_game->btn_text_active}}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+
+                        {{-- Flappy Games --}}
+                        @foreach ($campaign->flappy_games as $flappy_game)
+                        <div class="border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 mb-5 {{get_app_setting('cards_shadow') ? 'cards-shadow' : ''}}"
+                        style="{{$user_games && $user_games->contains($flappy_game->id) ? 'background:' . get_app_setting('disabled_gradient_1') . '; background: linear-gradient(135deg, ' . get_app_setting('disabled_gradient_1') . ' 0%, ' . get_app_setting('disabled_gradient_2') . ' 85%);' : 'background:' . $flappy_game->gradient_1 . '; background: linear-gradient(135deg, ' . $flappy_game->gradient_1 . ' 0%, ' . $flappy_game->gradient_2 . ' 85%);'}}">
+                            <div class="flex flex-row">
+                                <div class="basis-full">
+                                    <img src="{{$user_games && $user_games->contains($flappy_game->id) ? $flappy_game->featured_image_disabled : $flappy_game->featured_image}}" alt="{{$flappy_game->title}}" title="{{$flappy_game->title}}" class="rounded">
+                                </div>
+                            </div>
+                            <div class="flex flex-row">
+                                <div class="basis-full py-5 px-3">
+                                    {{-- <p class="py-5 -mt-2.5 text-white font-bold ">{{$puzzle->title}}</p>
+                                    <p class="pb-5 -mt-3.5 text-white font-bold ">{{$flappy_game->description}}</p> --}}
+                                    <div class="text-start">
+                                        <a href="{{route('flappy_game.show', ['tenant' => tenant('id'), 'slug' => $flappy_game->slug])}}" 
+                                            class="rounded-full px-5 py-2.5 me-2 mb-3 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 font-bold {{ $flappy_game->btn_shadow ? 'buttons-shadow' : '' }}" style="{{ $flappy_game->btn_border ? 'border: 2px solid ' . $flappy_game->btn_border_color . ';' : '' }} {{ $flappy_game->btn_text_color ? 'color: ' . $flappy_game->btn_text_color . ';' : '' }}background: {{ $flappy_game->btn_background_color_1 . '; background: linear-gradient(135deg, ' . $flappy_game->btn_background_color_1 . ' 0%, ' . $flappy_game->btn_background_color_2 . ' 85%);' }}">
+                                            {{$user_games && $user_games->contains($flappy_game->id) ? $flappy_game->btn_text_inactive : $flappy_game->btn_text_active}}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+
+                        {{-- Penal Games --}}
+                        @foreach ($campaign->penal_games as $penal_game)
+                        <div class="border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 mb-5 {{get_app_setting('cards_shadow') ? 'cards-shadow' : ''}}"
+                        style="{{$user_games && $user_games->contains($penal_game->id) ? 'background:' . get_app_setting('disabled_gradient_1') . '; background: linear-gradient(135deg, ' . get_app_setting('disabled_gradient_1') . ' 0%, ' . get_app_setting('disabled_gradient_2') . ' 85%);' : 'background:' . $penal_game->gradient_1 . '; background: linear-gradient(135deg, ' . $penal_game->gradient_1 . ' 0%, ' . $penal_game->gradient_2 . ' 85%);'}}">
+                            <div class="flex flex-row">
+                                <div class="basis-full">
+                                    <img src="{{$user_games && $user_games->contains($penal_game->id) ? $penal_game->featured_image_disabled : $penal_game->featured_image}}" alt="{{$penal_game->title}}" title="{{$penal_game->title}}" class="rounded">
+                                </div>
+                            </div>
+                            <div class="flex flex-row">
+                                <div class="basis-full py-5 px-3">
+                                    {{-- <p class="py-5 -mt-2.5 text-white font-bold ">{{$puzzle->title}}</p>
+                                    <p class="pb-5 -mt-3.5 text-white font-bold ">{{$penal_game->description}}</p> --}}
+                                    <div class="text-start">
+                                        <a href="{{route('penal_game.show', ['tenant' => tenant('id'), 'slug' => $penal_game->slug])}}" 
+                                            class="rounded-full px-5 py-2.5 me-2 mb-3 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 font-bold {{ $penal_game->btn_shadow ? 'buttons-shadow' : '' }}" style="{{ $penal_game->btn_border ? 'border: 2px solid ' . $penal_game->btn_border_color . ';' : '' }} {{ $penal_game->btn_text_color ? 'color: ' . $penal_game->btn_text_color . ';' : '' }}background: {{ $penal_game->btn_background_color_1 . '; background: linear-gradient(135deg, ' . $penal_game->btn_background_color_1 . ' 0%, ' . $penal_game->btn_background_color_2 . ' 85%);' }}">
+                                            {{$user_games && $user_games->contains($penal_game->id) ? $penal_game->btn_text_inactive : $penal_game->btn_text_active}}
                                         </a>
                                     </div>
                                 </div>
