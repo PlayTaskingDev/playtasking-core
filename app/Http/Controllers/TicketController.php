@@ -36,7 +36,6 @@ class TicketController extends Controller
                 $q->inRandomOrder();
             }])->inRandomOrder()->limit(1)->first();
         }
-
         return view('dashboard.tickets.create', [
             'campaign'          => $campaign,
             'campaign_games'    => $campaign_games,

@@ -10,7 +10,7 @@
         <div class="max-w-2xl mx-auto px-3 sm:px-6 lg:px-8">
             <div class="dark:bg-gray-800 overflow-hidden">
                 @if(get_app_setting('autologin') != true)
-                    <h1 class="font-semibold text-2xl dark:text-gray-200 leading-tight pb-5 text-white text-center uppercase">
+                    <h1 class="font-black italic text-3xl leading-tight pb-5 text-white text-center uppercase">
                     {{__('Hi')}}, {{auth()->user()->name}}
                     </h1>
                 @endif

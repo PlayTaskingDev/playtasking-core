@@ -174,7 +174,7 @@
     "codes": "códigos",
     "coupons by dynamic": "cupones por dinámica",
     "coupons remaining": "cupones restantes",
-    "Start": "Comenzar",
+    "Start": "Ingresar Ticket",
     "Play now": "Jugar ahora",
     "View result": "Ver resultado",
     "Error ocurred. Try Again.": "Ocurrió un error. Intenta de nuevo.",
@@ -285,5 +285,8 @@
     "Choose Game":"Elige un Juego",
     "Select City": "Ingresa Ciudad",
     "There are no matches!": "No hay Coincidencias",
-    "Points": "Puntos"
+    "Points": "Puntos",
+    "Enter the transaction number": "Ingresa el número de transacción",
+    "Enter the store name": "Captura únicamente el número",
+    "Enter the total amount": "Ingresa el monto total"
 }

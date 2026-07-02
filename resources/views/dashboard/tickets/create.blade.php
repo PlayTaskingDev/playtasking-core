@@ -1,3 +1,12 @@
+@php
+    use Carbon\Carbon;
+    $minDate = Carbon::parse($campaign->init_date)->format('Y-m-d');
+    $maxDate = now()->format('Y-m-d');
+    $oldTransactionDate = old('transaction_date');
+    $displayDate = $oldTransactionDate
+        ? Carbon::parse($oldTransactionDate)->format('d/m/Y')
+        : '';
+@endphp
 <x-app-layout>
     <x-slot name="title">
         {{ __('Tickets') }}
@@ -10,15 +19,25 @@
     <link href="https://unpkg.com/filepond@^4/dist/filepond.css" rel="stylesheet" />
     <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet" />
     @endsection --}}
+
 <style>
         /* Upload Area */
         .upload-area {
             width: 100%;
-            background-color: #fff;
-            border-radius: 18px;
-            padding: 2rem 1.875rem 3rem 1.875rem;
+            border-radius: 6px;
+            padding: 1rem 1.275rem 2rem 1.875rem;
             text-align: center;
             margin-top: 10px;
+            border: solid 1px #000;
+            position: relative;
+        }
+        .upload-area__header{
+            position: absolute;
+            left: 45px;
+            top: 30px;
+            background: {{ get_app_setting('cards_background_color') }} ;
+            z-index: 10;
+            padding: 0 5px;
         }
 
         .upload-area--open {
@@ -39,8 +58,7 @@
         /* Header */
 
         .upload-area__title {
-            font-size: 1.8rem;
-            font-weight: 500;
+            font-size: 1.2rem;
             margin-bottom: 0.3125rem;
             color: #000;
         }
@@ -87,13 +105,14 @@
         /* Drop Zoon */
         .upload-area__drop-zoon {
             position: relative;
-            height: 11.25rem; /* 180px */
+            height: 3.25rem;
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            border: 2px dashed #cfcfcf;
-            border-radius: 15px;
+            border: 1px solid #000;
+            background-color: #fff;
+            border-radius: 6px;
             margin-top: 2.1875rem;
             cursor: pointer;
             transition: border-color 300ms ease-in-out;
@@ -102,12 +121,14 @@
         .upload-area__drop-zoon:hover {
         border-color: #929292 !important;
         }
-
+        .drop-zoon{
+            position: relative;
+        }
         .drop-zoon__icon {
-        display: flex;
-        font-size: 3.75rem;
-        color: #929292 !important;
-        transition: opacity 300ms ease-in-out;
+            display: flex;
+            transition: opacity 300ms ease-in-out;
+            position: absolute;
+            right: 8px;
         }
 
         .drop-zoon__paragraph {
@@ -167,6 +188,7 @@
 
         /* (drop-zoon--over) Modifier Class */
         .drop-zoon--Uploaded {
+            height: 18rem;
         }
 
         .drop-zoon--Uploaded .drop-zoon__icon,
@@ -312,50 +334,64 @@
                         @csrf
                         <div>
                             <x-input-label for="transaction_number" :value="__('Transaction number')" />
-                            <x-text-input id="transaction_number" class="block mt-1 w-full text-black" type="text" name="transaction_number"
+                            <x-text-input id="transaction_number" class="block mt-1 w-full text-black" type="text" name="transaction_number" placeholder="{{__('Enter the transaction number')}}" :
                                 :value="old('transaction_number')" required autofocus autocomplete="transaction_number" />
                             <x-input-error :messages="$errors->get('transaction_number')" class="mt-2" />
                         </div>
                         <div class="mt-3">
+                            
                             <x-input-label for="transaction_date" :value="__('Transaction date')" />
-                            <x-text-input id="transaction_date" class="block mt-1 w-full text-black" type="text" name="transaction_date"
-                                :value="old('transaction_date')" required autofocus autocomplete="off" datepicker
-                                datepicker-autohide datepicker-format="yyyy-mm-dd" datepicker-min-date="{{$init_date}}" datepicker-max-date="{{$today}}" />
+
+                            <input
+                                type="text"
+                                id="transaction_date_display"
+                                placeholder="DD/MM/YYYY"
+                                maxlength="10"
+                                inputmode="numeric"
+                                autocomplete="off"
+                                class="border-gray-300 rounded-md shadow-sm block mt-1 w-full text-black"
+                                value="{{ $displayDate }}"
+                                data-min="{{ $minDate }}"
+                                data-max="{{ $maxDate }}"
+                            >
+
+                            <input
+                                type="hidden"
+                                id="transaction_date"
+                                name="transaction_date"
+                                value="{{ old('transaction_date') }}"
+                            >
                             <x-input-error :messages="$errors->get('transaction_date')" class="mt-2" />
                         </div>
                             <div class="mt-3">
                                 <x-input-label for="store" :value="__('Store')" />
-                                <x-text-input id="store" class="block mt-1 w-full text-black" type="text" name="store"
+                                <x-text-input id="store" class="block mt-1 w-full text-black" type="text" name="store" placeholder="{{__('Enter the store name')}}"
                                     :value="old('store')" required autofocus autocomplete="store" />
                                 <x-input-error :messages="$errors->get('store')" class="mt-2" />
                             </div>
                         <div class="mt-3">
                             <x-input-label for="amount" :value="__('Amount')" />
-                            <x-text-input id="amount" class="block mt-1 w-full text-black" type="text" name="amount"
+                            <x-text-input id="amount" class="block mt-1 w-full text-black" type="text" name="amount" placeholder="{{__('Enter the total amount')}}"
                                 :value="old('amount')" required autofocus autocomplete="amount" />
-                                <small>{{__('Enter the total amount without commas or points.')}}</small>
                             <x-input-error :messages="$errors->get('amount')" class="mt-2" />
                         </div>
                         <div class="mt-3">
                                 <div id="uploadArea" class="upload-area">
                                     <!-- Header -->
                                     <div class="upload-area__header">
-                                        <h1 class="upload-area__title">Sube tu Ticket</h1>
-                                        <p class="upload-area__paragraph">
-                                            Imagen debe ser de tipo jpeg, png.
-                                        </p>
+                                        <h3 class="upload-area__title font-bold">Sube aquí tu imagen</h3>
                                     </div>
                                     <!-- End Header -->
                                     <!-- Drop Zoon -->
                                     <div id="dropZoon" class="upload-area__drop-zoon drop-zoon">
                                         <span class="drop-zoon__icon">
-                                        <i class='bx bxs-file-image'></i>
+                                            <img src="/storage/assets/images/icon-upload-ticket.jpg" alt="Upload Icon" class="w-7 h-7">
                                         </span>
-                                        <p class="drop-zoon__paragraph">Selecciona o arrastra y suelta aquí tu imagen</p>
                                         <span id="loadingText" class="drop-zoon__loading-text">Un momentito...</span>
                                         <img src="" alt="Preview Image" id="previewImage" class="drop-zoon__preview-image" draggable="false">
                                         <input type="file" id="ticket" class="drop-zoon__file-input" accept="image/*" name="ticket">
                                     </div>
+                                    <small>La imagen no debe exceder los 2MB</small>
                                     <!-- End Drop Zoon -->
                                     <!-- File Details -->
                                     <div id="fileDetails" class="upload-area__file-details file-details">
@@ -363,8 +399,7 @@
 
                                         <div id="uploadedFile" class="uploaded-file">
                                         <div class="uploaded-file__icon-container">
-                                            <x-heroicon-o-document class="w-10 text-gray-800"/>
-                                            <span class="uploaded-file__icon-text"></span> <!-- Data Will be Comes From Js -->
+                                            <img src="/storage/assets/images/icon-upload-ticket.jpg" alt="Document Icon" class="w-8 h-8 text-gray-800">
                                         </div>
 
                                         <div id="uploadedFileInfo" class="uploaded-file__info">
@@ -384,7 +419,7 @@
                             <x-input-label for="ticket_answer" :value="$ticket_question->title" class="mb-3" />
                             @foreach ($ticket_question->ticket_answers as $answer)
                             <div class="flex items-center mb-4">
-                                <x-text-input id="ticket_answer_{{$answer->id}}" class="w-4 h-4 border-gray-300 focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-600 dark:focus:bg-blue-600 dark:bg-gray-700 dark:border-gray-600" type="radio" name="ticket_answer"
+                                <x-text-input id="ticket_answer_{{$answer->id}}" style="background-color: {{ get_app_setting('app_background_color') }}" class="w-4 h-4 rounded-full border-gray-300 " type="radio" name="ticket_answer"
                                 :value="$answer->id" required autofocus />
                                 <x-input-label for="ticket_answer_{{$answer->id}}" :value="$answer->title" class="block ms-2  text-sm font-bold dark:text-gray-300" />
                             </div>
@@ -401,261 +436,7 @@
             </div>
         </div>
     </div>
-    @section('scripts')
-        {{-- <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
-        <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
-        <script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js"></script>
-        <script src="https://unpkg.com/filepond@^4/dist/filepond.js"></script>
- --}}
-        <script>
-            document.addEventListener("DOMContentLoaded", () => {
-                /* FilePond.registerPlugin(FilePondPluginFileValidateType);
-                FilePond.registerPlugin(FilePondPluginImagePreview);
-                FilePond.registerPlugin(FilePondPluginFileValidateSize);
-
-                FilePond.setOptions({
-                    acceptedFileTypes: ['image/png', 'image/jpg', 'image/jpeg', 'image/heic'],
-                    maxFiles: 1,
-                    eValidateTypeDetectType: (source, type) =>
-                        new Promise((resolve, reject) => {
-                            resolve(type);
-                        }),
-                    server: {
-                        url: "{{ route('filepond-process', ['tenant' => tenant('id')]) }}",
-                        headers: {
-                            'X-CSRF-TOKEN': "{{ @csrf_token() }}",
-                        }
-                    },
-                    labelIdle: '<i class="fa fa-upload me-2" aria-hidden="true" style="font-size: 20px !important;"></i>{{  __('Add image or photo') }}',
-                    labelInvalidField: '{{ __('Field contains invalid files') }}',
-                    labelFileLoading: '{{ __('Loading') }}',
-                    labelFileLoadError: '{{ __('Error during load') }}',
-                    labelFileProcessingError: '{{ __('Error during upload') }}',
-                    labelFileProcessing: '{{ __('Uploading') }}',
-                    labelFileProcessingComplete: '{{ __('Upload complete') }}',
-                    labelFileTypeNotAllowed: '{{ __('File of invalid type') }}',
-                    labelFileWaitingForSize: 'Waiting for size',
-                    maxFileSize: '12MB',
-                    labelMaxFileSizeExceeded: 'File size too big',
-                    labelMaxFileSize: 'Maximum file size is {filesize}'
-                });
-
-                FilePond.create(document.querySelector('input[name="ticket"]')); */
-
-                // Datepicker
-                // const ticketDate = document.getElementById('transaction_date');
-                // const datepickerInstance = new Datepicker(ticketDate, {
-                //     format: 'yyyy-mm-dd',
-                //     minDate: '{{$init_date}}',
-                //     maxDate: '{{$today}}',
-                //     autoSelectToday: 1,
-                //     autohide: true
-                // });
-            });
-            // Select Upload-Area
-            const uploadArea = document.querySelector('#uploadArea')
-
-            // Select Drop-Zoon Area
-            const dropZoon = document.querySelector('#dropZoon');
-
-            // Loading Text
-            const loadingText = document.querySelector('#loadingText');
-
-            // Slect File Input 
-            const fileInput = document.querySelector('#ticket');
-
-            // Select Preview Image
-            const previewImage = document.querySelector('#previewImage');
-
-            // File-Details Area
-            const fileDetails = document.querySelector('#fileDetails');
-
-            // Uploaded File
-            const uploadedFile = document.querySelector('#uploadedFile');
-
-            // Uploaded File Info
-            const uploadedFileInfo = document.querySelector('#uploadedFileInfo');
-
-            // Uploaded File  Name
-            const uploadedFileName = document.querySelector('.uploaded-file__name');
-
-            // Uploaded File Icon
-            const uploadedFileIconText = document.querySelector('.uploaded-file__icon-text');
-
-            // Uploaded File Counter
-            const uploadedFileCounter = document.querySelector('.uploaded-file__counter');
-
-
-            // Images Types
-            const imagesTypes = [
-                "jpeg",
-                "png",
-            ];
-            // When (drop-zoon) has (dragover) Event 
-            dropZoon.addEventListener('dragover', function (event) {
-            // Prevent Default Behavior 
-            event.preventDefault();
-
-            // Add Class (drop-zoon--over) On (drop-zoon)
-            dropZoon.classList.add('drop-zoon--over');
-            });
-
-            // When (drop-zoon) has (dragleave) Event 
-            dropZoon.addEventListener('dragleave', function (event) {
-            // Remove Class (drop-zoon--over) from (drop-zoon)
-            dropZoon.classList.remove('drop-zoon--over');
-            });
-
-            // When (drop-zoon) has (drop) Event 
-            dropZoon.addEventListener('drop', function (event) {
-            // Prevent Default Behavior 
-            event.preventDefault();
-
-            // Remove Class (drop-zoon--over) from (drop-zoon)
-            dropZoon.classList.remove('drop-zoon--over');
-
-            // Select The Dropped File
-            const file = event.dataTransfer.files[0];
-
-            // Call Function uploadFile(), And Send To Her The Dropped File :)
-            uploadFile(file);
-            });
-
-            // When (drop-zoon) has (click) Event 
-            dropZoon.addEventListener('click', function (event) {
-            // Click The (fileInput)
-            fileInput.click();
-            });
-
-            // When (fileInput) has (change) Event 
-            fileInput.addEventListener('change', function (event) {
-            // Select The Chosen File
-            const file = event.target.files[0];
-
-            // Call Function uploadFile(), And Send To Her The Chosen File :)
-            uploadFile(file);
-            });
-
-            // Upload File Function
-            function uploadFile(file) {
-                // FileReader()
-                const fileReader = new FileReader();
-                // File Type 
-                const fileType = file.type;
-                // File Size 
-                const fileSize = file.size;
-
-                // If File Is Passed from the (File Validation) Function
-                if (fileValidate(fileType, fileSize)) {
-                    // Asignar el archivo al input file para que se envíe al servidor
-                    const dataTransfer = new DataTransfer();
-                    dataTransfer.items.add(file);
-                    fileInput.files = dataTransfer.files;
-
-                    // Add Class (drop-zoon--Uploaded) on (drop-zoon)
-                    dropZoon.classList.add('drop-zoon--Uploaded');
-
-                    // Show Loading-text
-                    loadingText.style.display = "block";
-                    // Hide Preview Image
-                    previewImage.style.display = 'none';
-
-                    // Remove Class (uploaded-file--open) From (uploadedFile)
-                    uploadedFile.classList.remove('uploaded-file--open');
-                    // Remove Class (uploaded-file__info--active) from (uploadedFileInfo)
-                    uploadedFileInfo.classList.remove('uploaded-file__info--active');
-
-                    // After File Reader Loaded 
-                    fileReader.addEventListener('load', function () {
-                    // After Half Second 
-                    setTimeout(function () {
-                        // Add Class (upload-area--open) On (uploadArea)
-                        uploadArea.classList.add('upload-area--open');
-
-                        // Hide Loading-text (please-wait) Element
-                        loadingText.style.display = "none";
-                        // Show Preview Image
-                        previewImage.style.display = 'block';
-
-                        // Add Class (file-details--open) On (fileDetails)
-                        fileDetails.classList.add('file-details--open');
-                        // Add Class (uploaded-file--open) On (uploadedFile)
-                        uploadedFile.classList.add('uploaded-file--open');
-                        // Add Class (uploaded-file__info--active) On (uploadedFileInfo)
-                        uploadedFileInfo.classList.add('uploaded-file__info--active');
-                    }, 500); // 0.5s
-
-                    // Add The (fileReader) Result Inside (previewImage) Source
-                    previewImage.setAttribute('src', fileReader.result);
-
-                    // Add File Name Inside Uploaded File Name
-                    uploadedFileName.innerHTML = file.name;
-
-                    // Call Function progressMove();
-                    progressMove();
-                    });
-
-                    // Read (file) As Data Url 
-                    fileReader.readAsDataURL(file);
-                } else { // Else
-
-                    this; // (this) Represent The fileValidate(fileType, fileSize) Function
-
-                };
-            };
-
-            // Progress Counter Increase Function
-            function progressMove() {
-                // Counter Start
-                let counter = 0;
-
-                // After 600ms 
-                setTimeout(() => {
-                    // Every 100ms
-                    let counterIncrease = setInterval(() => {
-                    // If (counter) is equle 100 
-                    if (counter === 100) {
-                        // Stop (Counter Increase)
-                        clearInterval(counterIncrease);
-                    } else { // Else
-                        // plus 10 on counter
-                        counter = counter + 10;
-                        // add (counter) vlaue inisde (uploadedFileCounter)
-                        uploadedFileCounter.innerHTML = `${counter}%`
-                    }
-                    }, 100);
-                }, 600);
-            };
-
-
-            // Simple File Validate Function
-            function fileValidate(fileType, fileSize) {
-                // File Type Validation
-                let isImage = imagesTypes.filter((type) => fileType.indexOf(`image/${type}`) !== -1);
-
-                // If The Uploaded File Type Is 'jpeg'
-                if (isImage[0] === 'jpeg') {
-                    // Add Inisde (uploadedFileIconText) The (jpg) Value
-                    uploadedFileIconText.innerHTML = 'jpg';
-                } else { // else
-                    // Add Inisde (uploadedFileIconText) The Uploaded File Type 
-                    uploadedFileIconText.innerHTML = isImage[0];
-                };
-
-                // If The Uploaded File Is An Image
-                if (isImage.length !== 0) {
-                    // Check, If File Size Is 2MB or Less
-                    if (fileSize <= 2000000) { // 2MB :)
-                    return true;
-                    } else { // Else File Size
-                    return alert('Please Your File Should be 2 Megabytes or Less');
-                    };
-                } else { // Else File Type 
-                    return alert('Please make sure to upload An Image File Type');
-                };
-            };
-
-        </script>
-    @endsection
+    
+    @vite(['resources/js/glgc/tcktdte.js'])
 </x-app-layout>
 
