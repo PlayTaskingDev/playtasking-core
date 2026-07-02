@@ -82,14 +82,15 @@
 
     function fileValidate(fileType, fileSize) {
         let isImage = imagesTypes.filter((type) => fileType.indexOf(`image/${type}`) !== -1);
-        const MAX_FILE_SIZE = 4 * 1024 * 1024; 
+        const MAX_FILE_SIZE = 10 * 1024 * 1024; 
         if (isImage.length !== 0) {
             if (fileSize <= MAX_FILE_SIZE) {
             return true;
             } else {
-            return alert('Please Your File Should be 2 Megabytes or Less');
+            return alert('Por favor, asegúrese de que su archivo pese 2 megabytes o menos.');
             };
         } else {
-            return alert('Please make sure to upload An Image File Type');
+            return alert('Por favor, asegúrese de subir un archivo de imagen.');
         };
     };
+
