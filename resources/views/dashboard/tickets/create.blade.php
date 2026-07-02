@@ -419,7 +419,7 @@
                             <x-input-label for="ticket_answer" :value="$ticket_question->title" class="mb-3" />
                             @foreach ($ticket_question->ticket_answers as $answer)
                             <div class="flex items-center mb-4">
-                                <x-text-input id="ticket_answer_{{$answer->id}}" style="background-color: {{ get_app_setting('app_background_color') }}" class="w-4 h-4 rounded-full border-gray-300 " type="radio" name="ticket_answer"
+                                <x-text-input id="ticket_answer_{{$answer->id}}" class="w-4 h-4 rounded-full border-gray-300 " type="radio" name="ticket_answer"
                                 :value="$answer->id" required autofocus />
                                 <x-input-label for="ticket_answer_{{$answer->id}}" :value="$answer->title" class="block ms-2  text-sm font-bold dark:text-gray-300" />
                             </div>
