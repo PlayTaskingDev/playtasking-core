@@ -362,7 +362,7 @@
                                 <div id="uploadArea" class="upload-area">
                                     <!-- Header -->
                                     <div class="upload-area__header">
-                                        <h3 class="upload-area__title font-bold">Sube aquí tu imagen</h3>
+                                        <h3 class="upload-area__title font-bold">Sube la imagen de tu ticket aqui.</h3>
                                     </div>
                                     <!-- End Header -->
                                     <!-- Drop Zoon -->

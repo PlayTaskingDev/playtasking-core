@@ -50,7 +50,6 @@ class TicketController extends Controller
     public function store(StoreTicketRequest $request)
     {
         $data = $request->validated();
-
         // Validate if ticket has registered
         $ticket = Ticket::where([
                 ['transaction_number',$data['transaction_number']],
@@ -62,7 +61,6 @@ class TicketController extends Controller
             return redirect()->route('tickets.saved', ['tenant' => tenant('id')])->with('status','duplicated');
         }
 
-
         $campaign = $this->get_current_campaign();
         $user = Auth::user();
         $points = get_app_setting('tickets_points');
@@ -71,9 +69,10 @@ class TicketController extends Controller
            /* $request_file_name = Str::uuid();
            $ticket_info = Filepond::field($data['ticket'])->moveTo(tenant('id') . '/tickets/' . $request_file_name); */
             $data['store'] = $data['store'] ?? env('APP_NAME');
-            $ticket_info = $this->uploadImage('gcs','tickets',$request->file('ticket'));
+            $ticket_info = $this->uploadImage('gcs','tickets',$request->file('ticket'),true);
             $ticket = $this->create_ticket($data,$ticket_info,$points,$campaign->id,$user->id);
        } catch (\Throwable $th) {
+            dd($th);
             return redirect()->route('tickets.saved', ['tenant' => tenant('id')]);
        }
 
