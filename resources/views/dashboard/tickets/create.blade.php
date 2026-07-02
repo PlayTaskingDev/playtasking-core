@@ -326,7 +326,8 @@
                     class="game-card rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 p-3 p-3">
 
                     <x-campaign-menu :campaign-games="$campaign_games" :campaign-tickets="$campaign_tickets" :campaign-coupons="$campaign_coupons" :campaign-url="route('campaign.show', ['tenant' => tenant('id'), 'slug' => $campaign->slug])" :active="'tickets'" />
-
+                    <h1 class="text-4xl font-bold italic">TICKETS</h1>
+                    <hr class="separator">
                     <h2 class="mb-5 font-bold text-xl">
                         {{get_app_setting('tickets_form_legend')}}
                     </h2>
