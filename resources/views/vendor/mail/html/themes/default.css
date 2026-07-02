@@ -80,7 +80,7 @@ img {
     -premailer-cellpadding: 0;
     -premailer-cellspacing: 0;
     -premailer-width: 100%;
-    background-color: #0c4997;
+    background-color: #000000;
     margin: 0;
     padding: 0;
     width: 100%;
@@ -232,11 +232,11 @@ img {
 
 .button-blue,
 .button-primary {
-    background-color: #0c4997;
-    border-bottom: 8px solid #0c4997;
-    border-left: 18px solid #0c4997;
-    border-right: 18px solid #0c4997;
-    border-top: 8px solid #0c4997;
+    background-color: #000000;
+    border-bottom: 8px solid #000000;
+    border-left: 18px solid #000000;
+    border-right: 18px solid #000000;
+    border-top: 8px solid #000000;
 }
 
 .button-green,

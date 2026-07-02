@@ -47,10 +47,7 @@ class ResetPasswordNotification extends Notification
                     ->greeting(trans('Hello') . ', ' . $notifiable->name)
                     ->line(trans('You are receiving this email because we received a password reset request for your account.'))
                     ->line(trans('This password reset link will expire in 60 minutes.'))
-                    ->action(trans('Reset Password'), $this->url)
-                    ->with([
-                        'headerColor' => get_app_setting('header_background_color') // Pass variable to layouts
-                    ]);
+                    ->action(trans('Reset Password'), $this->url);
     }
 
     /**
