@@ -5,6 +5,8 @@ namespace App\Exceptions;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Sentry\Laravel\Integration;
 use Throwable;
+use Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedOnDomainException;
+use Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedByPathException;
 
 class Handler extends ExceptionHandler
 {
@@ -23,7 +25,8 @@ class Handler extends ExceptionHandler
      * @var array<int, class-string<\Throwable>>
      */
     protected $dontReport = [
-        //
+         TenantCouldNotBeIdentifiedOnDomainException::class,
+        TenantCouldNotBeIdentifiedByPathException::class,
     ];
 
     /**
