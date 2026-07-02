@@ -82,9 +82,9 @@
 
     function fileValidate(fileType, fileSize) {
         let isImage = imagesTypes.filter((type) => fileType.indexOf(`image/${type}`) !== -1);
-
+        const MAX_FILE_SIZE = 4 * 1024 * 1024; 
         if (isImage.length !== 0) {
-            if (fileSize <= 2000000) {
+            if (fileSize <= MAX_FILE_SIZE) {
             return true;
             } else {
             return alert('Please Your File Should be 2 Megabytes or Less');
