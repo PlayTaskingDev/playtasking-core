@@ -33,7 +33,7 @@
         }
         .upload-area__header{
             position: absolute;
-            left: 45px;
+            left: 40px;
             top: 30px;
             background: {{ get_app_setting('cards_background_color') }} ;
             z-index: 10;
@@ -58,7 +58,7 @@
         /* Header */
 
         .upload-area__title {
-            font-size: 1.2rem;
+            font-size: 1.0rem;
             margin-bottom: 0.3125rem;
             color: #000;
         }
