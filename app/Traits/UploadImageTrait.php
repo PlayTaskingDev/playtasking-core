@@ -23,7 +23,7 @@ trait UploadImageTrait {
             $image = $manager->read($file->getRealPath());
             $image->scale(width: 1200);
 
-            $encoded = $image->toJpeg(quality: 75);
+            $encoded = $image->toJpeg(quality: 85);
 
             $filename = Str::uuid() . '.jpg';
             $path = trim($folder, '/') . '/' . $filename;
