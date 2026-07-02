@@ -158,7 +158,7 @@
         if (!isSameDate) {
             return null;
         }
-
+        console.log('Valid date:', ymd);
         return ymd;
     }
 

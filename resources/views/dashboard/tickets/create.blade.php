@@ -362,6 +362,7 @@
                                 name="transaction_date"
                                 value="{{ old('transaction_date') }}"
                             >
+                            <small id="transaction_date_error" style="color: red; display: none;"></small>
                             <x-input-error :messages="$errors->get('transaction_date')" class="mt-2" />
                         </div>
                             <div class="mt-3">
