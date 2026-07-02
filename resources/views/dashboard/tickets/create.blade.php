@@ -340,29 +340,10 @@
                             <x-input-error :messages="$errors->get('transaction_number')" class="mt-2" />
                         </div>
                         <div class="mt-3">
-                            
                             <x-input-label for="transaction_date" :value="__('Transaction date')" />
-
-                            <input
-                                type="text"
-                                id="transaction_date_display"
-                                placeholder="DD/MM/YYYY"
-                                maxlength="10"
-                                inputmode="numeric"
-                                autocomplete="off"
-                                class="border-gray-300 rounded-md shadow-sm block mt-1 w-full text-black"
-                                value="{{ $displayDate }}"
-                                data-min="{{ $minDate }}"
-                                data-max="{{ $maxDate }}"
-                            >
-
-                            <input
-                                type="hidden"
-                                id="transaction_date"
-                                name="transaction_date"
-                                value="{{ old('transaction_date') }}"
-                            >
-                            <small id="transaction_date_error" style="color: red; display: none;"></small>
+                            <x-text-input id="transaction_date" class="block mt-1 w-full text-black" type="text" name="transaction_date"
+                                :value="old('transaction_date')" required autofocus autocomplete="off" datepicker
+                                datepicker-autohide datepicker-format="yyyy-mm-dd" datepicker-min-date="{{$init_date}}" datepicker-max-date="{{$today}}" />
                             <x-input-error :messages="$errors->get('transaction_date')" class="mt-2" />
                         </div>
                             <div class="mt-3">
