@@ -25,7 +25,7 @@ class Handler extends ExceptionHandler
      * @var array<int, class-string<\Throwable>>
      */
     protected $dontReport = [
-         TenantCouldNotBeIdentifiedOnDomainException::class,
+        TenantCouldNotBeIdentifiedOnDomainException::class,
         TenantCouldNotBeIdentifiedByPathException::class,
     ];
 
@@ -62,5 +62,8 @@ class Handler extends ExceptionHandler
             return false;
         }
 	});
+    $this->renderable(function (TenantCouldNotBeIdentifiedByPathException $e, $request) {
+        abort(404);
+    });
     }
 }
