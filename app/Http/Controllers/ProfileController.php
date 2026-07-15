@@ -33,7 +33,7 @@ class ProfileController extends Controller
     {
         //$data = $request->validated();
         $data = $request->all();
-        if(isset($data['city']) && empty($data['city'])){
+        if(!isset($data['city']) && empty($data['city'])){
             $data['city'] = '';
         }
         $extra_info = ["city" => $data['city']]; 
