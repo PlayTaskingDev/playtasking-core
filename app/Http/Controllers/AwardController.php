@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Award;
 use App\Models\AwardCode;
+use App\Models\Ticket;
 use App\Models\Code;
 use App\Models\UserInteraction;
 use Illuminate\Http\Request;
@@ -29,6 +30,10 @@ class AwardController extends Controller
         $campaign_games = $this->has_content_type($campaign->id, 'games');
         $campaign_tickets = $this->has_content_type($campaign->id, 'tickets');
         $campaign_coupons = $this->has_content_type($campaign->id, 'coupons');
+
+        $tickets = Ticket::where('user_id', Auth::user()->id)
+            ->where('campaign_id', $campaign->id)
+            ->paginate(10);
 
         $award_codes = AwardCode::with('award.awardable')
             ->where('user_id', Auth::user()->id)
@@ -63,6 +68,7 @@ class AwardController extends Controller
             'award_codes'               => $award_codes,
             'active_icon'               => 'coupons',
             'code_hunter'               => $participation ? $code_hunter : null,
+            'tickets'                   => $tickets,
         ]);
     }
 
