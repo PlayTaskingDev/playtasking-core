@@ -19,7 +19,7 @@ class Reports extends Controller
 
     
     public function getUsers(){
-        $users = User::get(['id', 'name', 'email','phone','created_at as registered_at']);
+        $users = User::get(['id', 'name', 'email','phone','created_at as registered_at'])->paginate(100);
         return response()->json([
             'success' => true,
             'users' => $users,
