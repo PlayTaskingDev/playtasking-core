@@ -71,5 +71,6 @@ class Kernel extends HttpKernel
         'app_active' => \App\Http\Middleware\AppActive::class,
         'campaign_has_tickets' => \App\Http\Middleware\CampaignHasTickets::class,
         'campaign_has_coupons' => \App\Http\Middleware\CampaignHasCoupons::class,
+        'api.client' => \App\Http\Middleware\AuthenticateApiClient::class,
     ];
 }

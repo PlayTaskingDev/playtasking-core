@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Sentry\Laravel\Integration;
 use Throwable;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -55,9 +56,24 @@ class Handler extends ExceptionHandler
         if (request()->is(['dns-query', 'apple-touch-icon*', 'favicon.ico', 'robots.txt','dashboard'])) {
             return false;
         }
-	if (filter_var(request()->getHost(), FILTER_VALIDATE_IP)) {
-            return false;
-        }
-	});
+        if (filter_var(request()->getHost(), FILTER_VALIDATE_IP)) {
+                return false;
+            }
+        });
+
+         $this->renderable(function (
+            NotFoundHttpException $exception,
+            $request
+        ) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'El recurso solicitado no existe.',
+                    'error' => 'NOT_FOUND',
+                ], 404);
+            }
+
+            return null;
+        });
     }
 }
