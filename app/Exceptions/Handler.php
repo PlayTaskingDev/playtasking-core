@@ -5,6 +5,8 @@ namespace App\Exceptions;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Sentry\Laravel\Integration;
 use Throwable;
+use Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedOnDomainException;
+use Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedByPathException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
@@ -24,7 +26,8 @@ class Handler extends ExceptionHandler
      * @var array<int, class-string<\Throwable>>
      */
     protected $dontReport = [
-        //
+        TenantCouldNotBeIdentifiedOnDomainException::class,
+        TenantCouldNotBeIdentifiedByPathException::class,
     ];
 
     /**
@@ -56,6 +59,13 @@ class Handler extends ExceptionHandler
         if (request()->is(['dns-query', 'apple-touch-icon*', 'favicon.ico', 'robots.txt','dashboard'])) {
             return false;
         }
+	if (filter_var(request()->getHost(), FILTER_VALIDATE_IP)) {
+            return false;
+        }
+	});
+    $this->renderable(function (TenantCouldNotBeIdentifiedByPathException $e, $request) {
+        abort(404);
+    });
         if (filter_var(request()->getHost(), FILTER_VALIDATE_IP)) {
                 return false;
             }

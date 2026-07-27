@@ -15,6 +15,7 @@ use App\Models\Award;
 use App\Models\Setting;
 use App\Models\Option;
 use App\Models\User;
+use App\Models\Ticket;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Traits\CampaignsTrait;
 
@@ -278,6 +279,7 @@ class PanelController extends Controller
         $coupons = AwardCode::count();
         $coupons_delivered = AwardCode::where('active',true)->count();
         $coupons_dynamic = Award::withCount('codes_delivered')->with('awardable')->get();
+        $tickets = Ticket::count();
 
         return view('panel.statistics', [
             'title'             => get_app_setting('app_name'),
@@ -287,7 +289,8 @@ class PanelController extends Controller
             'coupons'           => $coupons,
             'coupons_delivered' => $coupons_delivered,
             'coupons_dynamic'   => $coupons_dynamic,
-            'coupons_remaining' => $coupons - $coupons_delivered
+            'coupons_remaining' => $coupons - $coupons_delivered,
+            'tickets'           => $tickets
         ]);
     }
 

@@ -46,6 +46,14 @@
                     </div>
                 </div>
             </div>
+            <div class="grid sm:grid-cols-2 gap-3 mb-3">
+                <div class="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
+                    <h5 class="mb-4 text-xl font-medium text-gray-500 dark:text-gray-400 capitalize">{{ __('registered tickets') }}</h5>
+                    <div class="flex items-baseline text-gray-900 dark:text-white">
+                        <span class="text-4xl font-extrabold tracking-tight">{{number_format($tickets)}}</span>
+                    </div>
+                </div>
+            </div>
 
             <div class="grid grid-cols-1 mb-3">
                 <div class="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">

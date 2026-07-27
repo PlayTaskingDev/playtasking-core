@@ -106,13 +106,31 @@
                             </div>
                         </div>
                     @endif
+                    @if (!empty($tickets))
+                        @foreach ($tickets as $ticket)
+                            <div href="#" class="flex md:max-w-xl md:flex-row max-md:flex-col mb-4 items-center bg-neutral-primary-soft p-6 border border-default rounded-base shadow-xs">
+                                <div class="flex-col md:w-[calc(40%)] max-md:w-full mb-2">
+                                    <img class=" md:w-35 md:max-w-35 rounded-base h-64 md:h-auto max-md:w-48 max-md:max-w-48 mb-4 " src="{{ $ticket->img_url }}" alt="">
+                                    <a  href="{{ $ticket->img_url }}" class=" inline-flex items-center w-auto text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading focus:ring-4 focus:ring-neutral-tertiary shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none">
+                                        {{__('Ver Ticket')}}
+                                    </a>
+                                </div>
+                                <div class="flex flex-col justify-between md:p-4 leading-normal md:w-[calc(60%)]">
+                                    <h5 class="mb-4 text-lg font-normal text-heading">Número de Transacción: <span class="font-bold">{{ $ticket->transaction_number }}</span></h5>
+                                    <p class="mb-2 text-body"> Monto de transacción: ${{ $ticket->transaction_amount }}</p>
+                                    <p class="mb-2 text-body"> Fecha de transacción: {{ $ticket->transaction_date }}</p>
+                                </div>
+                            </div>
+                        @endforeach
+                        {{ $tickets->links() }}
+                    @endif
                 </div>
             </div>
         </div>
     </div>
 
     <div class="game-navigator mb-3 text-center">
-        <x-primary-link href="{{ route('campaign.show', ['tenant' => tenant('id'), 'slug' => $campaign->slug]) }}"
+        <x-primary-link href="{{ route('profile.edit', ['tenant' => tenant('id')]) }}"
             class="inline-flex w-32 mx-auto">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="m9 14l-4-4l4-4"/><path d="M5 10h11a4 4 0 1 1 0 8h-1"/></g></svg>
             {{ __('Back') }}

@@ -11,6 +11,9 @@
                 <x-ui.statistics.card-count icon="ticket" title="Cupones entregados " count="{{ $coupons_delivered }}" />
                 <x-ui.statistics.card-count icon="ticket" title="Cupones Restantes " count="{{ $coupons_remaining }}" />
             </div>
+            <div class="grid grid-cols-2 gap-4 sm:grid-cols-2 md:gap-6">
+                <x-ui.statistics.card-count icon="ticket" title="Tickets Registrados" count="{{ $tickets }}" />
+            </div>
             {{-- <x-v2.ecommerce.monthly-sale /> --}}
         </div>
         <div class="col-span-12 xl:col-span-5">
