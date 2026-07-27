@@ -41,56 +41,7 @@ class CampaignController extends Controller
      */
     public function show($slug)
     {
-        $now = Carbon::now()->toDateTimeString();
-        $campaign = Campaign::with(
-                    [
-                        'share_quizzes' => function($q) use ($now)
-                            {
-                                $q->where([['init_date','<',$now],['end_date','>',$now]]);
-                            },
-                        'quizzes' => function($q) use ($now)
-                            {
-                                $q->where([['init_date','<',$now],['end_date','>',$now]]);
-                            },
-                        'memory_quizzes' => function($q) use ($now)
-                            {
-                                $q->where([['init_date','<',$now],['end_date','>',$now]]);
-                            },
-                        'vote_contests' => function($q) use ($now)
-                            {
-                                $q->where([['init_date','<',$now],['end_date','>',$now]]);
-                            },
-                        'click_wins' => function($q) use ($now)
-                            {
-                                $q->where([['init_date','<',$now],['end_date','>',$now]]);
-                            },
-                        'aplazo_games' => function($q) use ($now)
-                            {
-                                $q->where([['init_date','<',$now],['end_date','>',$now]]);
-                            },
-                        'puzzles' => function($q) use ($now)
-                            {
-                                $q->where([['init_date','<',$now],['end_date','>',$now]]);
-                            },
-                        'catch_games' => function($q) use ($now)
-                            {
-                                $q->where([['init_date','<',$now],['end_date','>',$now]]);
-                            },
-                        'smash_games' => function($q) use ($now)
-                            {
-                                $q->where([['init_date','<',$now],['end_date','>',$now]]);
-                            },
-                        'flappy_games' => function($q) use ($now)
-                            {
-                                $q->where([['init_date','<',$now],['end_date','>',$now]]);
-                            },
-                        'penal_games' => function($q) use ($now)
-                            {
-                                $q->where([['init_date','<',$now],['end_date','>',$now]]);
-                            }
-                    ])
-                    ->where([['slug', $slug],['active',true],['init_date','<',$now],['end_date','>',$now]])
-                    ->first();
+        $campaign = $this->get_all_active_games($slug);
 
         if (!is_null($campaign)) {
             $campaign_games = $this->has_content_type($campaign->id, 'games');

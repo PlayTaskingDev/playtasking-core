@@ -7,6 +7,7 @@ use Sentry\Laravel\Integration;
 use Throwable;
 use Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedOnDomainException;
 use Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedByPathException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -65,5 +66,24 @@ class Handler extends ExceptionHandler
     $this->renderable(function (TenantCouldNotBeIdentifiedByPathException $e, $request) {
         abort(404);
     });
+        if (filter_var(request()->getHost(), FILTER_VALIDATE_IP)) {
+                return false;
+            }
+        });
+
+         $this->renderable(function (
+            NotFoundHttpException $exception,
+            $request
+        ) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'El recurso solicitado no existe.',
+                    'error' => 'NOT_FOUND',
+                ], 404);
+            }
+
+            return null;
+        });
     }
 }

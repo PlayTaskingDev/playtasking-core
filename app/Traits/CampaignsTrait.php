@@ -133,4 +133,74 @@ trait CampaignsTrait
         $diferenciaEnSegundos = $fecha1->floatDiffInSeconds($fecha2);
         return (float) number_format($diferenciaEnSegundos, 2, '.', '');
     }
+
+    public function get_all_active_games($slug){
+        $now = Carbon::now()->toDateTimeString();
+        return Campaign::with(
+                    [
+                        'share_quizzes' => function($q) use ($now)
+                            {
+                                $q->where([['init_date','<',$now],['end_date','>',$now]]);
+                            },
+                        'quizzes' => function($q) use ($now)
+                            {
+                                $q->where([['init_date','<',$now],['end_date','>',$now]]);
+                            },
+                        'memory_quizzes' => function($q) use ($now)
+                            {
+                                $q->where([['init_date','<',$now],['end_date','>',$now]]);
+                            },
+                        'vote_contests' => function($q) use ($now)
+                            {
+                                $q->where([['init_date','<',$now],['end_date','>',$now]]);
+                            },
+                        'click_wins' => function($q) use ($now)
+                            {
+                                $q->where([['init_date','<',$now],['end_date','>',$now]]);
+                            },
+                        'aplazo_games' => function($q) use ($now)
+                            {
+                                $q->where([['init_date','<',$now],['end_date','>',$now]]);
+                            },
+                        'puzzles' => function($q) use ($now)
+                            {
+                                $q->where([['init_date','<',$now],['end_date','>',$now]]);
+                            },
+                        'catch_games' => function($q) use ($now)
+                            {
+                                $q->where([['init_date','<',$now],['end_date','>',$now]]);
+                            },
+                        'smash_games' => function($q) use ($now)
+                            {
+                                $q->where([['init_date','<',$now],['end_date','>',$now]]);
+                            },
+                        'flappy_games' => function($q) use ($now)
+                            {
+                                $q->where([['init_date','<',$now],['end_date','>',$now]]);
+                            },
+                        'penal_games' => function($q) use ($now)
+                            {
+                                $q->where([['init_date','<',$now],['end_date','>',$now]]);
+                            }
+                    ])
+                    ->where([['slug', $slug],['active',true],['init_date','<',$now],['end_date','>',$now]])
+                    ->first();
+    }
+
+    public function get_user_interactions($model_id){
+        return DB::table("user_interactions as ui")->where('ui.model_id', $model_id)
+            ->join('users as u', 'u.id', '=', 'ui.user_id')
+            ->selectRaw('
+                ui.model_id as game_id,
+                ui.model_title as game_title,
+                u.name as user_name,
+                u.email,
+                u.created_at as user_created_at,
+                ui.hit as pivot_hit,
+                ui.hit_created_at as hit_created_at,
+                ui.hit_updated_at as hit_updated_at,
+                ui.code as award_code
+            ')
+            ->get();
+    }
 }

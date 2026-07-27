@@ -29,7 +29,7 @@
                         {!! $active_campaign->campaign_splash_page->instructions !!}
                     </div>
                     <div class="my-6 text-center">
-                        @if ($active_campaign->content_types->contains('system_name', 'games') && ($active_campaign->content_types->contains('system_name', 'tickets') || $active_campaign->content_types->contains('system_name', 'coupons')))
+                        @if ($active_campaign->content_types->contains('system_name', 'games'))
                              <x-primary-link href="{{ route('campaign.show', ['tenant' => tenant('id'), 'slug' => $active_campaign->slug]) }}"
                                 class="w-full block">
                                 {{ __('Start') }}

@@ -17,10 +17,11 @@ use App\Models\Option;
 use App\Models\User;
 use App\Models\Ticket;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Traits\CampaignsTrait;
 
 class PanelController extends Controller
 {
-    use UploadImageTrait;
+    use UploadImageTrait, CampaignsTrait;
 
     public function index()
     {
@@ -295,20 +296,7 @@ class PanelController extends Controller
 
     public function export_user_interactions($model_id)
     {
-        $rows_collection = DB::table("user_interactions as ui")->where('ui.model_id', $model_id)
-            ->join('users as u', 'u.id', '=', 'ui.user_id')
-            ->selectRaw('
-                ui.model_id as game_id,
-                ui.model_title as game_title,
-                u.name as user_name,
-                u.email,
-                u.created_at as user_created_at,
-                ui.hit as pivot_hit,
-                ui.hit_created_at as hit_created_at,
-                ui.hit_updated_at as hit_updated_at,
-                ui.code as award_code
-            ')
-            ->get();
+        $rows_collection = $this->get_user_interactions($model_id);
 
         return Excel::download(
             new UserInteractionsExport($rows_collection),
