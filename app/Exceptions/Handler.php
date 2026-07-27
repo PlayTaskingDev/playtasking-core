@@ -7,6 +7,7 @@ use Sentry\Laravel\Integration;
 use Throwable;
 use Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedOnDomainException;
 use Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedByPathException;
+use Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
@@ -54,12 +55,12 @@ class Handler extends ExceptionHandler
             }
         });
 
-        $this->reportable(function (\Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedException $e) {
+        $this->reportable(function (TenantCouldNotBeIdentifiedException $e) {
         //11-10-25 AP
         if (request()->is(['dns-query', 'apple-touch-icon*', 'favicon.ico', 'robots.txt','dashboard'])) {
             return false;
         }
-	if (filter_var(request()->getHost(), FILTER_VALIDATE_IP)) {
+        if (filter_var(request()->getHost(), FILTER_VALIDATE_IP)) {
             return false;
         }
 	});
@@ -69,7 +70,6 @@ class Handler extends ExceptionHandler
         if (filter_var(request()->getHost(), FILTER_VALIDATE_IP)) {
                 return false;
             }
-        });
 
          $this->renderable(function (
             NotFoundHttpException $exception,
