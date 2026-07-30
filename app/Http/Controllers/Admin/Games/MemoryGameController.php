@@ -79,6 +79,7 @@ class MemoryGameController extends Controller
         if($request->file('game_banner')){
             $data['game_banner'] = $this->uploadImage('gcs','quizzes',$request->file('game_banner'));
         }
+        
 
         MemoryQuiz::create($data);
 
@@ -151,6 +152,14 @@ class MemoryGameController extends Controller
         $memoryQuiz = MemoryQuiz::findOrFail($id);
         if (isset(($data['delete_image_holder_hidden'])) && $data['delete_image_holder_hidden'] == true) {
             $memoryQuiz->game_banner = null;
+        }
+
+         if( !$request->has('btn_border') ){
+            $data['btn_border'] = false;
+        }
+
+        if( !$request->has('btn_shadow') ){
+            $data['btn_shadow'] = false;
         }
 
         $memoryQuiz->fill($data);
