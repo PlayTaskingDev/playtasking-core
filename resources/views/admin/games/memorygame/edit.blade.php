@@ -187,6 +187,7 @@
                     <h2 class="mb-5 text-lg font-semibold text-gray-800 dark:text-white/90">Button Settings</h2>
                     <x-ui.forms.input-color label="{{ __('Gradient Button Background 1') }}" name="btn_background_color_1" placeholder="" :value="$memory_quiz->btn_background_color_1" data-field="campaign.btn_background_color_1" />
                     <x-ui.forms.input-color label="{{ __('Gradient Button Background 2') }}" name="btn_background_color_2" placeholder="" :value="$memory_quiz->btn_background_color_2" data-field="campaign.btn_background_color_2" />
+                    <x-ui.forms.input-switch label="{{ __('Has border') }}" name="btn_border" value="1" switcher="{{ $memory_quiz->btn_border }}"/>
                     <x-ui.forms.input-color label="{{ __('Button Border Color') }}" name="btn_border_color" placeholder="" :value="$memory_quiz->btn_border_color" data-field="campaign.btn_border_color" />
                     <x-ui.forms.input-color label="{{ __('Button Text Color') }}" name="btn_text_color" placeholder="" :value="$memory_quiz->btn_text_color" data-field="campaign.btn_text_color" />
                     <x-ui.forms.input-switch label="{{ __('Has shadow') }}" name="btn_shadow" placeholder="" :value="$memory_quiz->btn_shadow" data-field="campaign.btn_shadow" />
