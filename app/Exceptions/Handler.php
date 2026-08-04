@@ -69,7 +69,6 @@ class Handler extends ExceptionHandler
         if (filter_var(request()->getHost(), FILTER_VALIDATE_IP)) {
                 return false;
             }
-        });
 
          $this->renderable(function (
             NotFoundHttpException $exception,
