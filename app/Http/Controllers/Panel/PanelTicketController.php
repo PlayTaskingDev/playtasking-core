@@ -22,7 +22,7 @@ class PanelTicketController extends Controller
 
     public function index()
     {
-        $tickets = Ticket::all();
+        $tickets = Ticket::with('user')->get();
         $ocrTickets = OcrTicket::all();
 
         $all_tickets = $tickets->merge($ocrTickets)->sortByDesc('created_at');

@@ -26,6 +26,9 @@
                                 {{ __('Thumbnail') }}
                             </th>
                             <th scope="col" class="px-6 py-3">
+                                {{ __('User') }}
+                            </th>
+                            <th scope="col" class="px-6 py-3">
                                 {{ __('Transaction number') }}
                             </th>
                             <th scope="col" class="px-6 py-3">
@@ -46,6 +49,9 @@
                                     <a href="{{ $ticket->img_url }}" target="_blank">
                                         <img src="{{ $ticket->img_url }}" alt="Thumbnail" class="w-16 h-16 object-cover rounded-lg">
                                     </a>
+                                </th>
+                                <th scope="row" class="px-6 py-4">
+                                    {{ $ticket->user->name }} <br> <small>{{ $ticket->user->email }}</small>
                                 </th>
                                 <th scope="row" class="px-6 py-4">
                                     {{ $ticket->transaction_number }}

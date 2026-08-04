@@ -289,5 +289,6 @@
     "Enter the transaction number": "Ingresa el número de transacción",
     "Enter the store name": "Captura únicamente el número",
     "Enter the total amount": "Ingresa el monto total",
-    "registered tickets": "Tickets registrados"
+    "registered tickets": "Tickets registrados",
+    "User": "Usuario"
 }
