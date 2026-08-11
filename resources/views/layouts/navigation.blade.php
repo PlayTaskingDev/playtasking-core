@@ -3,7 +3,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <!-- Hamburger -->
-            <div class="flex xl:hidden! -mr-2 items-center">
+            <div class="-mr-2 flex items-center lg:hidden">
                 <button @click="open = ! open"
                     class="inline-flex items-center justify-center p-2 rounded-md text-white dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-900 focus:text-gray-500 dark:focus:text-gray-400 transition duration-150 ease-in-out">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
@@ -18,14 +18,14 @@
 
             <div class="flex">
                 <!-- Logo -->
-                <div class="relative md:absolute  right-3 h-20 inset-y-0">
+                <div class="absolute sm:relative right-3 h-20 inset-y-0">
                     <a href="{{ Auth::user() ? route('campaign.splash', ['tenant' => tenant('id')]) : route('welcome', ['tenant' => tenant('id')]) }}">
                         <x-application-logo class="h-9 w-auto fill-current text-white dark:text-gray-200" />
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden md:flex! space-x-8 sm:-my-px sm:ml-10">
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 lg:flex">
                     @auth
                         <x-nav-link :href="route('campaign.splash', ['tenant' => tenant('id')])" :active="request()->routeIs('campaign.splash')">
                             {{ __('Dashboard') }}
@@ -41,7 +41,7 @@
 
             @auth
                 <!-- Settings Dropdown -->
-                <div class="hidden md:flex! sm:items-center sm:ml-6 ">
+                <div class="hidden lg:flex sm:items-center sm:ml-6">
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
                             <button
@@ -77,9 +77,6 @@
                             @role('admin')
                                 <x-dropdown-link :href="route('panel.index', ['tenant' => tenant('id')])">
                                     {{ __('Admin Panel') }}
-                                </x-dropdown-link>
-                                <x-dropdown-link :href="route('v2.index', ['tenant' => tenant('id')])">
-                                    {{ __('Admin Panel V2') }}
                                 </x-dropdown-link>
                             @endrole
                         </x-slot>
@@ -146,9 +143,6 @@
                 <x-responsive-nav-link :href="route('panel.index', ['tenant' => tenant('id')])">
                     {{ __('Admin Panel') }}
                 </x-responsive-nav-link>
-                <x-dropdown-link :href="route('v2.index', ['tenant' => tenant('id')])">
-                    {{ __('Admin Panel V2') }}
-                </x-dropdown-link>
             @endrole
         </div>
 

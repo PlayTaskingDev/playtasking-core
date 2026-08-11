@@ -39,7 +39,7 @@ class SaveCampaignRequest extends FormRequest
             'games'                 => ['exists:content_types,id'],
             'tickets'               => ['exists:content_types,id'],
             'coupons'               => ['exists:content_types,id'],
-            'instructions'                  => ['required','string'],
+            //'instructions'                  => ['required','string'],
             'featured_image_url'            => ['image:jpg,png,jpeg','max:600'],
             'featured_video_url'            => ['nullable','url'],
             'delete_image_holder_hidden'    => ['nullable','boolean']

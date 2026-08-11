@@ -29,12 +29,16 @@
                         {!! $active_campaign->campaign_splash_page->instructions !!}
                     </div>
                     <div class="my-6 text-center">
-                        @if ($active_campaign->content_types->contains('system_name', 'games') && ($active_campaign->content_types->contains('system_name', 'tickets') || $active_campaign->content_types->contains('system_name', 'coupons')))
-                             <x-primary-link href="{{ route('campaign.show', ['tenant' => tenant('id'), 'slug' => $active_campaign->slug]) }}"
+                        <x-primary-link href="{{ route('campaign.show', ['tenant' => tenant('id'), 'slug' => $active_campaign->slug]) }}"
+                                class="w-full block">
+                            {{ __('Start') }}
+                        </x-primary-link>
+                        {{-- @if ($active_campaign->content_types->contains('system_name', 'games') && ($active_campaign->content_types->contains('system_name', 'tickets') || $active_campaign->content_types->contains('system_name', 'coupons')))
+                            <x-primary-link href="{{ route('campaign.show', ['tenant' => tenant('id'), 'slug' => $active_campaign->slug]) }}"
                                 class="w-full block">
                                 {{ __('Start') }}
                             </x-primary-link>
-                        @elseif ($active_campaign->content_types->contains('system_name', 'tickets') && !$active_campaign->content_types->contains('system_name', 'games') && !$active_campaign->content_types->contains('system_name', 'coupons'))
+                        @elseif ($active_campaign->content_types->contains('system_name', 'tickets') && (!$active_campaign->content_types->contains('system_name', 'games') && !$active_campaign->content_types->contains('system_name', 'coupons')))
                             <x-primary-link href="{{ route('ticketsdash.create', ['tenant' => tenant('id')]) }}"
                                     class="w-full block">
                                     {{ __('Start') }}
@@ -44,7 +48,7 @@
                                     class="w-full block">
                                     {{ __('Start') }}
                             </x-primary-link>
-                        @endif
+                        @endif --}}
                     </div>
                     @if (false) {{-- Disabled for now AlbertoPaz--}}
                         @foreach ($active_campaign->content_types as $content_type)

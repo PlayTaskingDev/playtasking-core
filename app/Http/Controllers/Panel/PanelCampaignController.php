@@ -129,7 +129,6 @@ class PanelCampaignController extends Controller
     public function update(SaveCampaignRequest $request, Campaign $campaign)
     {
         $data = $request->validated();
-
         if( !$request->has('active') ){
             $data['active'] = false;
         }

@@ -13,7 +13,8 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=montserrat:400,400i,700,700i,900&display=swap" rel="stylesheet" />
 
-    @vite('resources/css/app.css')
+    <!-- Scripts -->
+    @vite(['resources/scss/app.scss'])
 
     <style>
         #main-nav {

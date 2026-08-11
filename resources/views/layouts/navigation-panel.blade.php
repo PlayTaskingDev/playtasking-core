@@ -218,9 +218,6 @@
             <x-responsive-nav-link :href="route('panel.index', ['tenant' => tenant('id')])" :active="request()->routeIs('panel.index')">
                 {{ __('Admin Panel') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('v2.index', ['tenant' => tenant('id')])" :active="request()->routeIs('v2.index')">
-                {{ __('Admin Panel V2') }}
-            </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('pages.index', ['tenant' => tenant('id')])" :active="request()->routeIs('pages.index')" class="flex items-center">
                 {{ __('Pages') }}
             </x-responsive-nav-link>
