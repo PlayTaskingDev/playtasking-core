@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\LogApiRequest;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,7 +17,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware([
     'auth:sanctum',
-    'api.client'
+    LogApiRequest::class,
+    'api.client',
 ])->prefix('v1')->group(function () {
     Route::get('/reports/getCountUsers', [App\Http\Controllers\Api\Reports::class, 'getCountUsers'])->name('getCountUsers');
     Route::get('/reports/getTotalParticipatingUsers', [App\Http\Controllers\Api\Reports::class, 'getTotalParticipatingUsers'])->name('getTotalParticipatingUsers');
