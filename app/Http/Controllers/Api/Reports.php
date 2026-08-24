@@ -261,5 +261,260 @@ class Reports extends Controller
             'maximum_resolution_time_per_game' => $maximumTimeByGame,
         ]);
     }
-    
+    //El juego menos utilizado por los usuarios
+    public function leastUsedGame(){
+        $leastUsedGame = UserInteraction::query()
+        ->select(
+            'model_id',
+            'model_title'
+        )
+        ->selectRaw('COUNT(*) as total_interactions')
+        ->groupBy('model_id', 'model_title')
+        ->orderBy('total_interactions')
+        ->first();
+
+        return response()->json([
+            'success' => true,
+            'least_used_game' => $leastUsedGame,
+        ]);
+    }
+    // A que hora promedio se registran los usuarios, es decir, el promedio de la hora en que los usuarios se registran en la plataforma
+    public function averageRegistrationTime(){
+        $averageRegistrationTime = User::query()
+        ->selectRaw('
+            SEC_TO_TIME(
+                AVG(
+                    TIME_TO_SEC(TIME(created_at))
+                )
+            ) as average_registration_time
+        ')
+        ->value('average_registration_time');
+        return response()->json([
+            'success' => true,
+            'average_registration_time' => $averageRegistrationTime,
+        ]);
+    }
+    //Hora con mayor cantidad de registros
+    public function peakRegistrationHour(){
+        $peakRegistrationHour = User::query()
+        ->selectRaw('HOUR(created_at) as hour')
+        ->selectRaw('COUNT(*) as total_registrations')
+        ->groupByRaw('HOUR(created_at)')
+        ->orderByDesc('total_registrations')
+        ->first();
+        return response()->json([
+            'success' => true,
+            'peak_registration_hour' => $peakRegistrationHour,
+        ]);
+    }
+    //Hora con mayor cantidad de interacciones
+    public function peakInteractionHour(){
+        $peakInteractionHour = UserInteraction::query()
+        ->selectRaw('HOUR(created_at) as hour')
+        ->selectRaw('COUNT(*) as total_interactions')
+        ->groupByRaw('HOUR(created_at)')
+        ->orderByDesc('total_interactions')
+        ->first();
+
+        return response()->json([
+            'success' => true,
+            'peak_interaction_hour' => $peakInteractionHour,
+        ]);
+    }
+    //Registros por hora
+    public function registrationsByHour(){
+        $registrationsByHour = User::query()
+        ->selectRaw('HOUR(created_at) as hour')
+        ->selectRaw('COUNT(*) as total_registrations')
+        ->groupByRaw('HOUR(created_at)')
+        ->orderByRaw('HOUR(created_at)')
+        ->get();
+
+        return response()->json([
+            'success' => true,
+            'registrations_by_hour' => $registrationsByHour,
+        ]);
+    }
+    //Interacciones por hora
+    public function interactionsByHour(){
+        $interactionsByHour = UserInteraction::query()
+        ->selectRaw('HOUR(created_at) as hour')
+        ->selectRaw('COUNT(*) as total_interactions')
+        ->groupByRaw('HOUR(created_at)')
+        ->orderByRaw('HOUR(created_at)')
+        ->get();
+
+        return response()->json([
+            'success' => true,
+            'interactions_by_hour' => $interactionsByHour,
+        ]);
+    }
+    //Registros por día
+    public function registrationsByDay(){
+        $registrationsByDay = User::query()
+        ->selectRaw('DATE(created_at) as date')
+        ->selectRaw('COUNT(*) as total_registrations')
+        ->groupByRaw('DATE(created_at)')
+        ->orderByRaw('DATE(created_at)')
+        ->get();
+
+        return response()->json([
+            'success' => true,
+            'registrations_by_day' => $registrationsByDay,
+        ]);
+    }
+    //Interacciones por día
+    public function interactionsByDay(){
+        $interactionsByDay = UserInteraction::query()
+        ->selectRaw('DATE(created_at) as date')
+        ->selectRaw('COUNT(*) as total_interactions')
+        ->groupByRaw('DATE(created_at)')
+        ->orderByRaw('DATE(created_at)')
+        ->get();
+
+        return response()->json([
+            'success' => true,
+            'interactions_by_day' => $interactionsByDay,
+        ]);
+    }
+    //Día de la semana con mayor actividad
+    public function mostActiveWeekday(){
+        $mostActiveWeekday = UserInteraction::query()
+        ->selectRaw('DAYOFWEEK(created_at) as weekday_number')
+        ->selectRaw('DAYNAME(created_at) as weekday')
+        ->selectRaw('COUNT(*) as total_interactions')
+        ->groupByRaw('DAYOFWEEK(created_at), DAYNAME(created_at)')
+        ->orderByDesc('total_interactions')
+        ->first();
+
+        return response()->json([
+            'success' => true,
+            'most_active_weekday' => $mostActiveWeekday,
+        ]);
+    }
+    // Nuevos usuarios registrados en el último mes, es decir, los usuarios que se registraron en la plataforma en los últimos 30 días
+    public function newUsersMonth(){
+        $newUsers = User::query()
+        ->whereYear('created_at', now()->year)
+        ->whereMonth('created_at', now()->month)
+        ->count();
+
+        return response()->json([
+            'success' => true,
+            'new_users_month' => $newUsers,
+        ]);
+    }
+    //Registros por semana
+    public function registrationsByWeek(){
+        $registrationsByWeek = User::query()
+        ->selectRaw('YEAR(created_at) as year')
+        ->selectRaw('WEEK(created_at, 1) as week')
+        ->selectRaw('COUNT(*) as total_registrations')
+        ->groupByRaw('YEAR(created_at), WEEK(created_at, 1)')
+        ->orderByRaw('YEAR(created_at)')
+        ->orderByRaw('WEEK(created_at, 1)')
+        ->get();
+
+        return response()->json([
+            'success' => true,
+            'registrations_by_week' => $registrationsByWeek,
+        ]);
+    }
+    //Esta métrica sí necesita comparar dos periodos.La forma más natural sería: Mes actual contra mes anterior.
+    public function userGrowth(){
+        $currentMonthUsers = User::query()
+            ->whereYear('created_at', now()->year)
+            ->whereMonth('created_at', now()->month)
+            ->count();
+
+        $previousMonth = now()->copy()->subMonth();
+
+        $previousMonthUsers = User::query()
+            ->whereYear('created_at', $previousMonth->year)
+            ->whereMonth('created_at', $previousMonth->month)
+            ->count();
+        
+        if ($previousMonthUsers > 0) {
+            $growthRate = round(
+                (
+                    ($currentMonthUsers - $previousMonthUsers)
+                    / $previousMonthUsers
+                ) * 100,
+                2
+            );
+        } else {
+            $growthRate = null;
+        }
+      return response()->json([
+            'success' => true,
+            'current_month_users' => $currentMonthUsers,
+            'previous_month_users' => $previousMonthUsers,
+            'growth_rate' => $growthRate,
+        ]);  
+        
+    }
+
+    public function summary(){
+       $interactionSummary = UserInteraction::query()
+        ->selectRaw('COUNT(*) as total_interactions')
+        ->selectRaw('COUNT(DISTINCT user_id) as participating_users')
+        ->selectRaw('COUNT(DISTINCT model_id) as total_used_games')
+        ->selectRaw('SUM(CASE WHEN hit = 1 THEN 1 ELSE 0 END) as total_awards')
+        ->selectRaw('SUM(CASE WHEN hit = 0 THEN 1 ELSE 0 END) as without_award')
+        ->first();
+        $totalUsers = User::count();
+        $participationRate = $totalUsers > 0
+        ? round(
+            ($interactionSummary->participating_users / $totalUsers) * 100,
+            2
+        )
+        : 0;
+        $averageInteractions = $interactionSummary->participating_users > 0
+        ? round(
+            $interactionSummary->total_interactions
+            / $interactionSummary->participating_users,
+            2
+        )
+        : 0;
+        $awardRate = $interactionSummary->total_interactions > 0
+        ? round(
+            ($interactionSummary->total_awards
+            / $interactionSummary->total_interactions) * 100,
+            2
+        )
+        : 0;
+        return response()->json([
+            'success' => true,
+
+            'summary' => [
+                'registered_users' => $totalUsers,
+
+                'participating_users' =>
+                    (int) $interactionSummary->participating_users,
+
+                'participation_rate' =>
+                    $participationRate . '%',
+
+                'total_interactions' =>
+                    (int) $interactionSummary->total_interactions,
+
+                'average_interactions_per_user' =>
+                    $averageInteractions,
+
+                'total_used_games' =>
+                    (int) $interactionSummary->total_used_games,
+
+                'total_awards_won' =>
+                    (int) $interactionSummary->total_awards,
+
+                'participations_without_award' =>
+                    (int) $interactionSummary->without_award,
+
+                'award_rate' =>
+                    $awardRate . '%',
+            ],
+        ]);
+    }
+
+
 }

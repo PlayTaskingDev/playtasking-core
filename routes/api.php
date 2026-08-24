@@ -35,5 +35,21 @@ Route::middleware([
     Route::get('/reports/getAverageResolutionTimePerGame', [App\Http\Controllers\Api\Reports::class, 'averageResolutionTimePerGame'])->name('getAverageResolutionTimePerGame');
     Route::get('/reports/getMinimumResolutionTimePerGame', [App\Http\Controllers\Api\Reports::class, 'minimumResolutionTimePerGame'])->name('getMinimumResolutionTimePerGame');
     Route::get('/reports/getMaximumResolutionTimePerGame', [App\Http\Controllers\Api\Reports::class, 'maximumResolutionTimePerGame'])->name('getMaximumResolutionTimePerGame');
+    //fase 2
+    Route::get('/reports/getLeastUsedGame', [App\Http\Controllers\Api\Reports::class, 'leastUsedGame'])->name('getLeastUsedGame');
+    Route::get('/reports/getAverageRegistrationTime', [App\Http\Controllers\Api\Reports::class, 'averageRegistrationTime'])->name('getAverageRegistrationTime');
+    Route::get('/reports/getPeakRegistrationHour', [App\Http\Controllers\Api\Reports::class, 'peakRegistrationHour'])->name('getPeakRegistrationHour');
+    Route::get('/reports/getPeakInteractionHour', [App\Http\Controllers\Api\Reports::class, 'peakInteractionHour'])->name('getPeakInteractionHour');
+    Route::get('/reports/getRegistrationsByHour', [App\Http\Controllers\Api\Reports::class, 'registrationsByHour'])->name('getRegistrationsByHour');
+    Route::get('/reports/getInteractionsByHour', [App\Http\Controllers\Api\Reports::class, 'interactionsByHour'])->name('getInteractionsByHour');
+    Route::get('/reports/getRegistrationsByDay', [App\Http\Controllers\Api\Reports::class, 'registrationsByDay'])->name('getRegistrationsByDay');
+    Route::get('/reports/getInteractionsByDay', [App\Http\Controllers\Api\Reports::class, 'interactionsByDay'])->name('getInteractionsByDay');
+    Route::get('/reports/getMostActiveWeekday', [App\Http\Controllers\Api\Reports::class, 'mostActiveWeekday'])->name('getMostActiveWeekday');
+    Route::get('/reports/getNewUsersMonth', [App\Http\Controllers\Api\Reports::class, 'newUsersMonth'])->name('newUsersMonth');
+    Route::get('/reports/getRegistrationsByWeek', [App\Http\Controllers\Api\Reports::class, 'registrationsByWeek'])->name('getRegistrationsByWeek');
+    //Route::get('/reports/getRegistrationsByMonth', [App\Http\Controllers\Api\Reports::class, 'registrationsByMonth'])->name('getRegistrationsByMonth');
+    Route::get('/reports/getUserGrowth', [App\Http\Controllers\Api\Reports::class, 'userGrowth'])->name('getUserGrowth');
+    Route::get('/reports/getSummary', [App\Http\Controllers\Api\Reports::class, 'summary'])->name('getSummary');
+
 });
 
