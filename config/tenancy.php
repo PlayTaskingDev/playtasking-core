@@ -25,6 +25,7 @@ return [
         'beneficioscalimax.com',
         '34.68.206.75',
         'sabordepelicula.com',
+        'beneficios.cantabrialabs.mx'
     ],
 
     /**
