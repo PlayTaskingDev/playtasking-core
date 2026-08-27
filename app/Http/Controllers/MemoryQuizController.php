@@ -45,7 +45,6 @@ class MemoryQuizController extends Controller
         $campaign_games = $this->has_content_type($memory_quiz->campaign->id, 'games');
         $campaign_tickets = $this->has_content_type($memory_quiz->campaign->id, 'tickets');
         $campaign_coupons = $this->has_content_type($memory_quiz->campaign->id, 'coupons');
-
         return view('dashboard.memory_quizzes.show', [
             'memory_quiz'       => $memory_quiz,
             'campaign_games'    => $campaign_games,

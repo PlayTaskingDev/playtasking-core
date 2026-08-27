@@ -38,7 +38,11 @@
                             {{ $memory_quiz->description }}
                         </p>
                         <hr class="my-6" style="color: {{get_app_setting('header_background_color')}};">
-                        <div id="timer" class="rounded p-3 mb-5 text-2xl text-center font-bold">
+                        <button id="startMemoryQuizBtn" type="button"
+                            class="block rounded-full px-5 py-2.5 mx-auto mb-6 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 font-bold {{ $memory_quiz->btn_shadow ? 'buttons-shadow' : '' }}" style="{{ $memory_quiz->btn_border ? 'border: 2px solid ' . $memory_quiz->btn_border_color . ';' : '' }} {{ $memory_quiz->btn_text_color ? 'color: ' . $memory_quiz->btn_text_color . ';' : '' }}background: {{ $memory_quiz->btn_background_color_1 . '; background: linear-gradient(135deg, ' . $memory_quiz->btn_background_color_1 . ' 0%, ' . $memory_quiz->btn_background_color_2 . ' 85%);' }}">
+                            {{ __('Start') }}
+                        </button>
+                        <div id="timer" class="hidden rounded p-3 mb-5 text-2xl text-center font-bold">
                             {{ __('Remaining')}} <span></span> {{ __('seconds')}}
                         </div>
                         <div class="dark:bg-gray-800 overflow-hidden rounded grid grid-cols-4 gap-1 sm:gap-2 memory-game">
@@ -76,7 +80,6 @@
                 const maxSeconds = {{$memory_quiz->seconds}};
                 const totalCards = {{$memory_quiz->memory_cards->count() * 2}};
                 const cards = document.querySelectorAll('.memory-card');
-                
                 let count = maxSeconds;
                 let timerObj = null;
                 let timer = null;
@@ -87,7 +90,10 @@
 
                 function initGame() {
                     timerObj = document.querySelector('#timer span');
-                    
+                    const timerEl = document.querySelector('#timer');
+                    timerEl.classList.remove('hidden');
+                    const startBtn = document.getElementById('startMemoryQuizBtn');
+                    startBtn.remove();
                     // Start game session on backend
                     axios.post('{{ route('game.start', ['tenant' => tenant('id')]) }}')
                         .then(({ data }) => {
@@ -197,11 +203,19 @@
                     });
                 }
 
+                 function setupStartButton() {
+                    const startBtn = document.getElementById('startMemoryQuizBtn');
+                    
+                    startBtn.addEventListener('click', () => {
+                        initGame();
+                    });
+                }
+
                 // Initialize game when DOM is ready
                 if (document.readyState === 'loading') {
-                    document.addEventListener('DOMContentLoaded', initGame);
+                    document.addEventListener('DOMContentLoaded', setupStartButton);
                 } else {
-                    initGame();
+                    setupStartButton();
                 }
             })();
             </script>
