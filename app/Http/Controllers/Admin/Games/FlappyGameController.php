@@ -50,35 +50,71 @@ class FlappyGameController extends Controller
      */
     public function store(SaveFlappyGameRequest $request)
     {
-        $data = $request->all();
+        $data = $request->validated();
 
-        if($request->file('featured_image')){
-            $data['featured_image'] = $this->uploadImage('gcs','flappyGames',$request->file('featured_image'));
+        if ($request->file('featured_image')) {
+            $data['featured_image'] = $this->uploadImage(
+                'gcs',
+                'flappyGames',
+                $request->file('featured_image')
+            );
         }
 
-        if($request->file('featured_image_disabled')){
-            $data['featured_image_disabled'] = $this->uploadImage('gcs','flappyGames',$request->file('featured_image_disabled'));
+        if ($request->file('featured_image_disabled')) {
+            $data['featured_image_disabled'] = $this->uploadImage(
+                'gcs',
+                'flappyGames',
+                $request->file('featured_image_disabled')
+            );
         }
 
-        if($request->file('game_bg_image')){
-            $data['game_bg_image'] = $this->uploadImage('gcs','flappyGames',$request->file('game_bg_image'));
+        if ($request->file('game_bg_image')) {
+            $data['game_bg_image'] = $this->uploadImage(
+                'gcs',
+                'flappyGames',
+                $request->file('game_bg_image')
+            );
         }
 
-        if($request->file('failed_image')){
-            $data['failed_image'] = $this->uploadImage('gcs','flappyGames',$request->file('failed_image'));
+        if ($request->file('game_pipe_image')) {
+            $data['game_pipe_image'] = $this->uploadImage(
+                'gcs',
+                'flappyGames',
+                $request->file('game_pipe_image')
+            );
         }
 
-        if($request->file('game_banner')){
-            $data['game_banner'] = $this->uploadImage('gcs','flappyGames',$request->file('game_banner'));
+        if ($request->file('flappy_image')) {
+            $data['flappy_image'] = $this->uploadImage(
+                'gcs',
+                'flappyGames',
+                $request->file('flappy_image')
+            );
         }
 
-        if($request->file('flappy_image')){
-            $data['flappy_image'] = $this->uploadImage('gcs','flappyGames',$request->file('flappy_image'));
+        if ($request->file('failed_image')) {
+            $data['failed_image'] = $this->uploadImage(
+                'gcs',
+                'flappyGames',
+                $request->file('failed_image')
+            );
+        }
+
+        if ($request->file('game_banner')) {
+            $data['game_banner'] = $this->uploadImage(
+                'gcs',
+                'flappyGames',
+                $request->file('game_banner')
+            );
         }
 
         FlappyGame::create($data);
 
-        return redirect(route('flappyGames.index', ['tenant' => tenant('id')]))->with('status', trans('Flappy Game saved successful'));
+        return redirect()
+            ->route('flappygames.index', [
+                'tenant' => tenant('id')
+            ])
+            ->with('status', trans('Flappy Game saved successful'));
     }
 
     /**
@@ -137,8 +173,17 @@ class FlappyGameController extends Controller
             $data['game_banner'] = $this->uploadImage('gcs','flappyGames',$request->file('game_banner'));
         }
 
-        if($request->file('flappy_image')){
-            $data['flappy_image'] = $this->uploadImage('gcs','flappyGames',$request->file('flappy_image'));
+        if($request->file('flappy_image_animated_1')){
+            $data['flappy_image_animated_1'] = $this->uploadImage('gcs','flappyGames',$request->file('flappy_image_animated_1'));
+        }
+        if($request->file('flappy_image_animated_2')){
+            $data['flappy_image_animated_2'] = $this->uploadImage('gcs','flappyGames',$request->file('flappy_image_animated_2'));
+        }
+        if($request->file('flappy_image_animated_3')){
+            $data['flappy_image_animated_3'] = $this->uploadImage('gcs','flappyGames',$request->file('flappy_image_animated_3'));
+        }
+        if($request->file('game_ground_image')){
+            $data['game_ground_image'] = $this->uploadImage('gcs','flappyGames',$request->file('game_ground_image'));
         }
 
         $flappyGame = FlappyGame::findOrFail($id);

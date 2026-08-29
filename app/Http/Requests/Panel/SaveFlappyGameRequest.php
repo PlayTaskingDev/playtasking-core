@@ -29,8 +29,7 @@ class SaveFlappyGameRequest extends FormRequest
             'description'       => ['required','regex:/^[A-Za-z0-9áéíóúÁÉÍÓÚÑñ,.;:!"¡?¿\$#\(\)\' \-]+$/'],
             'slug'              => [
                 'required',
-                'regex:/^[a-z0-9\-]+$/',
-                Rule::unique('catch_games')->ignore($this->id)
+                'regex:/^[a-z0-9\-]+$/',Rule::unique('flappy_games')->ignore($this->id)
             ],
             'init_date'         => ['required','date_format:Y-m-d H:i:s'],
             'end_date'          => ['required','date_format:Y-m-d H:i:s'],
@@ -38,12 +37,59 @@ class SaveFlappyGameRequest extends FormRequest
             'gradient_2'        => ['required','string'],
             'max_points'        => ['required','numeric'],
             'points_per_pipe' => ['required','numeric'],
-            'featured_image'    => [Rule::requiredIf(!$this->id),'image:jpg,png,jpeg','max:600'],
-            'featured_image_disabled'   => [Rule::requiredIf(!$this->id),'image:jpg,png,jpeg','max:600'],
-            'game_bg_image'     => [Rule::requiredIf(!$this->id),'image:jpg,png,jpeg','max:600'],
-            'game_pipe_image'     => [Rule::requiredIf(!$this->id),'image:jpg,png,jpeg','max:600'],
-            'flappy_image'      => [Rule::requiredIf(!$this->id),'image:jpg,png,jpeg','max:600'],
-            'failed_image'      => [Rule::requiredIf(!$this->id),'image:jpg,png,jpeg','max:600'],
+            'featured_image' => [
+                            Rule::requiredIf(!$this->id),
+                            'image',
+                            'mimes:jpg,jpeg,png',
+                            'max:600'
+                        ],
+
+                        'featured_image_disabled' => [
+                            Rule::requiredIf(!$this->id),
+                            'image',
+                            'mimes:jpg,jpeg,png',
+                            'max:600'
+                        ],
+
+                        'game_bg_image' => [
+                            Rule::requiredIf(!$this->id),
+                            'image',
+                            'mimes:jpg,jpeg,png',
+                            'max:600'
+                        ],
+
+                        'game_pipe_image' => [
+                            Rule::requiredIf(!$this->id),
+                            'image',
+                            'mimes:jpg,jpeg,png',
+                            'max:600'
+                        ],
+
+                        'flappy_image_animated_1' => [
+                            Rule::requiredIf(!$this->id),
+                            'image',
+                            'mimes:jpg,jpeg,png',
+                            'max:600'
+                        ],
+                        'flappy_image_animated_2' => [
+                            Rule::requiredIf(!$this->id),
+                            'image',
+                            'mimes:jpg,jpeg,png',
+                            'max:600'
+                        ],
+                        'flappy_image_animated_3' => [
+                            Rule::requiredIf(!$this->id),
+                            'image',
+                            'mimes:jpg,jpeg,png',
+                            'max:600'
+                        ],
+
+                        'failed_image' => [
+                            Rule::requiredIf(!$this->id),
+                            'image',
+                            'mimes:jpg,jpeg,png',
+                            'max:600'
+                        ],
             'delete_image_holder_hidden'    => ['nullable','boolean'],
             'game_banner'                   => ['nullable','image:jpg,png,jpeg','max:600'],
             'game_banner_url'               => ['nullable','url'],

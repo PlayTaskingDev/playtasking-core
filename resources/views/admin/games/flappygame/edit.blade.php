@@ -87,11 +87,61 @@
                                 <x-ui.forms.input-text label="{{ __('Video') }}" name="game_banner_video" placeholder="" :value="$flappyGame->game_banner_video" data-field="campaign.game_banner_video" />
                                 <h2 class="mt-6 text-lg col-span-2 font-semibold text-gray-800 dark:text-white/90">Game Settings</h2>
                                 <x-ui.forms.input-text label="{{ __('Slug') }}" name="slug" placeholder="" :value="$flappyGame->slug" data-field="campaign.slug" />
-                                <x-ui.forms.input-number label="{{ __('Seconds') }}" name="seconds" placeholder="" :value="$flappyGame->seconds" data-field="campaign.seconds" />
-                                <x-ui.forms.input-number label="{{ __('Max Points') }}" name="max_points" placeholder="" :value="$flappyGame->max_points" data-field="campaign.max_points" />
-                                <x-ui.forms.input-number label="{{ __('Points Per Pipe') }}" name="points_per_pipe" placeholder="" :value="$flappyGame->points_per_pipe" data-field="campaign.points_per_pipe" />
-                                <x-ui.forms.input-file label="{{ __('Failed Image') }}" dummy_img="/storage/dummy_assets/800x1180.png" name="failed_image" placeholder="" :value="$flappyGame->failed_image" data-field="campaign.failed_image" />
-                                <x-ui.forms.input-file label="{{ __('Flappy Image') }}" dummy_img="/storage/dummy_assets/800x1180.png" name="flappyGame_image" placeholder="" :value="$flappyGame->flappyGame_image" data-field="campaign.flappyGame_image" />
+                                <x-ui.forms.input-number
+                                    label="{{ __('Max Points') }}"
+                                    name="max_points"
+                                    placeholder=""
+                                    :value="$flappyGame->max_points"
+                                    data-field="campaign.max_points"
+                                />
+
+                                <x-ui.forms.input-number
+                                    label="{{ __('Points Per Pipe') }}"
+                                    name="points_per_pipe"
+                                    placeholder=""
+                                    :value="$flappyGame->points_per_pipe"
+                                    data-field="campaign.points_per_pipe"
+                                />
+
+                                <h2 class="mt-6 text-lg col-span-2 font-semibold text-gray-800 dark:text-white/90">
+                                    {{ __('Game Assets') }}
+                                </h2>
+
+                                <x-ui.forms.input-file
+                                    label="{{ __('Game Background Image') }}"
+                                    name="game_bg_image"
+                                    :value="$flappyGame->game_bg_image"
+                                />
+
+                                <x-ui.forms.input-file
+                                    label="{{ __('Pipe Image') }}"
+                                    name="game_pipe_image"
+                                    :value="$flappyGame->game_pipe_image"
+                                />
+
+                                <x-ui.forms.input-file
+                                    label="{{ __('Ground Image') }}"
+                                    name="game_ground_image"
+                                    :value="$flappyGame->game_ground_image"
+                                />
+
+                                <x-ui.forms.input-file
+                                    label="{{ __('Flappy Image - Frame 1') }}"
+                                    name="flappy_image_animated_1"
+                                    :value="$flappyGame->flappy_image_animated_1"
+                                />
+
+                                <x-ui.forms.input-file
+                                    label="{{ __('Flappy Image - Frame 2') }}"
+                                    name="flappy_image_animated_2"
+                                    :value="$flappyGame->flappy_image_animated_2"
+                                />
+
+                                <x-ui.forms.input-file
+                                    label="{{ __('Flappy Image - Frame 3') }}"
+                                    name="flappy_image_animated_3"
+                                    :value="$flappyGame->flappy_image_animated_3"
+                                />
                             </div>
                         </div>
 
@@ -103,7 +153,7 @@
                                 {{ __('Award') }}
                                 </h2>
                                 @if (is_null($flappyGame->award))
-                                    <a href="{{ route('v2awards.create', ['tenant' => tenant('id'), 'awardable_id' => $flappyGame->id, 'awardable_type' => 'App\Models\Flappy' ]) }}"
+                                    <a href="{{ route('v2awards.create', ['tenant' => tenant('id'), 'awardable_id' => $flappyGame->id, 'awardable_type' => 'App\Models\FlappyGame' ]) }}"
                                     class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
                                     {{ __('Create') }} {{ __('Award') }}
                                     </a>

@@ -41,7 +41,11 @@ class SmashGameObjectController extends Controller
         $data = $request->all();
 
         if($request->file('object_image')){
-            $data['object_image'] = $this->uploadImage('gcs','answers',$request->file('object_image'));
+            $data['object_image'] = $this->uploadImage(
+                                    'gcs',
+                                    'smash_objects',
+                                    $request->file('object_image')
+                                );
         }
 
         $smash_object = SmashObject::create($data);
