@@ -87,7 +87,7 @@
                                 <x-ui.forms.input-text label="{{ __('Video') }}" name="game_banner_video" placeholder="" :value="$vote_contest->game_banner_video" data-field="campaign.game_banner_video" />
                                 <h2 class="mt-6 text-lg col-span-2 font-semibold text-gray-800 dark:text-white/90">Vote Game Settings</h2>
                                 <x-ui.forms.input-text label="{{ __('Slug') }}" name="slug" placeholder="" :value="$vote_contest->slug" data-field="campaign.slug" />
-                                <x-ui.forms.input-select label="{{ __('Asset type') }}" :options="$type_asset" name="campaign_type" placeholder="" :value="$vote_contest->campaign_type" data-field="campaign.campaign_type" />
+                                <x-ui.forms.input-select label="{{ __('Asset type') }}" :options="$type_asset" name="asset_type" placeholder="" :value="$vote_contest->asset_type" data-field="campaign.asset_type" />
                                 <x-ui.forms.input-number label="{{ __('Asset size (Mb)') }}"  name="asset_kb_size" placeholder="" :value="$vote_contest->asset_kb_size" data-field="campaign.asset_kb_size" />
                                 <x-ui.forms.input-number label="{{ __('Points per vote') }}"  name="points_per_vote" placeholder="" :value="$vote_contest->points_per_vote" data-field="campaign.points_per_vote" />
 
