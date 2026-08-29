@@ -223,13 +223,49 @@
         "https://assets.codepen.io/1290466/flappy-bird-background.mp3"
     );
 
+    let isMuted = false;
 
+    const muteBtn = document.createElement("button");
+
+    muteBtn.id = "muteBtn";
+    muteBtn.innerText = "🔊";
+
+    muteBtn.style.position = "absolute";
+    muteBtn.style.left = "15px";
+    muteBtn.style.top = "15px";
+    muteBtn.style.zIndex = "60";
+
+    muteBtn.style.width = "42px";
+    muteBtn.style.height = "42px";
+    muteBtn.style.borderRadius = "50%";
+    muteBtn.style.background = "rgba(0, 0, 0, 0.45)";
+    muteBtn.style.color = "#fff";
+    muteBtn.style.border = "2px solid #fff";
+    muteBtn.style.fontSize = "20px";
+    muteBtn.style.cursor = "pointer";
+    muteBtn.style.display = "flex";
+    muteBtn.style.alignItems = "center";
+    muteBtn.style.justifyContent = "center";
+    gameContainer.appendChild(muteBtn);
     /*
     |--------------------------------------------------------------------------
     | BACKGROUND
     |--------------------------------------------------------------------------
     */
+    const setMuted = function (muted) {
+        isMuted = muted;
 
+        hitSound.muted = muted;
+        pointSound.muted = muted;
+        backgroundMusic.muted = muted;
+
+        muteBtn.innerText = muted ? "🔇" : "🔊";
+    };
+    muteBtn.addEventListener("click", function (event) {
+        event.stopPropagation();
+
+        setMuted(!isMuted);
+    });
     const drawBackground = function () {
         if (!backgroundImg.complete) {
             return;
@@ -731,7 +767,7 @@
         /*
          * Déjalo comentado si no quieres música.
          */
-        // backgroundMusic.play();
+        backgroundMusic.play();
 
 
         gameLoop();
