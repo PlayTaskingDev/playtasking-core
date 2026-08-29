@@ -158,7 +158,7 @@
     // Espacio entre tubería superior e inferior.
     const pipeGap = 155;
 
-    const pipeSpeed = 1;
+    const pipeSpeed = 2;
 
     let birdImageframe = 0;
     const flapInterval = 80;
