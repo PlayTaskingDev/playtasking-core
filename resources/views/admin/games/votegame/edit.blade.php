@@ -42,7 +42,7 @@
                 />
             @endif
             <form id="form-campaign" method="POST" enctype="multipart/form-data"
-            action="{{ $vote_contest->id == null ? route('clickwingames.store', ['tenant' => tenant('id')]) : route('clickwingames.update', ['tenant' => tenant('id'), 'clickwingame' => $vote_contest]) }}">
+            action="{{ $vote_contest->id == null ? route('votegames.store', ['tenant' => tenant('id')]) : route('votegames.update', ['tenant' => tenant('id'), 'votegame' => $vote_contest]) }}">
             <div class="mb-6 flex flex-col justify-between gap-6 rounded-2xl border border-gray-200 bg-white px-6 py-5 sm:flex-row sm:items-center dark:border-gray-800 dark:bg-white/3">
                 <div class="flex flex-col gap-2.5 divide-gray-300 sm:flex-row sm:divide-x dark:divide-gray-700">
                     <div class="flex items-center gap-2 sm:pr-3">

@@ -43,7 +43,7 @@
                 />
             @endif
             <form id="form-campaign" method="POST" enctype="multipart/form-data"
-            action="{{ $smash_game->id == null ? route('catchgames.store', ['tenant' => tenant('id')]) : route('catchgames.update', ['tenant' => tenant('id'), 'catchgame' => $smash_game]) }}">
+            action="{{ $smash_game->id == null ? route('smashgames.store', ['tenant' => tenant('id')]) : route('smashgames.update', ['tenant' => tenant('id'), 'smashgame' => $smash_game]) }}">
             <div class="mb-6 flex flex-col justify-between gap-6 rounded-2xl border border-gray-200 bg-white px-6 py-5 sm:flex-row sm:items-center dark:border-gray-800 dark:bg-white/3">
                 <div class="flex flex-col gap-2.5 divide-gray-300 sm:flex-row sm:divide-x dark:divide-gray-700">
                     <div class="flex items-center gap-2 sm:pr-3">
