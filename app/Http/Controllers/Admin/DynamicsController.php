@@ -27,37 +27,6 @@ class DynamicsController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\ContentType  $contentType
-     * @return \Illuminate\Http\Response
-     */
-    public function show(ContentType $contentType)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -95,12 +64,12 @@ class DynamicsController extends Controller
         if($request->file('section_banner')){
             $data['section_banner'] = $this->uploadImage('gcs','settings',$request->file('section_banner'));
         }
+        $contentType = ContentType::findorFail($id);
 
         if (isset(($data['delete_image_holder_hidden'])) && $data['delete_image_holder_hidden'] == true) {
             $contentType->section_banner = null;
         }
         
-        $contentType = ContentType::findorFail($id);
         $contentType->fill($data);
         $contentType->save();
 
@@ -108,14 +77,4 @@ class DynamicsController extends Controller
        
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\ContentType  $contentType
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(ContentType $contentType)
-    {
-        //
-    }
 }

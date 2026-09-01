@@ -24,6 +24,7 @@
 @endif
     <div class="py-6 mx-5">
         <div class="max-w-2xl mx-auto sm:px-6 lg:px-8 bg-white p-3 rounded shadow">
+            @dd($award->model_type)
             <form method="POST" enctype="multipart/form-data" action="{{ $award->model_type != 'code' || ($award->model_type == 'code' && $award->awardable->type == 'unique_external') ? route('awards.codes.import', ['tenant' => tenant('id')]) : route('awards.create_award_codes', ['tenant' => tenant('id')]) }}">
                 @csrf
 

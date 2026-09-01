@@ -14,7 +14,6 @@
             <div class="grid grid-cols-2 gap-4 sm:grid-cols-2 md:gap-6">
                 <x-ui.statistics.card-count icon="ticket" title="Tickets Registrados" count="{{ $tickets }}" />
             </div>
-            {{-- <x-v2.ecommerce.monthly-sale /> --}}
         </div>
         <div class="col-span-12 xl:col-span-5">
 
@@ -58,13 +57,6 @@
             </div>
         </div>
 
-        {{-- <div class="col-span-12">
-            <x-v2.ecommerce.statistics-chart />
-        </div> --}}
-
-        {{-- <div class="col-span-12 xl:col-span-5">
-            <x-v2.ecommerce.customer-demographic />
-        </div> --}}
 
         <div class="col-span-12 xl:col-span-7">
         </div>

@@ -336,9 +336,22 @@ Route::group([
         // index
         Route::get('/', [App\Http\Controllers\Admin\PanelController::class, 'index'])->name('v2.index');
         Route::post('/', [App\Http\Controllers\Admin\PanelController::class, 'save'])->name('v2.save.index');
-        
+        Route::post(
+            'media/upload',
+            [
+                App\Http\Controllers\Admin\MediaUploadController::class,
+                'store'
+            ]
+        )->name('v2.media.upload');
         // dynamics
-        Route::resource('dynamics',DynamicsController::class);
+        Route::resource(
+            'dynamics',
+        DynamicsController::class
+        )->only([
+            'index',
+            'edit',
+            'update',
+        ]);
         // campaigns
         Route::resource('campaigns',CampaignsController::class);
         // Game - A Plazo
@@ -394,7 +407,14 @@ Route::group([
          // Pages
         Route::resource('pages', App\Http\Controllers\Admin\PageController::class);
         // Resources
-        Route::resource('resources', App\Http\Controllers\Admin\ResourcesController::class);
+        Route::resource(
+            'resources',
+            App\Http\Controllers\Admin\ResourcesController::class
+        )->only([
+            'index',
+            'create',
+            'store',
+        ]);
         // options
         Route::get('/options', [App\Http\Controllers\Admin\OptionsController::class, 'index'])->name('v2.options');
         Route::post('/save_options', [App\Http\Controllers\Admin\OptionsController::class, 'save'])->name('v2.save.options');
@@ -406,85 +426,7 @@ Route::group([
         Route::post('/save_integrations', [App\Http\Controllers\Admin\IntegrationsController::class, 'save'])->name('v2.save.integrations');
 
 
-        // dashboard pages
-        Route::get('/dashboard', function () {
-            return view('pages.v2.dashboard.ecommerce', ['title' => 'E-commerce Dashboard']);
-        })->name('v2.dashboard');
-
-        // calender pages
-        Route::get('/calendar', function () {
-            return view('pages.v2.calender', ['title' => 'Calendar']);
-        })->name('v2.calendar');
-
-        // profile pages
-        Route::get('/profile', function () {
-            return view('pages.v2.profile', ['title' => 'Profile']);
-        })->name('v2.profile');
-
-        // form pages
-        Route::get('/form-elements', function () {
-            return view('pages.v2.form.form-elements', ['title' => 'Form Elements']);
-        })->name('v2.form-elements');
-
-        // tables pages
-        Route::get('/basic-tables', function () {
-            return view('pages.v2.tables.basic-tables', ['title' => 'Basic Tables']);
-        })->name('v2.basic-tables');
-
-        // pages
-
-        Route::get('/blank', function () {
-            return view('pages.v2.blank', ['title' => 'Blank']);
-        })->name('v2.blank');
-
-        // error pages
-        Route::get('/error-404', function () {
-            return view('pages.v2.errors.error-404', ['title' => 'Error 404']);
-        })->name('v2.error-404');
-
-        // chart pages
-        Route::get('/line-chart', function () {
-            return view('pages.v2.chart.line-chart', ['title' => 'Line Chart']);
-        })->name('v2.line-chart');
-
-        Route::get('/bar-chart', function () {
-            return view('pages.v2.chart.bar-chart', ['title' => 'Bar Chart']);
-        })->name('v2.bar-chart');
-
-
-        // authentication pages
-        Route::get('/signin', function () {
-            return view('pages.v2.auth.signin', ['title' => 'Sign In']);
-        })->name('v2.signin');
-
-        Route::get('/signup', function () {
-            return view('pages.v2.auth.signup', ['title' => 'Sign Up']);
-        })->name('v2.signup');
-
-        // ui elements pages
-        Route::get('/alerts', function () {
-            return view('pages.v2.ui-elements.alerts', ['title' => 'Alerts']);
-        })->name('v2.alerts');
-
-        Route::get('/avatars', function () {
-            return view('pages.v2.ui-elements.avatars', ['title' => 'Avatars']);
-        })->name('v2.avatars');
-
-        Route::get('/badge', function () {
-            return view('pages.v2.ui-elements.badges', ['title' => 'Badges']);
-        })->name('v2.badges');
-
-        Route::get('/buttons', function () {
-            return view('pages.v2.ui-elements.buttons', ['title' => 'Buttons']);
-        })->name('v2.buttons');
-
-        Route::get('/image', function () {
-            return view('pages.v2.ui-elements.images', ['title' => 'Images']);
-        })->name('v2.images');
-
-        Route::get('/videos', function () {
-            return view('pages.v2.ui-elements.videos', ['title' => 'Videos']);
-        })->name('v2.videos');
+       
 
     });
 
