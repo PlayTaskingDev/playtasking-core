@@ -12,6 +12,7 @@ use App\Http\Requests\Panel\SaveFlappyGameRequest;
 use App\Services\Admin\AwardService;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use App\Services\Admin\AwardCodeService;
 
 class FlappyGameController extends Controller
 {
@@ -52,33 +53,44 @@ class FlappyGameController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(
-    SaveFlappyGameRequest $request,
-    AwardService $awardService
+        SaveFlappyGameRequest $request,
+        AwardService $awardService,
+        AwardCodeService $awardCodeService
     ) {
-        $data = $this->prepareGameData(
-            $request
-        );
+        $data = $this->prepareGameData($request);
 
-        $awardData = $this->getAwardData(
-            $request
-        );
+        $awardData = $this->getAwardData($request);
 
         $flappyGame = DB::transaction(
             function () use (
+                $request,
                 $data,
                 $awardData,
-                $awardService
+                $awardService,
+                $awardCodeService
             ) {
 
-                $flappyGame =
-                    FlappyGame::create($data);
+                $flappyGame = FlappyGame::create($data);
 
                 if ($awardData) {
 
-                    $awardService->saveFor(
+                    $award = $awardService->saveFor(
                         $flappyGame,
                         $awardData
                     );
+
+                    if (
+                        $request->boolean(
+                            'generate_award_codes'
+                        )
+                    ) {
+                        $awardCodeService->generate(
+                            $award,
+                            (int) $request->input(
+                                'award_codes_quantity'
+                            )
+                        );
+                    }
                 }
 
                 return $flappyGame;
@@ -86,13 +98,10 @@ class FlappyGameController extends Controller
         );
 
         return redirect()
-            ->route(
-                'flappygames.edit',
-                [
-                    'tenant' => tenant('id'),
-                    'flappygame' => $flappyGame,
-                ]
-            )
+            ->route('flappygames.edit', [
+                'tenant' => tenant('id'),
+                'flappygame' => $flappyGame,
+            ])
             ->with(
                 'status',
                 trans('Flappy Game saved successful')
@@ -112,15 +121,25 @@ class FlappyGameController extends Controller
      */
     public function edit($id)
     {
-        $flappyGame = FlappyGame::findOrFail($id);
+        $flappyGame = FlappyGame::query()
+        ->with([
+            'campaign',
+            'award' => function ($query) {
+                $query->withCount([
+                    'codes_available',
+                    'codes_delivered',
+                ]);
+            },
+        ])
+        ->findOrFail($id);
         $campaigns = Campaign::all();
         $content_type = ContentType::where('system_name','games')->first();
         $time_slots = get_time_slots();
         return view('admin.games.flappygame.edit', [
-            'flappyGame'   => $flappyGame->load('award','campaign'),
-            'campaigns'    => $campaigns,
+            'flappyGame' => $flappyGame,
+            'campaigns' => $campaigns,
             'content_type' => $content_type,
-            'time_slots'   => $time_slots
+            'time_slots' => $time_slots,
         ]);
     }
 
@@ -130,7 +149,8 @@ class FlappyGameController extends Controller
     public function update(
         $id,
         SaveFlappyGameRequest $request,
-        AwardService $awardService
+        AwardService $awardService,
+        AwardCodeService $awardCodeService
     ) {
         $flappyGame =
             FlappyGame::findOrFail($id);
@@ -153,22 +173,35 @@ class FlappyGameController extends Controller
 
         DB::transaction(
             function () use (
+                $request,
                 $flappyGame,
                 $data,
                 $awardData,
-                $awardService
+                $awardService,
+                $awardCodeService
             ) {
 
-                $flappyGame->update(
-                    $data
-                );
+                $flappyGame->update($data);
 
                 if ($awardData) {
 
-                    $awardService->saveFor(
+                    $award = $awardService->saveFor(
                         $flappyGame,
                         $awardData
                     );
+
+                    if (
+                        $request->boolean(
+                            'generate_award_codes'
+                        )
+                    ) {
+                        $awardCodeService->generate(
+                            $award,
+                            (int) $request->input(
+                                'award_codes_quantity'
+                            )
+                        );
+                    }
                 }
             }
         );
@@ -224,6 +257,8 @@ class FlappyGameController extends Controller
             [
                 'award_title',
                 'award_content',
+                'generate_award_codes',
+                'award_codes_quantity',
                 'delete_image_holder_hidden',
             ]
         );
