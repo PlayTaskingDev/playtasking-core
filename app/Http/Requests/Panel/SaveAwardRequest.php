@@ -6,27 +6,31 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class SaveAwardRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
     public function authorize()
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, mixed>
-     */
     public function rules()
     {
         return [
-            'title'             => ['required'],
-            'awardable_id'      => ['required','exists:' . $this->awardable_type . ',id'],
-            'content'           => ['required']
+            'title' => [
+                'required',
+            ],
+
+            'content' => [
+                'required',
+            ],
+
+            'awardable_id' => [
+                'required',
+                'uuid',
+            ],
+
+            'awardable_type' => [
+                'required',
+                'string',
+            ],
         ];
     }
 }
