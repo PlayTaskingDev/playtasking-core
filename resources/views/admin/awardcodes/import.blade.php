@@ -27,6 +27,139 @@
 @section('content')
     <div class="py-6 mx-5">
         <div class="max-w-2xl mx-auto sm:px-6 lg:px-8 bg-white p-3 rounded shadow">
+            {{-- ========================================= --}}
+            {{-- GENERAR CÓDIGOS AUTOMÁTICAMENTE --}}
+            {{-- ========================================= --}}
+
+            <div
+                class="mb-6 rounded-xl border border-gray-200 bg-white p-6
+                    dark:border-gray-800 dark:bg-gray-900"
+            >
+                <div class="mb-5">
+                    <h2
+                        class="text-lg font-semibold text-gray-800
+                            dark:text-white"
+                    >
+                        {{ __('Generar códigos automáticamente') }}
+                    </h2>
+
+                    <p
+                        class="mt-1 text-sm text-gray-500
+                            dark:text-gray-400"
+                    >
+                        {{
+                            __('Genera códigos únicos aleatorios para este premio.')
+                        }}
+                    </p>
+                </div>
+
+                <form
+                    method="POST"
+                    action="{{
+                        route(
+                            'awards.codes.generate',
+                            [
+                                'tenant' => tenant('id'),
+                                'award' => $award
+                            ]
+                        )
+                    }}"
+                >
+                    @csrf
+
+                    <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+
+                        {{-- Cantidad --}}
+                        <div>
+                            <x-input-label
+                                for="quantity"
+                                :value="__('Cantidad')"
+                            />
+
+                            <x-text-input
+                                id="quantity"
+                                class="block mt-1 w-full"
+                                type="number"
+                                name="quantity"
+                                min="1"
+                                max="20000"
+                                :value="old('quantity', 2000)"
+                                required
+                            />
+
+                            <x-input-error
+                                :messages="$errors->get('quantity')"
+                                class="mt-2"
+                            />
+                        </div>
+
+                        {{-- Producto --}}
+                        <div>
+                            <x-input-label
+                                for="product"
+                                :value="__('Producto')"
+                            />
+
+                            <x-text-input
+                                id="product"
+                                class="block mt-1 w-full"
+                                type="text"
+                                name="product"
+                                :value="old('product')"
+                            />
+
+                            <x-input-error
+                                :messages="$errors->get('product')"
+                                class="mt-2"
+                            />
+                        </div>
+
+                        {{-- Vigencia --}}
+                        <div>
+                            <x-input-label
+                                for="validity"
+                                :value="__('Vigencia')"
+                            />
+
+                            <x-text-input
+                                id="validity"
+                                class="block mt-1 w-full"
+                                type="text"
+                                name="validity"
+                                :value="old('validity')"
+                            />
+
+                            <x-input-error
+                                :messages="$errors->get('validity')"
+                                class="mt-2"
+                            />
+                        </div>
+
+                    </div>
+
+                    <div class="mt-6">
+                        <button
+                            id="generate-codes-btn"
+                            type="submit"
+                            class="
+                                inline-flex items-center
+                                rounded-lg
+                                bg-blue-600
+                                px-5 py-2.5
+                                text-sm font-medium text-white
+                                hover:bg-blue-700
+                                focus:outline-none
+                                focus:ring-4
+                                focus:ring-blue-300
+                                disabled:cursor-not-allowed
+                                disabled:opacity-60
+                            "
+                        >
+                            {{ __('Generar códigos') }}
+                        </button>
+                    </div>
+                </form>
+            </div>
             <form method="POST" enctype="multipart/form-data" action="{{ $award->model_type != 'code' || ($award->model_type == 'code' && $award->awardable->type == 'unique_external') ? route('awards.codes.import', ['tenant' => tenant('id')]) : route('awards.create_award_codes', ['tenant' => tenant('id')]) }}">
                 @csrf
 
@@ -99,6 +232,44 @@
                         button.className = 'cursor-not-allowed bg-blue-400';
                         button.textContent = "{{ __('Loading codes...') }}";
                     });
+                }
+                const generateForm =
+                document.querySelector(
+                    'form[action*="/codes/generate"]'
+                );
+                if (generateForm) {
+                    generateForm.addEventListener(
+                        'submit',
+                        function () {
+                            const button =
+                                document.getElementById(
+                                    'generate-codes-btn'
+                                );
+                            if (!button) {
+                                return;
+                            }
+                            button.disabled = true;
+                            button.textContent =
+                                'Generando códigos...';
+                        }
+                    );
+                }
+                const importButton =
+                    document.getElementById(
+                        'import-codes-btn'
+                    );
+                if (importButton) {
+                    importButton
+                        .closest('form')
+                        .addEventListener(
+                            'submit',
+                            function () {
+                                importButton.disabled =
+                                    true;
+                                importButton.textContent =
+                                    'Importando...';
+                            }
+                        );
                 }
             });
         </script>

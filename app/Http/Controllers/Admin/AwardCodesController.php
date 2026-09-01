@@ -10,13 +10,14 @@ use App\Models\Award;
 use App\Models\AwardCode;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use App\Http\Requests\Panel\GenerateRandomAwardCodesRequest;
+use App\Services\Admin\AwardCodeService;
 
 class AwardCodesController extends Controller
 {
     public function index()
     {
         $awards = Award::with(['awardable'])->withCount(['codes_available','codes_delivered'])->orderBy('created_at','desc')->get();
-
         return response()->view('admin.awardcodes.list',[
             'title'         => 'Panel | ' . trans('Award Codes'),
             'description'   => 'Admin Panel',
@@ -49,13 +50,37 @@ class AwardCodesController extends Controller
         );
     }
 
+    public function generateRandom(
+        Award $award,
+        GenerateRandomAwardCodesRequest $request,
+        AwardCodeService $awardCodeService
+    ) {
+        $data = $request->validated();
 
+        $generated = $awardCodeService->generate(
+            $award,
+            $data['quantity'],
+            $data['product'] ?? null,
+            $data['validity'] ?? null
+        );
+
+        return redirect()
+            ->route(
+                'awardcodes.show',
+                [
+                    'tenant' => tenant('id'),
+                    'awardcode' => $award,
+                ]
+            )
+            ->with(
+                'status',
+                "{$generated} códigos generados correctamente."
+            );
+    }
     public function import(ImportAwardCodeRequest $request)
     {
         ini_set('upload_max_filesize', '8M');
         ini_set('post_max_size', '8M');
-        ini_set('memory_limit', '-1');
-        ini_set('max_execution_time', '2400');
 
         try {
             $import = new AwardCodeImport($request->award_id);
@@ -77,40 +102,52 @@ class AwardCodesController extends Controller
         }
     }
 
-    public function create_award_codes(GenerateAwardCodesRequest $request)
-    {
+    public function create_award_codes(
+        GenerateAwardCodesRequest $request,
+        AwardCodeService $awardCodeService
+    ) {
         $data = $request->validated();
 
-        if ($data['coupon_type'] == 'multiple') {
+        $award = Award::findOrFail(
+            $data['award_id']
+        );
+
+        /*
+        * Código reutilizable existente.
+        */
+        if ($data['coupon_type'] === 'multiple') {
+
             AwardCode::create([
-                'id'        => Str::uuid(),
-                'code'      => $data['code'],
-                'award_id'  => $data['award_id'],
-                'product'   => $data['product'] ?? null,
-                'validity'  => $data['validity'] ?? null,
+                'code' => $data['code'],
+                'award_id' => $award->id,
+                'product' => $data['product'] ?? null,
+                'validity' => $data['validity'] ?? null,
             ]);
+
         } else {
-            $this->generate_codes($data['award_id'],$data['quantity'],$data['product'] ?? null,$data['validity'] ?? null);
+
+            $awardCodeService->generate(
+                $award,
+                $data['quantity'],
+                $data['product'] ?? null,
+                $data['validity'] ?? null
+            );
         }
 
-        return redirect(route('awardcodes.index', ['tenant' => tenant('id')]))->with('status', trans('Codes added successful'));
+        return redirect()
+            ->route(
+                'awardcodes.index',
+                [
+                    'tenant' => tenant('id')
+                ]
+            )
+            ->with(
+                'status',
+                trans('Codes added successful')
+            );
     }
 
-    private function generate_codes($award_id,$quantity,$product = null,$validity = null)
-    {
-        ini_set('memory_limit', '-1');
-        ini_set('max_execution_time', '2400');
-        
-        for ($i=0; $i < $quantity; $i++) { 
-            AwardCode::create([
-                'id'        => Str::uuid(),
-                'code'      => Str::upper(Str::random(16)),
-                'award_id'  => $award_id,
-                'product'   => $product,
-                'validity'  => $validity,
-            ]);
-        }
-    }
+
 
     public function destroy(Award $award)
     {

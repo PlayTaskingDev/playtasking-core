@@ -397,6 +397,13 @@ Route::group([
         Route::post('create-award-codes', [App\Http\Controllers\Admin\AwardCodesController::class, 'create_award_codes'])->name('awards.create_award_codes');
         Route::get('get-codes-sample', [App\Http\Controllers\Admin\AwardCodesController::class, 'download_sample'])->name('awards.codes.sample');
         Route::post('import-codes', [App\Http\Controllers\Admin\AwardCodesController::class, 'import'])->name('awards.codes.import');
+        Route::post(
+            'awards/{award}/codes/generate',
+            [
+                App\Http\Controllers\Admin\AwardCodesController::class,
+                'generateRandom'
+            ]
+        )->name('awards.codes.generate');
         // Tickets
         //Route::resource('tickets', App\Http\Controllers\Admin\TicketController::class);
             // Tickets Questions
@@ -415,6 +422,7 @@ Route::group([
             'create',
             'store',
         ]);
+        
         // options
         Route::get('/options', [App\Http\Controllers\Admin\OptionsController::class, 'index'])->name('v2.options');
         Route::post('/save_options', [App\Http\Controllers\Admin\OptionsController::class, 'save'])->name('v2.save.options');
