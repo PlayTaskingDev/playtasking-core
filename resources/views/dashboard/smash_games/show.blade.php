@@ -248,96 +248,185 @@
 
    <script>
     const settingspzl = JSON.parse(document.getElementById('settingspzl').content)
+
     const maxSeconds = settingspzl.a;
     const puzzleId = settingspzl.b;
     const puzzleImageSrc = settingspzl.c;
     const nbPieces = settingspzl.d;
 
-    const GAME_DURATION = settingspzl.b
-    
+    const GAME_DURATION = settingspzl.b;
+
     const startButton = document.getElementById('startButton');
     const containerGame = document.getElementById('containerGame');
     const scoreEl = document.getElementById('score');
     const timeEl = document.getElementById('time');
     const goalEl = document.getElementById('scoreToWin');
     const messageEl = document.getElementById('message');
-        messageEl.style.display = 'none';
+    const elements_wrapper = document.querySelector(".element--wrapper");
+
+    messageEl.style.display = 'none';
 
     goalEl.textContent = settingspzl.c;
     timeEl.textContent = settingspzl.b;
-    
+
     let gameOver = false;
+    let gameStarted = false;
     let timeLeft = GAME_DURATION;
 
-    let elements = [],
-            count = 4,
-            score = 0;
-    const elements_wrapper = document.querySelector(".element--wrapper")
+    let elements = [];
+    let count = 4;
+    let score = 0;
+
+    let timer = null;
+
+    /*
+    |--------------------------------------------------------------------------
+    | Particle
+    |--------------------------------------------------------------------------
+    */
+
     class Particle {
         constructor(x, y, size, hue) {
             this.x = x;
             this.y = y;
             this.size = size;
             this.hue = hue;
+
             this.el = '';
-            this.dx = (.5 - Math.random()) * .15
-            this.dy = (-1 - Math.random()) * .1
-            this.alpha = 1
-            this.saturation = rand(50, 100)
-            this.lightness = rand(40, 60)
-            this.draw()
+
+            this.dx = (.5 - Math.random()) * .15;
+            this.dy = (-1 - Math.random()) * .1;
+
+            this.alpha = 1;
+
+            this.saturation = rand(50, 100);
+            this.lightness = rand(40, 60);
+
+            this.draw();
         }
+
         draw() {
-            this.el = `${(this.size / 2) + this.x * (this.size)}px ${(this.size / 2) + this.y * (this.size)}px 0px ${this.size / 2}px hsla(${this.hue} ${this.saturation}% ${this.lightness}% / ${this.alpha})`
+            this.el = `
+                ${(this.size / 2) + this.x * this.size}px
+                ${(this.size / 2) + this.y * this.size}px
+                0px
+                ${this.size / 2}px
+                hsla(
+                    ${this.hue}
+                    ${this.saturation}%
+                    ${this.lightness}%
+                    /
+                    ${this.alpha}
+                )
+            `;
         }
+
         animate() {
-            this.y += this.dy
-            this.x += this.dx
-            this.size += .01
-            this.alpha -= .03
-            this.draw()
+            this.y += this.dy;
+            this.x += this.dx;
+
+            this.size += .01;
+            this.alpha -= .03;
+
+            this.draw();
         }
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Effect
+    |--------------------------------------------------------------------------
+    */
+
     class Effect {
         constructor(particle_size, particle_hue, parent) {
-            this.particle_size = particle_size
-            this.particle_hue = particle_hue
-            this.parent = parent
-            this.particles = []
-            this.particlesStr = ''
-            this.req = null
-            this.draw()
-            this.animate()
+            this.particle_size = particle_size;
+            this.particle_hue = particle_hue;
+            this.parent = parent;
+
+            this.particles = [];
+            this.req = null;
+
+            this.draw();
+            this.animate();
         }
+
         draw() {
-            const rect = this.parent.getBoundingClientRect()
-            for (let x = 0; x < rect.height / this.particle_size; x++) {
-                for (let y = 0; y < rect.width / this.particle_size; y++) {
+            const rect = this.parent.getBoundingClientRect();
+
+            for (
+                let x = 0;
+                x < rect.height / this.particle_size;
+                x++
+            ) {
+                for (
+                    let y = 0;
+                    y < rect.width / this.particle_size;
+                    y++
+                ) {
                     this.particles.push(
-                        new Particle(x, y, this.particle_size, this.particle_hue)
-                    )
+                        new Particle(
+                            x,
+                            y,
+                            this.particle_size,
+                            this.particle_hue
+                        )
+                    );
                 }
             }
-            this.parent.style.setProperty("--particles", this.particles.map(p => p.el).join(","))
+
+            this.parent.style.setProperty(
+                "--particles",
+                this.particles.map(p => p.el).join(",")
+            );
         }
+
         update() {
             if (this.particles.length <= 0) {
-                cancelAnimationFrame(this.req)
-                this.parent.remove()
-            } else {
-                this.parent.style.setProperty("--particles", this.particles.map(p => p.el).join(","))
-                this.parent.textContent = ''
+                cancelAnimationFrame(this.req);
+
+                if (this.parent?.isConnected) {
+                    this.parent.remove();
+                }
+
+                return;
             }
+
+            this.parent.style.setProperty(
+                "--particles",
+                this.particles.map(p => p.el).join(",")
+            );
+
+            this.parent.textContent = '';
         }
+
         animate() {
-            this.req = requestAnimationFrame(() => this.animate())
-            this.particles.forEach((p, i) => {
-                if (p.alpha <= 0) this.particles.splice(i, 1)
-                else p.animate()
-            })
-            this.update()
+            this.req = requestAnimationFrame(() => this.animate());
+
+            /*
+             * filter evita hacer splice() mientras
+             * estamos recorriendo el mismo array.
+             */
+            this.particles = this.particles.filter(particle => {
+                if (particle.alpha <= 0) {
+                    return false;
+                }
+
+                particle.animate();
+
+                return true;
+            });
+
+            this.update();
         }
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Element
+    |--------------------------------------------------------------------------
+    */
+
     class Element {
         constructor(i, x, y, width, height, color, total, duration) {
             Object.assign(this, {
@@ -349,176 +438,520 @@
                 color,
                 total,
                 duration
-            })
-            this.init()
-            this.addEventListeners()
-            this.animate()
+            });
+
+            this.destroyed = false;
+            this.clicked = false;
+
+            this.init();
+            this.addEventListeners();
         }
+
         init() {
-            this.ELEMENT = document.createElement("div")
-            this.ELEMENT.className = "element"
-            this.ELEMENT.id = this.i
-            //this.ELEMENT.textContent = getRandomIcon()
-            this.ELEMENT.innerHTML = '<img src="' + getRandomImage() + '" style="width:' + this.width + 'px;" alt="element" />'
-            this.ELEMENT.style = `
+            this.ELEMENT = document.createElement("div");
+
+            this.ELEMENT.className = "element";
+
+            /*
+             * No dependemos del índice del array como ID.
+             * Solo es una referencia del objeto.
+             */
+            this.ELEMENT.dataset.elementId = this.i;
+
+            const image = document.createElement('img');
+
+            image.src = getRandomImage();
+            image.alt = 'element';
+
+            /*
+             * IMPORTANTE:
+             * evita el drag & drop nativo de imágenes en desktop.
+             */
+            image.draggable = false;
+
+            image.style.width = `${this.width}px`;
+            image.style.height = `${this.height}px`;
+            image.style.objectFit = 'contain';
+            image.style.pointerEvents = 'none';
+            image.style.userSelect = 'none';
+
+            /*
+             * También prevenimos cualquier intento de drag
+             * directamente sobre la imagen.
+             */
+            image.addEventListener('dragstart', event => {
+                event.preventDefault();
+            });
+
+            this.ELEMENT.appendChild(image);
+
+            this.ELEMENT.style.cssText = `
                 position: absolute;
                 top: ${this.y}px;
                 left: ${this.x}px;
+
                 width: ${this.width}px;
                 height: ${this.height}px;
-                font-size: ${this.width / 2}px;
+
                 cursor: pointer;
+
                 display: flex;
                 align-items: center;
                 justify-content: center;
+
                 user-select: none;
+                -webkit-user-select: none;
+                -webkit-user-drag: none;
+
+                touch-action: manipulation;
+
                 transform: translateY(${-this.height}px);
-                animation: move ${this.duration}ms linear infinite forwards;
-                animation-delay: ${((this.duration / this.total) * ((this.total - this.i) + 1)) * 1}ms;
-                `
+
+                animation:
+                    move
+                    ${this.duration}ms
+                    linear
+                    infinite
+                    forwards;
+
+                animation-delay:
+                    ${(
+                        (this.duration / this.total)
+                        * ((this.total - this.i) + 1)
+                    )}ms;
+            `;
         }
+
         addEventListeners() {
-            this.ELEMENT.onanimationiteration = () => {
-                this.ELEMENT.style.left = rand(0, (containerGame.offsetWidth - this.width)) + "px"
-                endGame(false)
-            }
-            let click = false;
-            this.ELEMENT.onclick = () => {
-                if (gameOver) return;
-                if(!click) {
-                    click = true;
-                        if(this.remove()){
-                    elements.forEach((p, i) => {
-                        if (this.i === i) {
-                            elements.splice(this.i, 1)
-                            i--
-                            elements = [...elements, new Element(
-                                this.i,
-                                rand(0, containerGame.offsetWidth - 100),
-                                0,
-                                80,
-                                80,
-                                "#E06015",
-                                count,
-                                3000
-                            )]
-                            elements_wrapper.append(elements[elements.length - 1].ELEMENT)
-                        }
-                    })
-                }
-                setTimeout(() => click = false, 700)
-                }
-            }
-        }
-        remove() {
-            let scoreToWin = parseInt(settingspzl.c) || 200
-            new Effect(35, 22, this.ELEMENT)
-            score += settingspzl.a
-            document.querySelector("#score").textContent = score < 100 ? `0${score}` : `0${score}`;
-            if(score == scoreToWin) {
-                endGame(true)
-                return false;
-            }
-            return true;
-        }
-        animate() {}
-    }
-    
-    function startGame(){
-        const generate_elements = (count) => {
-            const particles = []
-            elements_wrapper.innerHTML = ''
-            for (let i = 0; i < count; i++) {
-                elements.push(new Element(
-                    i,
-                    rand(0, containerGame.offsetWidth - 100),
-                    0,
-                    80,
-                    80,
-                    "#E06015",
-                    count,
-                    3000
-                ))
-            }
-            elements.forEach(p => elements_wrapper.append(p.ELEMENT))
-        }
-        
-        startTimer();
-        generate_elements(count)
-    }
-    function lostGameOver() {
-        console.log("lost")
-        window.location.reload();
-    }
-    function endGame(win) {
 
-        gameOver = true;
-        if (win) {
-            messageEl.style.display = 'block';
-            messageEl.textContent =  settingspzl.e+" 🎉";
-            containerGame.remove();
-            axios.post(settingspzl.f, {data: settingspzl.g,slug:settingspzl.j}, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            })
+            /*
+             * Si el objeto llegó al final de la pantalla:
+             *
+             * NO terminamos todo el juego.
+             *
+             * Simplemente aparece nuevamente arriba
+             * en otra posición.
+             */
+            this.ELEMENT.addEventListener(
+                'animationiteration',
+                () => {
+                    if (gameOver || this.destroyed) {
+                        return;
+                    }
 
-            .then(function (response)
-            {
-                window.location = settingspzl.h;
-            })
-            .catch(function (error)
-            {
-                //console.log(error);
-            });
-        } else {
-            containerGame.remove();
-            document.getElementById('try-again').classList.remove('hidden');
+                    this.moveToRandomPosition();
+                }
+            );
+
+            /*
+             * pointerdown funciona tanto para:
+             *
+             * mouse
+             * touch
+             * stylus
+             *
+             * y además evita muchos problemas derivados
+             * de usar onclick.
+             */
+            this.ELEMENT.addEventListener(
+                'pointerdown',
+                event => {
+
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    if (gameOver) {
+                        return;
+                    }
+
+                    if (this.destroyed) {
+                        return;
+                    }
+
+                    if (this.clicked) {
+                        return;
+                    }
+
+                    this.clicked = true;
+
+                    this.smash();
+                },
+                {
+                    passive: false
+                }
+            );
+
+            /*
+             * Protección adicional contra drag & drop
+             * del navegador.
+             */
+            this.ELEMENT.addEventListener(
+                'dragstart',
+                event => event.preventDefault()
+            );
+
+            this.ELEMENT.addEventListener(
+                'mousedown',
+                event => event.preventDefault()
+            );
         }
 
-    }
-    function restartGame() {
-        elements = []
-        count = 4
-        generate_elements(count)
-        score = 0
-        document.querySelector("#score").textContent = score < 100 ? `00${score}` : `0${score}`;
-        document.querySelector(".wrapper").classList.remove("game-over")
-        document.querySelector(".lost").classList.remove("show")
-    }
-     function startTimer() {
-        const timer = setInterval(() => {
-            if (gameOver) {
-                clearInterval(timer);
+        moveToRandomPosition() {
+            const maxLeft = Math.max(
+                0,
+                containerGame.offsetWidth - this.width
+            );
+
+            this.ELEMENT.style.left =
+                rand(0, maxLeft) + "px";
+        }
+
+        smash() {
+            if (this.destroyed || gameOver) {
                 return;
             }
-            timeLeft--;
-            timeEl.textContent = timeLeft;
-            if (timeLeft <= 0) {
+
+            this.destroyed = true;
+
+            /*
+             * Detenemos inmediatamente la animación
+             * para evitar eventos inesperados.
+             */
+            this.ELEMENT.style.animationPlayState = 'paused';
+
+            /*
+             * Efecto visual.
+             */
+            new Effect(
+                35,
+                22,
+                this.ELEMENT
+            );
+
+            /*
+             * Sumamos puntos.
+             */
+            score += Number(settingspzl.a);
+
+            updateScore();
+
+            /*
+             * Utilizamos >= y no ==
+             * para evitar que un incremento que se pase
+             * del objetivo impida ganar.
+             */
+            const scoreToWin =
+                parseInt(settingspzl.c) || 200;
+
+            if (score >= scoreToWin) {
+                endGame(true);
+                return;
+            }
+
+            /*
+             * Eliminamos la referencia del array
+             * sin depender del índice original.
+             */
+            elements = elements.filter(
+                element => element !== this
+            );
+
+            /*
+             * Creamos uno nuevo para mantener
+             * siempre la misma cantidad de elementos.
+             */
+            spawnElement();
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Game
+    |--------------------------------------------------------------------------
+    */
+
+    function startGame() {
+        if (gameStarted) {
+            return;
+        }
+
+        gameStarted = true;
+        gameOver = false;
+
+        score = 0;
+        timeLeft = GAME_DURATION;
+
+        elements = [];
+
+        updateScore();
+
+        timeEl.textContent = timeLeft;
+
+        elements_wrapper.innerHTML = '';
+
+        for (let i = 0; i < count; i++) {
+            spawnElement(i);
+        }
+
+        startTimer();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Spawn element
+    |--------------------------------------------------------------------------
+    */
+
+    function spawnElement(id = null) {
+        if (gameOver) {
+            return;
+        }
+
+        /*
+         * ID único para evitar depender de la posición
+         * dentro del array.
+         */
+        const uniqueId =
+            id ??
+            `${Date.now()}-${Math.random()}`;
+
+        const width = 80;
+        const height = 80;
+
+        const maxLeft = Math.max(
+            0,
+            containerGame.offsetWidth - width
+        );
+
+        const element = new Element(
+            uniqueId,
+            rand(0, maxLeft),
+            0,
+            width,
+            height,
+            "#E06015",
+            count,
+            3000
+        );
+
+        elements.push(element);
+
+        elements_wrapper.append(
+            element.ELEMENT
+        );
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Score
+    |--------------------------------------------------------------------------
+    */
+
+    function updateScore() {
+        scoreEl.textContent = score;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | End game
+    |--------------------------------------------------------------------------
+    */
+
+    function endGame(win) {
+
+        /*
+         * Muy importante:
+         *
+         * timer + animaciones + clicks podrían
+         * intentar terminar el juego simultáneamente.
+         */
+        if (gameOver) {
+            return;
+        }
+
+        gameOver = true;
+
+        if (timer) {
+            clearInterval(timer);
+            timer = null;
+        }
+
+        /*
+         * Congelamos todos los objetos.
+         */
+        elements.forEach(element => {
+            if (element.ELEMENT) {
+                element.ELEMENT.style.animationPlayState =
+                    'paused';
+            }
+        });
+
+        if (win) {
+
+            messageEl.style.display = 'block';
+
+            messageEl.textContent =
+                settingspzl.e + " 🎉";
+
+            containerGame.remove();
+
+            axios.post(
+                settingspzl.f,
+                {
+                    data: settingspzl.g,
+                    slug: settingspzl.j
+                },
+                {
+                    headers: {
+                        'Content-Type':
+                            'multipart/form-data'
+                    }
+                }
+            )
+            .then(function (response) {
+
+                window.location =
+                    settingspzl.h;
+
+            })
+            .catch(function (error) {
+
+                console.error(
+                    'Error completing Smash Game:',
+                    error
+                );
+
+            });
+
+        } else {
+
+            containerGame.remove();
+
+            document
+                .getElementById('try-again')
+                .classList.remove('hidden');
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Timer
+    |--------------------------------------------------------------------------
+    */
+
+    function startTimer() {
+
+        if (timer) {
+            clearInterval(timer);
+        }
+
+        timer = setInterval(() => {
+
+            if (gameOver) {
+
                 clearInterval(timer);
+
+                timer = null;
+
+                return;
+            }
+
+            timeLeft--;
+
+            timeEl.textContent = timeLeft;
+
+            if (timeLeft <= 0) {
+
+                clearInterval(timer);
+
+                timer = null;
+
                 endGame(false);
             }
+
         }, 1000);
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Random image
+    |--------------------------------------------------------------------------
+    */
+
     function getRandomImage() {
+
         const images = settingspzl.d;
-        const randomIndex = Math.floor(Math.random() * images.length);
+
+        if (!Array.isArray(images) || images.length === 0) {
+            return '';
+        }
+
+        const randomIndex =
+            Math.floor(
+                Math.random() * images.length
+            );
+
         return images[randomIndex];
     }
-     startButton.addEventListener('click', () => {
-        startButton.style.display = 'none';
-        window.scrollTo({
-            top: document.body.scrollHeight,
-            behavior: 'smooth'
-        });
 
-        axios.post(settingspzl.i)
-        .then(({ data }) => {
-            console.log('Game started at', data.game_start);
-        });
+    /*
+    |--------------------------------------------------------------------------
+    | Start button
+    |--------------------------------------------------------------------------
+    */
 
-        startGame();
-    });
-	const rand = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
-   </script>
+    startButton.addEventListener(
+        'click',
+        () => {
+
+            if (gameStarted) {
+                return;
+            }
+
+            startButton.style.display = 'none';
+
+            window.scrollTo({
+                top: document.body.scrollHeight,
+                behavior: 'smooth'
+            });
+
+            /*
+             * Informamos al backend que comenzó
+             * el juego.
+             *
+             * No esperamos el POST para comenzar
+             * para que la experiencia sea inmediata.
+             */
+            axios
+                .post(settingspzl.i)
+                .then(({ data }) => {
+                    console.log(
+                        'Game started at',
+                        data.game_start
+                    );
+                })
+                .catch(error => {
+                    console.error(
+                        'Error starting Smash Game:',
+                        error
+                    );
+                });
+
+            startGame();
+        }
+    );
+
+    /*
+    |--------------------------------------------------------------------------
+    | Helpers
+    |--------------------------------------------------------------------------
+    */
+
+    const rand = (min, max) =>
+        Math.floor(
+            Math.random()
+            * (max - min + 1)
+            + min
+        );
+</script>
 </x-app-layout>

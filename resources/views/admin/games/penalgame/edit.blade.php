@@ -1,7 +1,7 @@
 @extends('layouts.v2.app')
 
 <x-slot name="title">
-    {{ !is_null($penalGame->title) ? $penalGame->title : trans('Create') . '' . trans('Flappy Game') }}
+    {{ !is_null($penalGame->title) ? $penalGame->title : trans('Create') . '' . trans('Penales Game') }}
 </x-slot>
 <x-slot name="description">
     {{ $penalGame->id == null ? '' : $penalGame->description }}
@@ -15,7 +15,7 @@
     <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
         <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
             <h2 class="text-xl font-semibold text-gray-800 dark:text-white/90">
-            {{ $penalGame->id == null ? trans('Create') : trans('Edit') }} {{ __('Flappy Game') }}
+            {{ $penalGame->id == null ? trans('Create') : trans('Edit') }} {{ __('Penales Game') }}
             </h2>
             <nav>
             <ol class="flex items-center gap-1.5">
@@ -28,7 +28,7 @@
                 </a>
                 </li>
                 <li class="text-sm text-gray-800 dark:text-white/90">
-                {{ !is_null($penalGame->title) ? $penalGame->title : trans('Create') . '' . trans('Flappy Game') }}
+                {{ !is_null($penalGame->title) ? $penalGame->title : trans('Create') . '' . trans('Penales Game') }}
                 </li>
             </ol>
             </nav>
@@ -85,13 +85,63 @@
                                 <x-ui.forms.input-file label="{{ __('Top Banner') }}" dummy_img="/storage/dummy_assets/600x200.png" name="game_banner" placeholder="" :value="$penalGame->game_banner" data-field="campaign.game_banner" />
                                 <x-ui.forms.input-text label="{{ __('Banner URL (Image)') }}" name="game_banner_url" placeholder="" :value="$penalGame->game_banner_url" data-field="campaign.game_banner_url" />
                                 <x-ui.forms.input-text label="{{ __('Video') }}" name="game_banner_video" placeholder="" :value="$penalGame->game_banner_video" data-field="campaign.game_banner_video" />
-                                <h2 class="mt-6 text-lg col-span-2 font-semibold text-gray-800 dark:text-white/90">Game Settings</h2>
-                                <x-ui.forms.input-text label="{{ __('Slug') }}" name="slug" placeholder="" :value="$penalGame->slug" data-field="campaign.slug" />
-                                <x-ui.forms.input-number label="{{ __('Seconds') }}" name="seconds" placeholder="" :value="$penalGame->seconds" data-field="campaign.seconds" />
-                                <x-ui.forms.input-number label="{{ __('Max Points') }}" name="max_points" placeholder="" :value="$penalGame->max_points" data-field="campaign.max_points" />
-                                <x-ui.forms.input-number label="{{ __('Points Per Pipe') }}" name="points_per_pipe" placeholder="" :value="$penalGame->points_per_pipe" data-field="campaign.points_per_pipe" />
-                                <x-ui.forms.input-file label="{{ __('Failed Image') }}" dummy_img="/storage/dummy_assets/800x1180.png" name="failed_image" placeholder="" :value="$penalGame->failed_image" data-field="campaign.failed_image" />
-                                <x-ui.forms.input-file label="{{ __('Flappy Image') }}" dummy_img="/storage/dummy_assets/800x1180.png" name="flappyGame_image" placeholder="" :value="$penalGame->flappyGame_image" data-field="campaign.flappyGame_image" />
+                                <h2 class="mt-6 text-lg col-span-2 font-semibold text-gray-800 dark:text-white/90">
+                                    Game Settings
+                                </h2>
+
+                                <x-ui.forms.input-text
+                                    label="{{ __('Slug') }}"
+                                    name="slug"
+                                    placeholder=""
+                                    :value="$penalGame->slug"
+                                    data-field="campaign.slug"
+                                />
+
+                                <x-ui.forms.input-number
+                                    label="{{ __('Seconds') }}"
+                                    name="seconds"
+                                    placeholder=""
+                                    :value="$penalGame->seconds"
+                                    data-field="campaign.seconds"
+                                />
+
+                                <x-ui.forms.input-number
+                                    label="{{ __('Max Points') }}"
+                                    name="max_points"
+                                    placeholder=""
+                                    :value="$penalGame->max_points"
+                                    data-field="campaign.max_points"
+                                />
+
+                                <x-ui.forms.input-number
+                                    label="{{ __('Points Per Goal') }}"
+                                    name="points_per_goal"
+                                    placeholder=""
+                                    :value="$penalGame->points_per_goal"
+                                    data-field="campaign.points_per_goal"
+                                />
+
+                                <h2 class="mt-6 text-lg col-span-2 font-semibold text-gray-800 dark:text-white/90">
+                                    Game Background
+                                </h2>
+
+                                <x-ui.forms.input-file
+                                    label="{{ __('Background Desktop') }}"
+                                    dummy_img="/storage/dummy_assets/800x1180.png"
+                                    name="game_bg_image_desktop"
+                                    placeholder=""
+                                    :value="$penalGame->game_bg_image_desktop"
+                                    data-field="campaign.game_bg_image_desktop"
+                                />
+
+                                <x-ui.forms.input-file
+                                    label="{{ __('Failed Image') }}"
+                                    dummy_img="/storage/dummy_assets/800x1180.png"
+                                    name="failed_image"
+                                    placeholder=""
+                                    :value="$penalGame->failed_image"
+                                    data-field="campaign.failed_image"
+                                />
                             </div>
                         </div>
 

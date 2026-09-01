@@ -1,164 +1,421 @@
 <x-app-layout>
-    <x-slot name="title">
-        {{ $penal_game->title }}
-    </x-slot>
-    <x-slot name="description">
-        {{ $penal_game->description }}
-    </x-slot>
-    <x-slot name="settingspzl">
-        {{ $puzzle_settings }}
-    </x-slot>
+  <x-slot name="title">
+      {{ $penal_game->title }}
+  </x-slot>
+  <x-slot name="description">
+      {{ $penal_game->description }}
+  </x-slot>
+  <x-slot name="settingspzl">
+      {{ $puzzle_settings }}
+  </x-slot>
 
     @section('header_scripts')
     <style>
-    .scoreboard {
-      color: white;
-      font-size: 24px;
-      z-index: 10;
-    }
+        /*
+        |--------------------------------------------------------------------------
+        | Penal Game
+        |--------------------------------------------------------------------------
+        |
+        | El juego conserva siempre la misma relación 480x768.
+        | En móvil ocupa el ancho disponible.
+        | En escritorio nunca crece más de 480px.
+        |
+        */
 
-    .game-container {
-      position: relative;
-      width: 100%;
-      height: 768px;
-      overflow: hidden;
-      border-radius: 25px;
-    }
+        .penal-game-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            user-select: none;
+            -webkit-user-select: none;
+        }
 
-    .background-penal {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-    }
+        .game-container {
+            position: relative;
 
-    .goalkeeper {
-      position: absolute;
-      width: 90px;
-      left: 48%;
-      transform: translateX(-45%);
-      bottom: 175px;
-      z-index: 2;
-      transition: all 0.3s ease;
-    }
+            width: 100%;
+            max-width: 480px;
 
-    .goalkeeper.plongeon-gauche {
-      width: 200px;
-      bottom: 115px;
-    }
+            aspect-ratio: 480 / 768;
 
-    .goalkeeper.plongeon-droite {
-      width: 265px;
-      bottom: 115px;
-    }
+            overflow: hidden;
 
-    .goalkeeper.plongeon-haut {
-      width: 300px;  
-      bottom: 175px;
-    }
+            border-radius: 20px;
 
-    .goalkeeper.plongeon-bas {
-      width: 100px;
-      bottom: 110px;
-    }
+            touch-action: none;
 
-    .goalkeeper.plongeon-milieu {
-      width: 240px;
-      bottom: 125px;
-      left: 48%;
-      transform: translateX(-50%);
-    }
+            user-select: none;
+            -webkit-user-select: none;
 
-    .goalkeeper.plongeon-haut-gauche {
-      width: 200px;
-      bottom: 185px;
-      left: 42%;
-      transform: translateX(-50%) rotate(-15deg);
-    }
+            background: #111;
+        }
 
-    .goalkeeper.plongeon-milieu-gauche {
-      width: 200px;
-      bottom: 80px;
-      left: 39%;
-      transform: translateX(-50%) rotate(--8deg);
-    }
+        /*
+        |--------------------------------------------------------------------------
+        | Background
+        |--------------------------------------------------------------------------
+        */
 
-    .goalkeeper.plongeon-bas-gauche {
-      width: 200px;
-      bottom: 50px;
-      left: 39%;
-      transform: translateX(-50%) rotate(-38deg);
-    }
+        .background-penal {
+            position: absolute;
 
-    .goalkeeper.plongeon-haut-droite {
-      width: 270px;
-      bottom: 240px;
-      left: 54%;
-      transform: translateX(-50%) rotate(-20deg);
-    }
+            inset: 0;
 
-    .goalkeeper.plongeon-milieu-droite {
-      width: 270px;
-      bottom: 130px;
-      left: 56%;
-      transform: translateX(-50%) rotate(-28deg);
-    }
+            width: 100%;
+            height: 100%;
 
-    .goalkeeper.plongeon-bas-droite {
-      width: 250px;
-      bottom: 105px;
-      left: 54%;
-      transform: translateX(-50%) rotate(8deg);
-    }
+            object-fit: cover;
 
-    .ball {
-      position: absolute;
-      width: 80px;
-      left: 48%;
-      transform: translateX(-50%);
-      bottom: 50px;
-      z-index: 5;
-      transition: all 0.4s ease;
-    }
+            pointer-events: none;
+            user-select: none;
+            -webkit-user-drag: none;
 
-    .goal-area {
-      position: absolute;
-      top: 58%;
-      left: 50.40%;
-      transform: translate(-50%, -50%);
-      width: 58%;
-      height: 172px;
-      z-index: 4;
-      cursor: crosshair;
-      background-color: rgba(255, 255, 0, 0.0); 
-    }
-    .target-container{
-        position: absolute;
-        top: 58%;
-        left: 50.40%;
-        transform: translate(-50%, -50%);
-        width: 58%;
-        height: 172px;
-        z-index: 5;
-    }
-        
-    .target-zone {
-      position: absolute;
-      width: 60px; 
-      height: 60px;
-      background-image: url('https://i.imgur.com/vjJwph2.png');
-      background-size: contain;
-      background-repeat: no-repeat;
-      opacity: 0;
-      animation: pulseTarget 2s ease-in-out infinite;
-      z-index: 6;
-      pointer-events: auto;
-    }
+            z-index: 0;
+        }
 
-    @keyframes pulseTarget {
-      0%, 100% { opacity: 0; transform: scale(0.9); }
-      50% { opacity: 0.4; transform: scale(1); }
-    }
+        /*
+        |--------------------------------------------------------------------------
+        | Goal area
+        |--------------------------------------------------------------------------
+        |
+        | Esta zona representa únicamente el interior de la portería.
+        |
+        | IMPORTANTE:
+        | Si tu imagen cambia posteriormente, solamente tendríamos que
+        | modificar estos porcentajes.
+        |
+        */
+
+        .goal-area {
+            position: absolute;
+            left: 20%;
+            top: 48%;
+            width: 60%;
+            height: 22%;
+            z-index: 2;
+            pointer-events: none;
+            /* background: rgba(255, 0, 0, .20); */
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Goalkeeper
+        |--------------------------------------------------------------------------
+        */
+
+        .goalkeeper {
+            position: absolute;
+            left: 50%;
+            top: 66%;
+            width: 18%;
+            transform:
+                translate(-50%, -50%)
+                rotate(0deg);
+            transform-origin: center center;
+            z-index: 4;
+            pointer-events: none;
+            user-select: none;
+            -webkit-user-drag: none;
+            transition:
+                left .22s ease,
+                top .22s ease,
+                width .22s ease,
+                transform .22s ease;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Goalkeeper directions
+        |--------------------------------------------------------------------------
+        */
+
+        .goalkeeper.zone-left-top {
+            left: 32%;
+            top: 46%;
+            width: 35%;
+            transform:
+                translate(-50%, -50%)
+                rotate(-12deg);
+        }
+
+        .goalkeeper.zone-center-top {
+            left: 50%;
+            top: 45%;
+            width: 42%;
+            transform:
+                translate(-50%, -50%);
+        }
+
+        .goalkeeper.zone-right-top {
+            left: 68%;
+            top: 46%;
+            width: 42%;
+            transform:
+                translate(-50%, -50%)
+                rotate(12deg);
+        }
+
+        .goalkeeper.zone-left-middle {
+            left: 32%;
+            top: 52%;
+            width: 37%;
+            transform:
+                translate(-50%, -50%)
+                rotate(-8deg);
+        }
+
+        .goalkeeper.zone-center-middle {
+            left: 50%;
+            top: 52%;
+            width: 38%;
+            transform:
+                translate(-50%, -50%);
+        }
+
+        .goalkeeper.zone-right-middle {
+            left: 68%;
+            top: 52%;
+            width: 42%;
+            transform:
+                translate(-50%, -50%)
+                rotate(8deg);
+        }
+
+        .goalkeeper.zone-left-bottom {
+            left: 32%;
+            top: 58%;
+            width: 35%;
+            transform:
+                translate(-50%, -50%)
+                rotate(-18deg);
+        }
+
+        .goalkeeper.zone-center-bottom {
+            left: 50%;
+            top: 57%;
+            width: 25%;
+            transform:
+                translate(-50%, -50%);
+        }
+
+        .goalkeeper.zone-right-bottom {
+            left: 68%;
+            top: 58%;
+            width: 40%;
+            transform:
+                translate(-50%, -50%)
+                rotate(18deg);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Ball
+        |--------------------------------------------------------------------------
+        */
+
+        .ball {
+            position: absolute;
+
+            left: 50%;
+            top: 84%;
+
+            width: 15%;
+
+            max-width: 78px;
+
+            transform:
+                translate(-50%, -50%)
+                rotate(0deg)
+                scale(1);
+
+            transform-origin: center center;
+
+            z-index: 10;
+
+            cursor: grab;
+
+            touch-action: none;
+
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        .ball.dragging {
+            cursor: grabbing;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Aim line
+        |--------------------------------------------------------------------------
+        */
+
+        .aim-line {
+            position: absolute;
+
+            left: 0;
+            top: 0;
+
+            height: 5px;
+
+            width: 100px;
+
+            border-radius: 999px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(255,255,255,.15),
+                    rgba(255,255,255,.95)
+                );
+
+            transform-origin: left center;
+
+            z-index: 8;
+
+            pointer-events: none;
+
+            display: none;
+
+            filter: drop-shadow(0 0 4px rgba(0,0,0,.55));
+        }
+
+        .aim-line::after {
+            content: '';
+
+            position: absolute;
+
+            right: -3px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            width: 0;
+            height: 0;
+
+            border-top: 9px solid transparent;
+            border-bottom: 9px solid transparent;
+            border-left: 15px solid white;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Power
+        |--------------------------------------------------------------------------
+        */
+
+        .power-container {
+            position: absolute;
+
+            left: 5%;
+            bottom: 4%;
+
+            width: 90%;
+            height: 12px;
+
+            background: rgba(0, 0, 0, .45);
+
+            border: 2px solid rgba(255,255,255,.75);
+            border-radius: 999px;
+
+            overflow: hidden;
+
+            z-index: 20;
+
+            opacity: 0;
+
+            transition: opacity .15s ease;
+
+            pointer-events: none;
+        }
+
+        .power-container.show {
+            opacity: 1;
+        }
+
+        .power-bar {
+            width: 0%;
+            height: 100%;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #22c55e 0%,
+                    #eab308 60%,
+                    #ef4444 100%
+                );
+
+            transition: width .04s linear;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Message
+        |--------------------------------------------------------------------------
+        */
+
+        .penal-message {
+            position: absolute;
+
+            left: 50%;
+            top: 28%;
+
+            transform: translate(-50%, -50%);
+
+            width: 90%;
+
+            text-align: center;
+
+            color: white;
+
+            font-size: clamp(22px, 6vw, 36px);
+            font-weight: 800;
+
+            text-shadow:
+                0 3px 6px rgba(0,0,0,.8);
+
+            z-index: 30;
+
+            pointer-events: none;
+
+            opacity: 0;
+
+            transition:
+                opacity .15s ease,
+                transform .15s ease;
+        }
+
+        .penal-message.show {
+            opacity: 1;
+
+            transform:
+                translate(-50%, -50%)
+                scale(1.05);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Instructions
+        |--------------------------------------------------------------------------
+        */
+
+        .penal-instructions {
+            position: absolute;
+            left: 50%;
+            bottom: 5%;
+            transform: translateX(-50%);
+            width: 85%;
+            text-align: center;
+            color: white;
+            font-weight: 700;
+            font-size: clamp(10px, 3.3vw, 15px);
+            text-shadow:
+                0 2px 5px rgba(0,0,0,.9);
+            z-index: 7;
+            pointer-events: none;
+            transition: opacity .2s ease;
+        }
     </style>
     @endsection
 
@@ -195,30 +452,84 @@
                             <p class="font-bold mb-5 text-center">
                                 {{ $penal_game->description }}
                             </p>
-
                             {{-- Game --}}
-                            <!--<div class="scoreboard" style="top: 40px;">
-                              Marcación: <span id="score">0</span>
-                            </div>-->
-                            <div class="game-container">
-                              <img src="/storage/dummy_assets/fondo-penal-game.webp" alt="Background" class="background-penal" />
-                              <img src="https://i.imgur.com/aX1zBPZ.png" alt="Goalkeeper" class="goalkeeper" />
-                              <img src="https://i.imgur.com/qarbcqB.png" alt="Ball" class="ball" />
-                              <div class="goal-area"></div>
-                              <!-- line 1 -->
-                              <div class="target-zone clickable" data-zone="haut-gauche" style="top: 360px; left: 95px;"></div>
-                              <div class="target-zone clickable" data-zone="haut-centre" style="top: 360px; left: 220px;"></div>
-                              <div class="target-zone clickable" data-zone="haut-droite" style="top: 360px; left: 330px;"></div>
-                              <!-- line 2 -->
-                              <div class="target-zone clickable" data-zone="milieu-gauche" style="top: 425px; left: 95px;"></div>
-                              <div class="target-zone clickable" data-zone="milieu-centre" style="top: 425px; left: 215px;"></div>
-                              <div class="target-zone clickable" data-zone="milieu-droite" style="top: 425px; left: 330px;"></div>
-                              <!-- Line 3 -->
-                              <div class="target-zone clickable" data-zone="bas-gauche" style="top: 490px; left: 95px;"></div>
-                              <!--<div class="target-zone clickable" data-zone="bas-centre" style="top: 490px; left: 215px;"></div>-->
-                              <div class="target-zone clickable" data-zone="bas-droite" style="top: 490px; left: 330px;"></div>
-                            </div>
-                            <div id="message" class="text-white text-center text-2xl text-shadow font-bold py-12"></div>
+                              <div class="penal-game-wrapper">
+
+                                  <div
+                                      id="penalGame"
+                                      class="game-container"
+                                  >
+
+                                      {{-- Background --}}
+                                      <img
+                                          src="{{ $penal_game->game_bg_image_desktop }}"
+                                          alt="{{ $penal_game->title }}"
+                                          class="background-penal"
+                                          draggable="false"
+                                      >
+
+                                      {{-- Portería lógica --}}
+                                      <div
+                                          id="goalArea"
+                                          class="goal-area"
+                                      ></div>
+
+                                      {{-- Portero --}}
+                                      <img
+                                          id="goalkeeper"
+                                          src="/storage/dummy_assets/gk1.png"
+                                          alt="Goalkeeper"
+                                          class="goalkeeper"
+                                          draggable="false"
+                                      >
+
+                                      {{-- Flecha --}}
+                                      <div
+                                          id="aimLine"
+                                          class="aim-line"
+                                      ></div>
+
+                                      {{-- Balón --}}
+                                      <img
+                                          id="ball"
+                                          src="/storage/dummy_assets/ball.png"
+                                          alt="Ball"
+                                          class="ball"
+                                          draggable="false"
+                                      >
+
+                                      {{-- Mensajes --}}
+                                      <div
+                                          id="penalMessage"
+                                          class="penal-message"
+                                      ></div>
+
+                                      {{-- Instrucciones --}}
+                                      <div
+                                          id="penalInstructions"
+                                          class="penal-instructions"
+                                      >
+                                          Jala el balón hacia atrás y suéltalo para disparar
+                                      </div>
+
+                                      {{-- Potencia --}}
+                                      <div
+                                          id="powerContainer"
+                                          class="power-container"
+                                      >
+                                          <div
+                                              id="powerBar"
+                                              class="power-bar"
+                                          ></div>
+                                      </div>
+
+                                  </div>
+
+                              </div>
+                              <div
+                                  id="message"
+                                  class="text-white text-center text-2xl text-shadow font-bold py-12"
+                              ></div>
                         </div>
                     </div>
                 </div>
@@ -226,225 +537,1491 @@
         </div>
     </div>
 
-   <script>
-      const settingspzl = JSON.parse(document.getElementById('settingspzl').content)
-      const ball = document.querySelector(".ball");
-      const goalkeeper = document.querySelector(".goalkeeper");
-      //const scoreDisplay = document.getElementById("score");
-      let score = 0;
-      let isAnimating = false; // Flag para evitar múltiples clicks
+  <script>
+      const settingspzl =
+          JSON.parse(
+              document.getElementById('settingspzl').content
+          );
 
-      const startLeft = ball.offsetLeft;
-      const startBottom = parseInt(window.getComputedStyle(ball).bottom);
+      /*
+      |--------------------------------------------------------------------------
+      | Elements
+      |--------------------------------------------------------------------------
+      */
 
-      // 📸 Goalkeeper images
+      const gameContainer =
+          document.getElementById('penalGame');
+
+      const ball =
+          document.getElementById('ball');
+
+      const goalkeeper =
+          document.getElementById('goalkeeper');
+
+      const goalArea =
+          document.getElementById('goalArea');
+
+      const aimLine =
+          document.getElementById('aimLine');
+
+      const powerContainer =
+          document.getElementById('powerContainer');
+
+      const powerBar =
+          document.getElementById('powerBar');
+
+      const penalMessage =
+          document.getElementById('penalMessage');
+
+      const instructions =
+          document.getElementById('penalInstructions');
+
+      /*
+      |--------------------------------------------------------------------------
+      | Audio
+      |--------------------------------------------------------------------------
+      */
+
+      const hitSound =
+          new Audio(
+              "/storage/dummy_assets/ball-kick.wav"
+          );
+
+      const backgroundMusic =
+          new Audio(
+              "/storage/dummy_assets/playing.wav"
+          );
+
+      hitSound.preload = 'auto';
+      backgroundMusic.preload = 'auto';
+
+      /*
+      |--------------------------------------------------------------------------
+      | Goalkeeper images
+      |--------------------------------------------------------------------------
+      */
+
       const goalkeeperImages = {
-        centre: "https://i.imgur.com/aX1zBPZ.png",
-        gauche: "https://i.imgur.com/TGLyMBD.png",
-        droite: "https://i.imgur.com/sIBXdcx.png",
-        haut: "https://i.imgur.com/zH8ceJX.png" // also used for middle-center
+
+          center:"/storage/dummy_assets/gk1.png",
+
+          left:"/storage/dummy_assets/gk2.png",
+
+          right:"/storage/dummy_assets/gk3.png",
+
+          up:"/storage/dummy_assets/gk4.png"
       };
 
-      const hitSound = new Audio("/storage/dummy_assets/ball-kick.wav");
-      const backgroundMusic = new Audio("/storage/dummy_assets/playing.wav");
-
-
-
-      // Define zone classes
-      const zoneClasses = {
-        0: "plongeon-haut-gauche",
-        1: "plongeon-haut",
-        2: "plongeon-haut-droite",
-        3: "plongeon-milieu-gauche",
-        4: "plongeon-milieu",
-        5: "plongeon-milieu-droite",
-        6: "plongeon-bas-gauche",
-        7: "plongeon-bas",
-        8: "plongeon-bas-droite"
-      };
+      /*
+      |--------------------------------------------------------------------------
+      | Messages
+      |--------------------------------------------------------------------------
+      */
 
       const messagesGoal = [
-        "🎯 ¡Esa fue con chanflee!",
-        "🎯 ¡Golazoooo!",
-        "🎯 ¡Eres la reencarnación de Pele!",
-        "🎯 ¡Gol Gol Gol!",
-        "🎯 ¡En donde las arañas tejen su nido!",
+          "🎯 ¡Esa fue con chanfle!",
+          "⚽ ¡Golazoooo!",
+          "🔥 ¡Eres la reencarnación de Pelé!",
+          "⚽ ¡Gol Gol Gol!",
+          "🕷️ ¡Donde las arañas tejen su nido!"
       ];
 
-      document.querySelectorAll(".target-zone").forEach((zone, index) => {
-        zone.addEventListener("click", (e) => {
-          // Evitar múltiples clicks mientras está en progreso
-          if (isAnimating) return;
-          e.stopPropagation();
-          
-          hitSound.play();
-          const container = document.querySelector(".game-container");
-          const rect = container.getBoundingClientRect();
-          const clickX = e.clientX - rect.left;
-          const clickY = e.clientY - rect.top;
+      /*
+      |--------------------------------------------------------------------------
+      | Configuration
+      |--------------------------------------------------------------------------
+      */
 
-          // Realistic ball animation with parabolic trajectory and rotation
-          animateBallRealistic(clickX, clickY);
-        });
-      });
+      const MAX_DRAG_DISTANCE = 120;
 
-      // Realistic ball animation with parabolic trajectory
-      function animateBallRealistic(targetX, targetY) {
-        isAnimating = true; // Activar flag de animación
-        const duration = 500; // Animation duration in ms
-        const startTime = Date.now();
-        const startX = parseInt(ball.style.left) || startLeft;
-        const startY = parseInt(ball.style.bottom) || startBottom;
-        
-        // Calculate distance for rotation speed
-        const distance = Math.sqrt(Math.pow(targetX - startX, 2) + Math.pow(targetY - startY, 2));
-        const rotationAmount = (distance / 200) * 360 * 3; // Multiple rotations based on distance
-        
-        function animateStep() {
-          const elapsed = Date.now() - startTime;
-          const progress = Math.min(elapsed / duration, 1);
-          
-          // Cubic-bezier easing for realistic physics (ease-in-out)
-          const easeProgress = progress < 0.5
-            ? 2 * progress * progress
-            : -1 + (4 - 2 * progress) * progress;
-          
-          // Parabolic arc: ball goes up then down
-          const arcHeight = 150; // Maximum height of the arc
-          const arcProgress = Math.sin(progress * Math.PI); // Creates smooth arc
-          
-          const currentX = startX + (targetX - startX) * easeProgress;
-          const currentY = startY + (targetY - startY) * easeProgress + (arcHeight * arcProgress);
-          const currentRotation = rotationAmount * progress;
-          
-          // Apply transformations
-          ball.style.left = currentX + "px";
-          ball.style.bottom = currentY + "px";
-          ball.style.transform = `translateX(-50%) rotateZ(${currentRotation}deg)`;
-          
-          if (progress < 1) {
-            requestAnimationFrame(animateStep);
+      /*
+      * El usuario debe jalar una cantidad mínima
+      * para poder disparar.
+      */
+      const MIN_POWER = 0.12;
+
+      /*
+      * Probabilidad de que el portero adivine
+      * correctamente.
+      */
+      const SAVE_PROBABILITY = 0.30;
+
+      /*
+      |--------------------------------------------------------------------------
+      | State
+      |--------------------------------------------------------------------------
+      */
+
+      let dragging = false;
+
+      let shooting = false;
+
+      let pointerId = null;
+
+      let origin = {
+          x: 0,
+          y: 0
+      };
+
+      let dragPosition = {
+          x: 0,
+          y: 0
+      };
+
+      let aimVector = {
+          x: 0,
+          y: -1
+      };
+
+      let power = 0;
+
+      let rotation = 0;
+
+      /*
+      |--------------------------------------------------------------------------
+      | Helpers
+      |--------------------------------------------------------------------------
+      */
+
+      function clamp(value, min, max) {
+          return Math.min(
+              Math.max(value, min),
+              max
+          );
+      }
+
+      function random(min, max) {
+          return (
+              Math.random() * (max - min)
+              + min
+          );
+      }
+
+      /*
+      |--------------------------------------------------------------------------
+      | Ball origin
+      |--------------------------------------------------------------------------
+      |
+      | Obtenemos la posición REAL del balón dentro del contenedor.
+      |
+      */
+
+      function getBallOrigin() {
+
+          const containerRect =
+              gameContainer.getBoundingClientRect();
+
+          const ballRect =
+              ball.getBoundingClientRect();
+
+          return {
+
+              x:
+                  ballRect.left
+                  - containerRect.left
+                  + ballRect.width / 2,
+
+              y:
+                  ballRect.top
+                  - containerRect.top
+                  + ballRect.height / 2
+          };
+      }
+
+      /*
+      |--------------------------------------------------------------------------
+      | Pointer position
+      |--------------------------------------------------------------------------
+      */
+
+      function getPointerPosition(event) {
+
+          const rect =
+              gameContainer.getBoundingClientRect();
+
+          return {
+
+              x:
+                  event.clientX
+                  - rect.left,
+
+              y:
+                  event.clientY
+                  - rect.top
+          };
+      }
+
+      /*
+      |--------------------------------------------------------------------------
+      | Start drag
+      |--------------------------------------------------------------------------
+      */
+
+      function startDrag(event) {
+
+          if (shooting) {
+              return;
+          }
+
+          event.preventDefault();
+
+          dragging = true;
+
+          pointerId =
+              event.pointerId;
+
+          /*
+          * Capturamos el pointer.
+          *
+          * Esto es especialmente importante en móvil porque
+          * aunque el dedo salga visualmente del balón,
+          * continuamos recibiendo los eventos.
+          */
+          ball.setPointerCapture(pointerId);
+
+          origin =
+              getBallOrigin();
+
+          dragPosition = {
+              ...origin
+          };
+
+          ball.classList.add(
+              'dragging'
+          );
+
+          aimLine.style.display =
+              'block';
+
+          powerContainer.classList.add(
+              'show'
+          );
+
+          instructions.style.opacity =
+              '0';
+
+          updateAim(event);
+      }
+
+      /*
+      |--------------------------------------------------------------------------
+      | Drag
+      |--------------------------------------------------------------------------
+      */
+
+      function updateAim(event) {
+
+          if (!dragging) {
+              return;
+          }
+
+          if (
+              pointerId !== null
+              && event.pointerId !== pointerId
+          ) {
+              return;
+          }
+
+          event.preventDefault();
+
+          const pointer =
+              getPointerPosition(event);
+
+          /*
+          * Vector desde el origen hacia donde
+          * estamos jalando.
+          */
+          let dragX =
+              pointer.x - origin.x;
+
+          let dragY =
+              pointer.y - origin.y;
+
+          let distance =
+              Math.sqrt(
+                  dragX * dragX
+                  +
+                  dragY * dragY
+              );
+
+          /*
+          * Limitamos cuánto podemos jalar.
+          */
+          if (
+              distance >
+              MAX_DRAG_DISTANCE
+          ) {
+
+              const scale =
+                  MAX_DRAG_DISTANCE
+                  / distance;
+
+              dragX *= scale;
+              dragY *= scale;
+
+              distance =
+                  MAX_DRAG_DISTANCE;
+          }
+
+          /*
+          * Impedimos jalar demasiado hacia arriba.
+          *
+          * La mecánica natural es jalar
+          * hacia abajo/lados para disparar arriba.
+          */
+          dragY =
+              Math.max(
+                  dragY,
+                  -25
+              );
+
+          dragPosition = {
+
+              x:
+                  origin.x
+                  + dragX,
+
+              y:
+                  origin.y
+                  + dragY
+          };
+
+          /*
+          * POTENCIA
+          */
+
+          power =
+              clamp(
+                  distance
+                  / MAX_DRAG_DISTANCE,
+
+                  0,
+                  1
+              );
+
+          /*
+          * Dirección del disparo.
+          *
+          * Es exactamente contraria
+          * al movimiento de jalado.
+          */
+          let shotX =
+              -dragX;
+
+          let shotY =
+              -dragY;
+
+          /*
+          * Siempre debe dirigirse hacia arriba.
+          */
+          shotY =
+              Math.min(
+                  shotY,
+                  -20
+              );
+
+          const shotLength =
+              Math.sqrt(
+                  shotX * shotX
+                  +
+                  shotY * shotY
+              ) || 1;
+
+          aimVector = {
+
+              x:
+                  shotX
+                  / shotLength,
+
+              y:
+                  shotY
+                  / shotLength
+          };
+
+          moveBallWhileDragging();
+
+          drawAim();
+
+          updatePowerBar();
+      }
+
+      /*
+      |--------------------------------------------------------------------------
+      | Move ball during drag
+      |--------------------------------------------------------------------------
+      */
+
+      function moveBallWhileDragging() {
+
+          const containerRect =
+              gameContainer
+                  .getBoundingClientRect();
+
+          const left =
+              (
+                  dragPosition.x
+                  / containerRect.width
+              ) * 100;
+
+          const top =
+              (
+                  dragPosition.y
+                  / containerRect.height
+              ) * 100;
+
+          ball.style.left =
+              `${left}%`;
+
+          ball.style.top =
+              `${top}%`;
+
+          ball.style.transform =
+              `
+                  translate(-50%, -50%)
+                  scale(${1 + power * .08})
+              `;
+      }
+
+      /*
+      |--------------------------------------------------------------------------
+      | Aim arrow
+      |--------------------------------------------------------------------------
+      */
+
+      function drawAim() {
+
+          const length =
+              70
+              +
+              (power * 120);
+
+          const angle =
+              Math.atan2(
+                  aimVector.y,
+                  aimVector.x
+              );
+
+          const angleDeg =
+              angle
+              * 180
+              / Math.PI;
+
+          aimLine.style.left =
+              `${origin.x}px`;
+
+          aimLine.style.top =
+              `${origin.y}px`;
+
+          aimLine.style.width =
+              `${length}px`;
+
+          aimLine.style.transform =
+              `
+                  rotate(${angleDeg}deg)
+              `;
+
+          aimLine.style.opacity =
+              `${0.35 + power * 0.65}`;
+      }
+
+      /*
+      |--------------------------------------------------------------------------
+      | Power UI
+      |--------------------------------------------------------------------------
+      */
+
+      function updatePowerBar() {
+
+          powerBar.style.width =
+              `${power * 100}%`;
+      }
+
+      /*
+      |--------------------------------------------------------------------------
+      | Release
+      |--------------------------------------------------------------------------
+      */
+
+      function releaseBall(event) {
+
+          if (!dragging) {
+              return;
+          }
+
+          if (
+              pointerId !== null
+              &&
+              event.pointerId !== pointerId
+          ) {
+              return;
+          }
+
+          dragging = false;
+
+          ball.classList.remove(
+              'dragging'
+          );
+
+          try {
+
+              ball.releasePointerCapture(
+                  pointerId
+              );
+
+          } catch (error) {}
+
+          pointerId = null;
+
+          aimLine.style.display =
+              'none';
+
+          powerContainer.classList.remove(
+              'show'
+          );
+
+          /*
+          * Jaló demasiado poco.
+          */
+          if (
+              power <
+              MIN_POWER
+          ) {
+
+              resetBall();
+
+              instructions.style.opacity =
+                  '1';
+
+              return;
+          }
+
+          shootBall();
+      }
+
+      /*
+      |--------------------------------------------------------------------------
+      | Shoot
+      |--------------------------------------------------------------------------
+      */
+
+      function shootBall() {
+
+          if (shooting) {
+              return;
+          }
+
+          shooting = true;
+
+          try {
+
+              hitSound.currentTime = 0;
+
+              hitSound.play().catch(() => {});
+
+          } catch (error) {}
+
+          /*
+          * Calculamos dónde intersectaría
+          * la trayectoria con la altura
+          * aproximada de la portería.
+          */
+
+          const goalRect =
+              goalArea
+                  .getBoundingClientRect();
+
+          const containerRect =
+              gameContainer
+                  .getBoundingClientRect();
+
+          /*
+          * Centro vertical de la portería.
+          */
+          const goalY =
+              goalRect.top
+              - containerRect.top
+              +
+              goalRect.height * .55;
+
+          const deltaY =
+              goalY
+              - origin.y;
+
+          /*
+          * Evitamos una trayectoria horizontal.
+          */
+          const directionY =
+              Math.min(
+                  aimVector.y,
+                  -0.15
+              );
+
+          const distanceToGoal =
+              deltaY
+              / directionY;
+
+          let targetX =
+              origin.x
+              +
+              aimVector.x
+              * distanceToGoal;
+
+          let targetY =
+              goalY;
+
+          /*
+          * La potencia modifica ligeramente
+          * la altura final.
+          *
+          * Mucha potencia = balón más alto.
+          */
+          targetY -=
+              (power - .5)
+              *
+              goalRect.height
+              *
+              .45;
+
+          /*
+          * Si el tiro tiene muy poca potencia,
+          * no llega completamente.
+          */
+          if (power < .35) {
+
+              targetY +=
+                  goalRect.height
+                  * .70;
+          }
+
+          animateShot(
+              targetX,
+              targetY,
+              power
+          );
+      }
+
+      /*
+      |--------------------------------------------------------------------------
+      | Ball animation
+      |--------------------------------------------------------------------------
+      */
+
+      function animateShot(
+          targetX,
+          targetY,
+          shotPower
+      ) {
+
+          const rect =
+              gameContainer
+                  .getBoundingClientRect();
+
+          const startX =
+              dragPosition.x;
+
+          const startY =
+              dragPosition.y;
+
+          /*
+          * Más potencia = disparo ligeramente más rápido.
+          */
+          const duration =
+              720
+              -
+              (shotPower * 250);
+
+          const startTime =
+              performance.now();
+
+          const arcHeight =
+              rect.height
+              *
+              (
+                  .06
+                  +
+                  shotPower * .07
+              );
+
+          function frame(now) {
+
+              const elapsed =
+                  now - startTime;
+
+              const progress =
+                  clamp(
+                      elapsed / duration,
+                      0,
+                      1
+                  );
+
+              /*
+              * Easing.
+              */
+              const ease =
+                  1
+                  -
+                  Math.pow(
+                      1 - progress,
+                      3
+                  );
+
+              /*
+              * Movimiento base.
+              */
+              const x =
+                  startX
+                  +
+                  (
+                      targetX
+                      - startX
+                  )
+                  * ease;
+
+              const linearY =
+                  startY
+                  +
+                  (
+                      targetY
+                      - startY
+                  )
+                  * ease;
+
+              /*
+              * Pequeño arco.
+              */
+              const arc =
+                  Math.sin(
+                      progress
+                      * Math.PI
+                  )
+                  * arcHeight;
+
+              const y =
+                  linearY
+                  - arc;
+
+              rotation +=
+                  28
+                  +
+                  shotPower * 30;
+
+              /*
+              * Conforme se acerca a portería
+              * se hace pequeño para dar sensación
+              * de profundidad.
+              */
+              const scale =
+                  1
+                  -
+                  progress
+                  * .52;
+
+              ball.style.left =
+                  `${x}px`;
+
+              ball.style.top =
+                  `${y}px`;
+
+              ball.style.transform =
+                  `
+                      translate(-50%, -50%)
+                      rotate(${rotation}deg)
+                      scale(${scale})
+                  `;
+
+              if (
+                  progress < 1
+              ) {
+
+                  requestAnimationFrame(
+                      frame
+                  );
+
+                  return;
+              }
+
+              resolveShot(
+                  targetX,
+                  targetY
+              );
+          }
+
+          requestAnimationFrame(
+              frame
+          );
+      }
+
+      /*
+      |--------------------------------------------------------------------------
+      | Resolve shot
+      |--------------------------------------------------------------------------
+      */
+
+      function resolveShot(
+          targetX,
+          targetY
+      ) {
+
+          const goalRect =
+              goalArea
+                  .getBoundingClientRect();
+
+          const containerRect =
+              gameContainer
+                  .getBoundingClientRect();
+
+          const goalLeft =
+              goalRect.left
+              - containerRect.left;
+
+          const goalTop =
+              goalRect.top
+              - containerRect.top;
+
+          const goalRight =
+              goalLeft
+              +
+              goalRect.width;
+
+          const goalBottom =
+              goalTop
+              +
+              goalRect.height;
+
+          /*
+          * Primero validamos si realmente
+          * entró dentro del marco.
+          */
+          const insideGoal =
+
+              targetX >= goalLeft
+              &&
+              targetX <= goalRight
+              &&
+              targetY >= goalTop
+              &&
+              targetY <= goalBottom;
+
+          if (!insideGoal) {
+
+              goalkeeperStay();
+
+              showMessage(
+                  "😬 ¡Fuera!"
+              );
+
+              scheduleReset();
+
+              return;
+          }
+
+          /*
+          * Calculamos la zona relativa
+          * dentro de la portería.
+          */
+          const relativeX =
+              (
+                  targetX
+                  - goalLeft
+              )
+              /
+              goalRect.width;
+
+          const relativeY =
+              (
+                  targetY
+                  - goalTop
+              )
+              /
+              goalRect.height;
+
+          const zone =
+              getGoalZone(
+                  relativeX,
+                  relativeY
+              );
+
+          /*
+          * El portero decide si adivina.
+          */
+          const willSave =
+              Math.random()
+              <= SAVE_PROBABILITY;
+
+          let goalkeeperZone;
+
+          if (willSave) {
+
+              animateGoalkeeperToBall(
+                  zone,
+                  targetX,
+                  targetY
+              );
+
           } else {
-            // Final position
-            ball.style.left = targetX + "px";
-            ball.style.bottom = (768 - targetY - 40) + "px";
-            ball.style.transform = `translateX(-50%) rotateZ(${rotationAmount}deg)`;
-            
-            // Continue with the rest of the logic
-            continueGameLogic(targetX, targetY);
+              goalkeeperZone =
+                  getDifferentZone(
+                      zone
+                  );
+
+              animateGoalkeeper(
+                  goalkeeperZone
+              );
           }
-        }
-        
-        requestAnimationFrame(animateStep);
-      }
 
-      // Continue the game logic after animation
-      function continueGameLogic(clickX, clickY) {
-        // Define las posiciones de cada zona en píxeles
-        const zonePositions = {
-          0: { top: 360, left: 95, name: "haut-gauche" },      // top-left
-          1: { top: 360, left: 220, name: "haut-centre" },     // top-center
-          2: { top: 360, left: 330, name: "haut-droite" },     // top-right
-          3: { top: 425, left: 95, name: "milieu-gauche" },    // middle-left
-          4: { top: 425, left: 215, name: "milieu-centre" },   // middle-center
-          5: { top: 425, left: 330, name: "milieu-droite" },   // middle-right
-          6: { top: 490, left: 95, name: "bas-gauche" },       // bottom-left
-          8: { top: 490, left: 330, name: "bas-droite" }       // bottom-right (no 7)
-        };
-        
-        // Encontrar la zona más cercana
-        let zoneId = -1;
-        let minDistance = Infinity;
-        for (let id in zonePositions) {
-          const zone = zonePositions[id];
-          const distance = Math.abs(clickX - zone.left) + Math.abs(clickY - zone.top);
-          if (distance < minDistance) {
-            minDistance = distance;
-            zoneId = parseInt(id);
+          if (willSave) {
+
+            setTimeout(() => {
+
+                ball.style.transition =
+                    'transform .15s ease';
+
+                ball.style.transform +=
+                    ' scale(.75)';
+
+                showMessage(
+                    "🧤 ¡Atajadón!"
+                );
+
+            }, 120);
+
+            scheduleReset();
+
+            return;
+        }
+
+          /*
+          * GOAL
+          */
+
+          const message =
+              messagesGoal[
+                  Math.floor(
+                      Math.random()
+                      *
+                      messagesGoal.length
+                  )
+              ];
+
+          setTimeout(() => {
+
+              showMessage(
+                  message
+              );
+
+          }, 120);
+
+          completeGame();
+      }
+      function animateGoalkeeperToBall(
+            zone,
+            targetX,
+            targetY
+        ) {
+
+            resetGoalkeeperClass();
+
+            const containerRect =
+                gameContainer.getBoundingClientRect();
+
+            /*
+            * Convertimos la posición final
+            * del balón a porcentaje.
+            */
+            let leftPercent =
+                (
+                    targetX
+                    / containerRect.width
+                )
+                * 100;
+
+            let topPercent =
+                (
+                    targetY
+                    / containerRect.height
+                )
+                * 100;
+
+            /*
+            * Evitamos que el portero pueda
+            * salir demasiado de la portería.
+            */
+            leftPercent =
+                clamp(
+                    leftPercent,
+                    27,
+                    73
+                );
+
+            topPercent =
+                clamp(
+                    topPercent,
+                    43,
+                    61
+                );
+
+            /*
+            * Seleccionamos imagen según
+            * dirección del tiro.
+            */
+            let directionImage =
+                'center';
+
+            if (
+                zone.startsWith('left')
+            ) {
+
+                directionImage =
+                    'left';
+
+            } else if (
+                zone.startsWith('right')
+            ) {
+
+                directionImage =
+                    'right';
+
+            } else if (
+                zone.endsWith('top')
+            ) {
+
+                directionImage =
+                    'up';
+            }
+
+            goalkeeper.src =
+                goalkeeperImages[
+                    directionImage
+                ];
+
+            /*
+            * Tamaño dependiendo del tipo
+            * de clavado.
+            */
+            if (
+                zone.startsWith('left')
+                ||
+                zone.startsWith('right')
+            ) {
+
+                goalkeeper.style.width =
+                    '40%';
+
+            } else if (
+                zone.endsWith('top')
+            ) {
+
+                goalkeeper.style.width =
+                    '42%';
+
+            } else {
+
+                goalkeeper.style.width =
+                    '30%';
+            }
+
+            /*
+            * AQUÍ ESTÁ LA PARTE IMPORTANTE:
+            *
+            * el portero se mueve hacia
+            * la posición REAL del balón.
+            */
+            goalkeeper.style.left =
+                `${leftPercent}%`;
+
+            goalkeeper.style.top =
+                `${topPercent}%`;
+
+            /*
+            * Orientación visual.
+            */
+            let rotation =
+                0;
+
+            if (
+                zone.startsWith('left')
+            ) {
+
+                rotation =
+                    -12;
+
+            }
+
+            if (
+                zone.startsWith('right')
+            ) {
+
+                rotation =
+                    12;
+
+            }
+
+            goalkeeper.style.transform =
+                `
+                    translate(-50%, -50%)
+                    rotate(${rotation}deg)
+                `;
+        }
+      /*
+      |--------------------------------------------------------------------------
+      | Goal zones
+      |--------------------------------------------------------------------------
+      */
+
+      function getGoalZone(
+          x,
+          y
+      ) {
+
+          let column;
+
+          if (x < .33) {
+
+              column =
+                  'left';
+
+          } else if (x < .66) {
+
+              column =
+                  'center';
+
+          } else {
+
+              column =
+                  'right';
           }
-        }
-        
-        const willSave = Math.random() <= 0.6;
-        let effectiveZone = willSave ? zoneId : getRandomOtherZone(zoneId);
 
-        // Apply goalkeeper image
-        let direction = "centre";
-        goalkeeper.className = "goalkeeper";
+          let row;
 
-        if ([0, 3, 6].includes(effectiveZone)) {
-          direction = "gauche";
-        } else if ([2, 5, 8].includes(effectiveZone)) {
-          direction = "droite";
-        } else if ([1, 4].includes(effectiveZone)) {
-          direction = "haut";
-        } else {
-          direction = "centre";
-        }
+          if (y < .33) {
 
-        goalkeeper.classList.add(zoneClasses[effectiveZone]);
-        goalkeeper.src = goalkeeperImages[direction];
+              row =
+                  'top';
 
-        // Display message
-        if (willSave) {
-          setTimeout(() => {
-            showMessage("🧤 No Goal !");
-          }, 100);
-        } else {
-          score++;
-          setTimeout(() => {
-            showMessage(messagesGoal[Math.floor(Math.random() * messagesGoal.length)]);
-            //scoreDisplay.textContent = score;
-             axios.post(settingspzl.f, {data: settingspzl.g,slug:settingspzl.j}, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                  })
-                  .then(function (response)
-                  {
-                      window.location = settingspzl.h;
-                  })
-                  .catch(function (error)
-                  {
-                      //console.log(error);
-                  });
-          }, 100);
-        }
+          } else if (y < .66) {
 
-        // Reset
-        setTimeout(() => {
-          ball.style.left = startLeft + "px";
-          ball.style.bottom = startBottom + "px";
-          ball.style.transform = "translateX(-50%)";
-          goalkeeper.className = "goalkeeper";
-          goalkeeper.src = goalkeeperImages.centre;
-          isAnimating = false; // Desactivar flag de animación para permitir nuevo click
-        }, 800);
+              row =
+                  'middle';
+
+          } else {
+
+              row =
+                  'bottom';
+          }
+
+          return `${column}-${row}`;
       }
 
-      function getRandomOtherZone(exclude) {
-        let otherZones = [0,1,2,3,4,5,6,8].filter(z => z !== exclude);
-        return otherZones[Math.floor(Math.random() * otherZones.length)];
+      /*
+      |--------------------------------------------------------------------------
+      | Goalkeeper
+      |--------------------------------------------------------------------------
+      */
+
+      function animateGoalkeeper(zone) {
+
+          resetGoalkeeperClass();
+
+          let directionImage =
+              'center';
+
+          if (
+              zone.startsWith(
+                  'left'
+              )
+          ) {
+
+              directionImage =
+                  'left';
+
+          } else if (
+              zone.startsWith(
+                  'right'
+              )
+          ) {
+
+              directionImage =
+                  'right';
+
+          } else if (
+              zone.endsWith(
+                  'top'
+              )
+          ) {
+
+              directionImage =
+                  'up';
+          }
+
+          goalkeeper.src =
+              goalkeeperImages[
+                  directionImage
+              ];
+
+          goalkeeper.classList.add(
+              `zone-${zone}`
+          );
       }
+
+      function goalkeeperStay() {
+
+          resetGoalkeeperClass();
+
+          goalkeeper.src =
+              goalkeeperImages.center;
+      }
+
+      function resetGoalkeeperClass() {
+
+          goalkeeper.className =
+              'goalkeeper';
+
+          goalkeeper.style.left =
+              '';
+
+          goalkeeper.style.top =
+              '';
+
+          goalkeeper.style.width =
+              '';
+
+          goalkeeper.style.transform =
+              '';
+      }
+
+      /*
+      |--------------------------------------------------------------------------
+      | Other goalkeeper zone
+      |--------------------------------------------------------------------------
+      */
+
+      function getDifferentZone(
+          current
+      ) {
+
+          const zones = [
+
+              'left-top',
+              'center-top',
+              'right-top',
+
+              'left-middle',
+              'center-middle',
+              'right-middle',
+
+              'left-bottom',
+              'center-bottom',
+              'right-bottom'
+          ];
+
+          const alternatives =
+              zones.filter(
+                  zone =>
+                      zone !== current
+              );
+
+          return alternatives[
+              Math.floor(
+                  Math.random()
+                  *
+                  alternatives.length
+              )
+          ];
+      }
+
+      /*
+      |--------------------------------------------------------------------------
+      | Reset
+      |--------------------------------------------------------------------------
+      */
+
+      function scheduleReset() {
+
+          setTimeout(() => {
+
+              resetBall();
+
+              resetGoalkeeperClass();
+
+              goalkeeper.src =
+                  goalkeeperImages.center;
+
+              shooting = false;
+
+              instructions.style.opacity =
+                  '1';
+
+          }, 1100);
+      }
+
+      function resetBall() {
+
+          rotation = 0;
+
+          power = 0;
+
+          powerBar.style.width =
+              '0%';
+
+          ball.style.transition =
+              'all .25s ease';
+
+          ball.style.left =
+              '50%';
+
+          ball.style.top =
+              '84%';
+
+          ball.style.transform =
+              `
+                  translate(-50%, -50%)
+                  rotate(0deg)
+                  scale(1)
+              `;
+
+          setTimeout(() => {
+
+              ball.style.transition =
+                  'none';
+
+          }, 260);
+      }
+
+      /*
+      |--------------------------------------------------------------------------
+      | Messages
+      |--------------------------------------------------------------------------
+      */
 
       function showMessage(text) {
-        const existing = document.getElementById("game-msg");
-        if (existing) existing.remove();
 
-        const msg = document.createElement("div");
-        msg.id = "game-msg";
-        msg.textContent = text;
-        msg.style.position = "absolute";
-        msg.style.top = "50%";
-        msg.style.left = "50%";
-        msg.style.transform = "translate(-50%, -50%)";
-        msg.style.color = "white";
-        msg.style.fontSize = "36px";
-        msg.style.zIndex = "99";
-        document.body.appendChild(msg);
+          penalMessage.textContent =
+              text;
 
-        setTimeout(() => {
-          msg.remove();
-        }, 1200);
+          penalMessage.classList.add(
+              'show'
+          );
+
+          setTimeout(() => {
+
+              penalMessage
+                  .classList
+                  .remove('show');
+
+          }, 1000);
       }
-   </script>
+
+      /*
+      |--------------------------------------------------------------------------
+      | Complete game
+      |--------------------------------------------------------------------------
+      */
+
+      function completeGame() {
+
+          shooting = true;
+
+          axios.post(
+
+              settingspzl.f,
+
+              {
+                  data:
+                      settingspzl.g,
+
+                  slug:
+                      settingspzl.j
+              },
+
+              {
+                  headers: {
+
+                      'Content-Type':
+                          'multipart/form-data'
+                  }
+              }
+
+          )
+          .then(function(response) {
+
+              setTimeout(() => {
+
+                  window.location =
+                      settingspzl.h;
+
+              }, 1000);
+
+          })
+          .catch(function(error) {
+
+              console.error(
+                  'Error completing Penal Game:',
+                  error
+              );
+
+              /*
+              * Si falla el backend,
+              * permitimos seguir jugando.
+              */
+              scheduleReset();
+          });
+      }
+
+      /*
+      |--------------------------------------------------------------------------
+      | Events
+      |--------------------------------------------------------------------------
+      */
+
+      ball.addEventListener(
+          'pointerdown',
+          startDrag,
+          {
+              passive: false
+          }
+      );
+
+      ball.addEventListener(
+          'pointermove',
+          updateAim,
+          {
+              passive: false
+          }
+      );
+
+      ball.addEventListener(
+          'pointerup',
+          releaseBall,
+          {
+              passive: false
+          }
+      );
+
+      ball.addEventListener(
+          'pointercancel',
+          releaseBall,
+          {
+              passive: false
+          }
+      );
+
+      /*
+      * Evitamos drag nativo del navegador.
+      */
+      ball.addEventListener(
+          'dragstart',
+          event =>
+              event.preventDefault()
+      );
+
+      /*
+      * También prevenimos menú contextual
+      * al mantener presionado.
+      */
+      gameContainer.addEventListener(
+          'contextmenu',
+          event =>
+              event.preventDefault()
+      );
+  </script>
 </x-app-layout>

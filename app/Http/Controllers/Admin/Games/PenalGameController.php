@@ -60,8 +60,20 @@ class PenalGameController extends Controller
             $data['featured_image_disabled'] = $this->uploadImage('gcs','penalGames',$request->file('featured_image_disabled'));
         }
 
-        if($request->file('game_bg_image')){
-            $data['game_bg_image'] = $this->uploadImage('gcs','penalGames',$request->file('game_bg_image'));
+        if ($request->file('game_bg_image_desktop')) {
+            $data['game_bg_image_desktop'] = $this->uploadImage(
+                'gcs',
+                'penalGames',
+                $request->file('game_bg_image_desktop')
+            );
+        }
+
+        if ($request->file('game_bg_image_movil')) {
+            $data['game_bg_image_movil'] = $this->uploadImage(
+                'gcs',
+                'penalGames',
+                $request->file('game_bg_image_movil')
+            );
         }
 
         if($request->file('failed_image')){
@@ -72,13 +84,10 @@ class PenalGameController extends Controller
             $data['game_banner'] = $this->uploadImage('gcs','penalGames',$request->file('game_banner'));
         }
 
-        if($request->file('penal_image')){
-            $data['penal_image'] = $this->uploadImage('gcs','penalGames',$request->file('penal_image'));
-        }
 
         PenalGame::create($data);
 
-        return redirect(route('penalGames.index', ['tenant' => tenant('id')]))->with('status', trans('Penal Game saved successful'));
+        return redirect(route('penalgames.index', ['tenant' => tenant('id')]))->with('status', trans('Penal Game saved successful'));
     }
 
     /**
@@ -121,12 +130,20 @@ class PenalGameController extends Controller
             $data['featured_image_disabled'] = $this->uploadImage('gcs','penalGames',$request->file('featured_image_disabled'));
         }
 
-        if($request->file('game_bg_image')){
-            $data['game_bg_image'] = $this->uploadImage('gcs','penalGames',$request->file('game_bg_image'));
+        if ($request->file('game_bg_image_desktop')) {
+            $data['game_bg_image_desktop'] = $this->uploadImage(
+                'gcs',
+                'penalGames',
+                $request->file('game_bg_image_desktop')
+            );
         }
 
-        if($request->file('game_pipe_image')){
-            $data['game_pipe_image'] = $this->uploadImage('gcs','penalGames',$request->file('game_pipe_image'));
+        if ($request->file('game_bg_image_movil')) {
+            $data['game_bg_image_movil'] = $this->uploadImage(
+                'gcs',
+                'penalGames',
+                $request->file('game_bg_image_movil')
+            );
         }
 
         if($request->file('failed_image')){
@@ -137,9 +154,6 @@ class PenalGameController extends Controller
             $data['game_banner'] = $this->uploadImage('gcs','penalGames',$request->file('game_banner'));
         }
 
-        if($request->file('penal_image')){
-            $data['penal_image'] = $this->uploadImage('gcs','penalGames',$request->file('penal_image'));
-        }
 
         $penalGame = PenalGame::findOrFail($id);
         if (isset(($data['delete_image_holder_hidden'])) && $data['delete_image_holder_hidden'] == true) {
@@ -149,7 +163,7 @@ class PenalGameController extends Controller
         $penalGame->fill($data);
         $penalGame->save();
 
-        return redirect(route('penalGames.index', ['tenant' => tenant('id')]))->with('status', trans('Catch Game saved successful'));
+        return redirect(route('penalgames.index', ['tenant' => tenant('id')]))->with('status', trans('Catch Game saved successful'));
     }
 
     /**
