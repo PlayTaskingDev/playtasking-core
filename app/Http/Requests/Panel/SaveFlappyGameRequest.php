@@ -37,6 +37,12 @@ class SaveFlappyGameRequest extends FormRequest
             'gradient_2'        => ['required','string'],
             'max_points'        => ['required','numeric'],
             'points_per_pipe' => ['required','numeric'],
+            'game_ground_image' => [
+                Rule::requiredIf(!$this->id),
+                'image',
+                'mimes:jpg,jpeg,png',
+                'max:600',
+            ],
             'featured_image' => [
                             Rule::requiredIf(!$this->id),
                             'image',
@@ -102,6 +108,17 @@ class SaveFlappyGameRequest extends FormRequest
             'btn_text_inactive'             => ['nullable','string'],
             'btn_shadow'                    => ['nullable','boolean'],
             'btn_text_color'                => ['nullable','string'],
+            'award_title' => [
+                'nullable',
+                'required_with:award_content',
+                'string',
+            ],
+
+            'award_content' => [
+                'nullable',
+                'required_with:award_title',
+                'string',
+            ],
         ];
     }
 }

@@ -142,54 +142,18 @@
                                     name="flappy_image_animated_3"
                                     :value="$flappyGame->flappy_image_animated_3"
                                 />
+                                <x-ui.forms.input-file
+                                    label="{{ __('Failed Image') }}"
+                                    name="failed_image"
+                                    :value="$flappyGame->failed_image"
+                                />
                             </div>
                         </div>
 
                     </div>
-                    @if (!is_null($flappyGame->id))
-                        <div class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/3 mt-6">
-                            <div class="flex justify-between">
-                                <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight mb-5">
-                                {{ __('Award') }}
-                                </h2>
-                                @if (is_null($flappyGame->award))
-                                    <a href="{{ route('v2awards.create', ['tenant' => tenant('id'), 'awardable_id' => $flappyGame->id, 'awardable_type' => 'App\Models\FlappyGame' ]) }}"
-                                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-                                    {{ __('Create') }} {{ __('Award') }}
-                                    </a>
-                                @endif
-
-                            </div>
-                            @if (!is_null($flappyGame->award))
-                                <div class="relative overflow-x-auto shadow-md rounded-lg">
-                                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                                        <thead
-                                        class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                        <tr>
-                                        <th scope="col" class="px-6 py-3">
-                                        {{ __('Title') }}
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                        {{ __('Actions') }}
-                                        </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
-                                        <th scope="row" class="px-6 py-4">
-                                        {!!$flappyGame->award->title!!}
-                                        </th>
-                                        <td class="px-6 py-4">
-                                        <a href="{{ route('v2awards.edit', ['tenant' => tenant('id'), 'v2award' => $flappyGame->award]) }}"
-                                        class="font-medium text-blue-600 dark:text-blue-500 hover:underline">{{ __('Edit') }}</a>
-                                        </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        @endif
-                    </div>
-                @endif
+                    <x-admin.awards.inline-form
+                        :award="$flappyGame->award ?? null"
+                    />
             </div>
             <div class="space-y-6 lg:col-span-4 2xl:col-span-3">
                 <div class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/3">
@@ -270,5 +234,6 @@ modalToggleBtn.click();
 }
 }
 </script>
+<x-footer.tinymce-config />
 @endsection
 

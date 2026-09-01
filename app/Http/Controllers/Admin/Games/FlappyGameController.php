@@ -9,6 +9,9 @@ use App\Models\Campaign;
 use App\Models\ContentType;
 use App\Models\FlappyGame;
 use App\Http\Requests\Panel\SaveFlappyGameRequest;
+use App\Services\Admin\AwardService;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 class FlappyGameController extends Controller
 {
@@ -48,73 +51,52 @@ class FlappyGameController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(SaveFlappyGameRequest $request)
-    {
-        $data = $request->validated();
+    public function store(
+    SaveFlappyGameRequest $request,
+    AwardService $awardService
+    ) {
+        $data = $this->prepareGameData(
+            $request
+        );
 
-        if ($request->file('featured_image')) {
-            $data['featured_image'] = $this->uploadImage(
-                'gcs',
-                'flappyGames',
-                $request->file('featured_image')
-            );
-        }
+        $awardData = $this->getAwardData(
+            $request
+        );
 
-        if ($request->file('featured_image_disabled')) {
-            $data['featured_image_disabled'] = $this->uploadImage(
-                'gcs',
-                'flappyGames',
-                $request->file('featured_image_disabled')
-            );
-        }
+        $flappyGame = DB::transaction(
+            function () use (
+                $data,
+                $awardData,
+                $awardService
+            ) {
 
-        if ($request->file('game_bg_image')) {
-            $data['game_bg_image'] = $this->uploadImage(
-                'gcs',
-                'flappyGames',
-                $request->file('game_bg_image')
-            );
-        }
+                $flappyGame =
+                    FlappyGame::create($data);
 
-        if ($request->file('game_pipe_image')) {
-            $data['game_pipe_image'] = $this->uploadImage(
-                'gcs',
-                'flappyGames',
-                $request->file('game_pipe_image')
-            );
-        }
+                if ($awardData) {
 
-        if ($request->file('flappy_image')) {
-            $data['flappy_image'] = $this->uploadImage(
-                'gcs',
-                'flappyGames',
-                $request->file('flappy_image')
-            );
-        }
+                    $awardService->saveFor(
+                        $flappyGame,
+                        $awardData
+                    );
+                }
 
-        if ($request->file('failed_image')) {
-            $data['failed_image'] = $this->uploadImage(
-                'gcs',
-                'flappyGames',
-                $request->file('failed_image')
-            );
-        }
-
-        if ($request->file('game_banner')) {
-            $data['game_banner'] = $this->uploadImage(
-                'gcs',
-                'flappyGames',
-                $request->file('game_banner')
-            );
-        }
-
-        FlappyGame::create($data);
+                return $flappyGame;
+            }
+        );
 
         return redirect()
-            ->route('flappygames.index', [
-                'tenant' => tenant('id')
-            ])
-            ->with('status', trans('Flappy Game saved successful'));
+            ->route(
+                'flappygames.edit',
+                [
+                    'tenant' => tenant('id'),
+                    'flappygame' => $flappyGame,
+                ]
+            )
+            ->with(
+                'status',
+                trans('Flappy Game saved successful')
+            );
     }
 
     /**
@@ -145,56 +127,64 @@ class FlappyGameController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update($id,SaveFlappyGameRequest $request)
-    {
-        $data = $request->validated();
+    public function update(
+        $id,
+        SaveFlappyGameRequest $request,
+        AwardService $awardService
+    ) {
+        $flappyGame =
+            FlappyGame::findOrFail($id);
 
-        if($request->file('featured_image')){
-            $data['featured_image'] = $this->uploadImage('gcs','flappyGames',$request->file('featured_image'));
-        }
+        $data = $this->prepareGameData(
+            $request
+        );
 
-        if($request->file('featured_image_disabled')){
-            $data['featured_image_disabled'] = $this->uploadImage('gcs','flappyGames',$request->file('featured_image_disabled'));
-        }
+        $awardData = $this->getAwardData(
+            $request
+        );
 
-        if($request->file('game_bg_image')){
-            $data['game_bg_image'] = $this->uploadImage('gcs','flappyGames',$request->file('game_bg_image'));
-        }
-
-        if($request->file('game_pipe_image')){
-            $data['game_pipe_image'] = $this->uploadImage('gcs','flappyGames',$request->file('game_pipe_image'));
-        }
-
-        if($request->file('failed_image')){
-            $data['failed_image'] = $this->uploadImage('gcs','flappyGames',$request->file('failed_image'));
-        }
-
-        if($request->file('game_banner')){
-            $data['game_banner'] = $this->uploadImage('gcs','flappyGames',$request->file('game_banner'));
+        if (
+            $request->boolean(
+                'delete_image_holder_hidden'
+            )
+        ) {
+            $data['game_banner'] = null;
         }
 
-        if($request->file('flappy_image_animated_1')){
-            $data['flappy_image_animated_1'] = $this->uploadImage('gcs','flappyGames',$request->file('flappy_image_animated_1'));
-        }
-        if($request->file('flappy_image_animated_2')){
-            $data['flappy_image_animated_2'] = $this->uploadImage('gcs','flappyGames',$request->file('flappy_image_animated_2'));
-        }
-        if($request->file('flappy_image_animated_3')){
-            $data['flappy_image_animated_3'] = $this->uploadImage('gcs','flappyGames',$request->file('flappy_image_animated_3'));
-        }
-        if($request->file('game_ground_image')){
-            $data['game_ground_image'] = $this->uploadImage('gcs','flappyGames',$request->file('game_ground_image'));
-        }
+        DB::transaction(
+            function () use (
+                $flappyGame,
+                $data,
+                $awardData,
+                $awardService
+            ) {
 
-        $flappyGame = FlappyGame::findOrFail($id);
-        if (isset(($data['delete_image_holder_hidden'])) && $data['delete_image_holder_hidden'] == true) {
-            $flappyGame->game_banner = null;
-        }
+                $flappyGame->update(
+                    $data
+                );
 
-        $flappyGame->fill($data);
-        $flappyGame->save();
+                if ($awardData) {
 
-        return redirect(route('flappygames.index', ['tenant' => tenant('id')]))->with('status', trans('Catch Game saved successful'));
+                    $awardService->saveFor(
+                        $flappyGame,
+                        $awardData
+                    );
+                }
+            }
+        );
+
+        return redirect()
+            ->route(
+                'flappygames.edit',
+                [
+                    'tenant' => tenant('id'),
+                    'flappygame' => $flappyGame,
+                ]
+            )
+            ->with(
+                'status',
+                trans('Flappy Game saved successful')
+            );
     }
 
     /**
@@ -224,5 +214,69 @@ class FlappyGameController extends Controller
         $flappyGame->delete();
 
         return redirect(route('flappyGames.index', ['tenant' => tenant('id')]))->with('status', trans('Catch Game deleted successful'));
+    }
+    private function prepareGameData(
+        SaveFlappyGameRequest $request
+    ): array {
+
+        $data = Arr::except(
+            $request->validated(),
+            [
+                'award_title',
+                'award_content',
+                'delete_image_holder_hidden',
+            ]
+        );
+
+        $imageFields = [
+            'featured_image',
+            'featured_image_disabled',
+
+            'game_bg_image',
+            'game_pipe_image',
+            'game_ground_image',
+
+            'flappy_image_animated_1',
+            'flappy_image_animated_2',
+            'flappy_image_animated_3',
+
+            'failed_image',
+            'game_banner',
+        ];
+
+        foreach ($imageFields as $field) {
+
+            if (!$request->hasFile($field)) {
+                continue;
+            }
+
+            $data[$field] = $this->uploadImage(
+                'gcs',
+                'flappyGames',
+                $request->file($field)
+            );
+        }
+
+        return $data;
+    }
+    private function getAwardData(
+    SaveFlappyGameRequest $request
+    ): ?array {
+
+        $title = $request->input('award_title');
+        $content = $request->input('award_content');
+
+        if (
+            blank($title)
+            &&
+            blank($content)
+        ) {
+            return null;
+        }
+
+        return [
+            'title' => $title,
+            'content' => $content,
+        ];
     }
 }

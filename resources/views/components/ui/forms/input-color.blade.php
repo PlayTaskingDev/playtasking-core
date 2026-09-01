@@ -128,6 +128,7 @@
           type="text"
           id="{{ $name }}"
           name="{{ $name }}"
+          value="{{ old($name, $value ?? '') }}"
           x-model="textInput"
           required
           {{ 

@@ -16,7 +16,9 @@
                 @if ($options)
                 @foreach ($options as $option )
                     <option value="{{ $option->id }}"
-                        @if (isset($value) && $value == $option->id) selected @endif
+                        @if (old($name, $value) == $option->id)
+                            selected
+                        @endif
                          class="text-gray-700 dark:bg-gray-900 dark:text-gray-400">
                         {{ $option->name }}
                     </option>
