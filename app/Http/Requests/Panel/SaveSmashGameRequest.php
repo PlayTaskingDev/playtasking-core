@@ -55,6 +55,36 @@ class SaveSmashGameRequest extends FormRequest
             'btn_text_inactive'             => ['nullable','string'],
             'btn_shadow'                    => ['nullable','boolean'],
             'btn_text_color'                => ['nullable','string'],
+            'award_title' => [
+                'nullable',
+                'required_with:award_content',
+                'required_if:generate_award_codes,1',
+                'string',
+            ],
+
+            'award_content' => [
+                'nullable',
+                'required_with:award_title',
+                'required_if:generate_award_codes,1',
+                'string',
+            ],
+
+            'generate_award_codes' => [
+                'nullable',
+                'boolean',
+            ],
+
+            'award_codes_quantity' => [
+                'nullable',
+                'required_if:generate_award_codes,1',
+                'integer',
+                'min:1',
+                'max:20000',
+            ],
+            'btn_enable_shadow' => [
+                'nullable',
+                'boolean',
+            ],
         ];
     }
 }

@@ -7,8 +7,11 @@ use App\Http\Requests\Panel\SaveSmashGameRequest;
 use App\Models\SmashGame;
 use App\Models\Campaign;
 use App\Models\ContentType;
-use Illuminate\Http\Request;
 use App\Traits\UploadImageTrait;
+use App\Services\Admin\AwardService;
+use App\Services\Admin\AwardCodeService;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 class SmashGameController extends Controller
 {
@@ -47,33 +50,69 @@ class SmashGameController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(SaveSmashGameRequest $request)
-    {
-        $data = $request->all();
+    public function store(
+        SaveSmashGameRequest $request,
+        AwardService $awardService,
+        AwardCodeService $awardCodeService
+    ) {
+        $data = $this->prepareGameData(
+            $request
+        );
 
-        if($request->file('featured_image')){
-            $data['featured_image'] = $this->uploadImage('gcs','smash_games',$request->file('featured_image'));
-        }
+        $awardData = $this->getAwardData(
+            $request
+        );
 
-        if($request->file('featured_image_disabled')){
-            $data['featured_image_disabled'] = $this->uploadImage('gcs','smash_games',$request->file('featured_image_disabled'));
-        }
+        $smashGame = DB::transaction(
+            function () use (
+                $request,
+                $data,
+                $awardData,
+                $awardService,
+                $awardCodeService
+            ) {
 
-        if($request->file('game_bg_image')){
-            $data['game_bg_image'] = $this->uploadImage('gcs','smash_games',$request->file('game_bg_image'));
-        }
+                $smashGame = SmashGame::create(
+                    $data
+                );
 
-        if($request->file('failed_image')){
-            $data['failed_image'] = $this->uploadImage('gcs','smash_games',$request->file('failed_image'));
-        }
+                if ($awardData) {
 
-        if($request->file('game_banner')){
-            $data['game_banner'] = $this->uploadImage('gcs','smash_games',$request->file('game_banner'));
-        }
+                    $award = $awardService->saveFor(
+                        $smashGame,
+                        $awardData
+                    );
 
-        SmashGame::create($data);
+                    if (
+                        $request->boolean(
+                            'generate_award_codes'
+                        )
+                    ) {
+                        $awardCodeService->generate(
+                            $award,
+                            (int) $request->input(
+                                'award_codes_quantity'
+                            )
+                        );
+                    }
+                }
 
-        return redirect(route('smashgames.index', ['tenant' => tenant('id')]))->with('status', trans('Smash Game saved successful'));
+                return $smashGame;
+            }
+        );
+
+        return redirect()
+            ->route(
+                'smashgames.edit',
+                [
+                    'tenant' => tenant('id'),
+                    'smashgame' => $smashGame,
+                ]
+            )
+            ->with(
+                'status',
+                trans('Smash Game saved successful')
+            );
     }
 
     /**
@@ -89,55 +128,119 @@ class SmashGameController extends Controller
      */
     public function edit($id)
     {
-        $smash_game = SmashGame::findOrFail($id);
+        $smash_game = SmashGame::query()
+            ->with([
+                'campaign',
+                'smash_objects',
+
+                'award' => function ($query) {
+
+                    $query->withCount([
+                        'codes_available',
+                        'codes_delivered',
+                    ]);
+                },
+            ])
+            ->findOrFail($id);
+
         $campaigns = Campaign::all();
-        $content_type = ContentType::where('system_name','games')->first();
+
+        $content_type = ContentType::where(
+            'system_name',
+            'games'
+        )->first();
+
         $time_slots = get_time_slots();
 
-        return view('admin.games.smashgame.edit', [
-            'smash_game'   => $smash_game->load('smash_objects'),
-            'campaigns'    => $campaigns,
-            'content_type' => $content_type,
-            'time_slots'   => $time_slots
-        ]);
+        return view(
+            'admin.games.smashgame.edit',
+            [
+                'smash_game' => $smash_game,
+                'campaigns' => $campaigns,
+                'content_type' => $content_type,
+                'time_slots' => $time_slots,
+            ]
+        );
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update($id, SaveSmashGameRequest $request)
-    {
-        $data = $request->validated();
+    public function update(
+        $id,
+        SaveSmashGameRequest $request,
+        AwardService $awardService,
+        AwardCodeService $awardCodeService
+    ) {
+        $smashGame = SmashGame::findOrFail(
+            $id
+        );
 
-        if($request->file('featured_image')){
-            $data['featured_image'] = $this->uploadImage('gcs','smash_games',$request->file('featured_image'));
+        $data = $this->prepareGameData(
+            $request
+        );
+
+        $awardData = $this->getAwardData(
+            $request
+        );
+
+        if (
+            $request->boolean(
+                'delete_image_holder_hidden'
+            )
+        ) {
+            $data['game_banner'] = null;
         }
 
-        if($request->file('featured_image_disabled')){
-            $data['featured_image_disabled'] = $this->uploadImage('gcs','smash_games',$request->file('featured_image_disabled'));
-        }
+        DB::transaction(
+            function () use (
+                $request,
+                $smashGame,
+                $data,
+                $awardData,
+                $awardService,
+                $awardCodeService
+            ) {
 
-        if($request->file('game_bg_image')){
-            $data['game_bg_image'] = $this->uploadImage('gcs','smash_games',$request->file('game_bg_image'));
-        }
+                $smashGame->update(
+                    $data
+                );
 
-        if($request->file('failed_image')){
-            $data['failed_image'] = $this->uploadImage('gcs','smash_games',$request->file('failed_image'));
-        }
+                if ($awardData) {
 
-        if($request->file('game_banner')){
-            $data['game_banner'] = $this->uploadImage('gcs','smash_games',$request->file('game_banner'));
-        }
+                    $award = $awardService->saveFor(
+                        $smashGame,
+                        $awardData
+                    );
 
-        $smash_game = SmashGame::findOrFail($id);
-        if (isset(($data['delete_image_holder_hidden'])) && $data['delete_image_holder_hidden'] == true) {
-            $smash_game->game_banner = null;
-        }
+                    if (
+                        $request->boolean(
+                            'generate_award_codes'
+                        )
+                    ) {
+                        $awardCodeService->generate(
+                            $award,
+                            (int) $request->input(
+                                'award_codes_quantity'
+                            )
+                        );
+                    }
+                }
+            }
+        );
 
-        $smash_game->fill($data);
-        $smash_game->save();
-
-        return redirect(route('smashgames.index', ['tenant' => tenant('id')]))->with('status', trans('Smash Game saved successful'));
+        return redirect()
+            ->route(
+                'smashgames.edit',
+                [
+                    'tenant' => tenant('id'),
+                    'smashgame' => $smashGame,
+                ]
+            )
+            ->with(
+                'status',
+                trans('Smash Game saved successful')
+            );
     }
 
     /**
@@ -148,9 +251,9 @@ class SmashGameController extends Controller
         $smash_game = SmashGame::findOrFail($id);
         $smash_game->load(['smash_objects','award','coupons']);
 
-        if ($smash_game->memory_cards && $smash_game->memory_cards->isNotEmpty()) {
-            foreach ($smash_game->memory_cards as $card) {
-                $card->delete();
+        if ($smash_game->smash_objects && $smash_game->smash_objects->isNotEmpty()) {
+            foreach ($smash_game->smash_objects as $object) {
+                $object->delete();
             }
         }
 
@@ -167,5 +270,65 @@ class SmashGameController extends Controller
         $smash_game->delete();
 
         return redirect(route('smashgames.index', ['tenant' => tenant('id')]))->with('status', trans('Smash Game deleted successful'));
+    }
+    private function prepareGameData(
+        SaveSmashGameRequest $request
+    ): array {
+
+        $imageFields = [
+            'featured_image',
+            'featured_image_disabled',
+            'game_bg_image',
+            'failed_image',
+            'game_banner',
+        ];
+
+        $data = Arr::except(
+            $request->validated(),
+            array_merge(
+                $imageFields,
+                [
+                    'award_title',
+                    'award_content',
+                    'generate_award_codes',
+                    'award_codes_quantity',
+                    'delete_image_holder_hidden',
+                ]
+            )
+        );
+
+        foreach ($imageFields as $field) {
+
+            if (!$request->hasFile($field)) {
+                continue;
+            }
+
+            $data[$field] = $this->uploadImage(
+                'gcs',
+                'smash_games',
+                $request->file($field)
+            );
+        }
+
+        return $data;
+    }
+    private function getAwardData(
+        SaveSmashGameRequest $request
+    ): ?array {
+
+        $title = $request->input('award_title');
+        $content = $request->input('award_content');
+
+        if (
+            blank($title) &&
+            blank($content)
+        ) {
+            return null;
+        }
+
+        return [
+            'title' => $title,
+            'content' => $content,
+        ];
     }
 }

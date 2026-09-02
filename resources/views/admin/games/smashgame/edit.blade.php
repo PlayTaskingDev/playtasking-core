@@ -94,91 +94,60 @@
                                 <x-ui.forms.input-number label="{{ __('Max Points') }}"  name="max_points" placeholder="" :value="$smash_game->max_points" data-field="campaign.max_points" />
                                 <x-ui.forms.input-number label="{{ __('Points per Object') }}" name="points_per_object" placeholder="" :value="$smash_game->points_per_object" data-field="campaign.points_per_object" />
                                 <x-ui.forms.input-file label="{{ __('Game Background Image') }}" dummy_img="/storage/dummy_assets/800x1180.png" name="game_bg_image" placeholder="" :value="$smash_game->game_bg_image" data-field="campaign.game_bg_image" />
-                                <div id="cards_container" class="py-6 mx-5 col-span-2">
-                                    <div class="flex justify-between">
-                                        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight mb-5">
-                                        {{ __('Objects') }}</h2>
-                                        <a href="{{ route('smashgameobjects.create', ['tenant' => tenant('id'), 'smash_game_id' => $smash_game]) }}"
-                                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-                                        {{ __('Create') }} {{ __('Object') }}
-                                        </a>
-                                    </div>
-                                    <div class="relative overflow-x-auto shadow-md rounded-lg">
-                                        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                                <tr>
-                                                <th scope="col" class="px-6 py-3">
-                                                {{ __('Image') }}
-                                                </th>
-                                                <th scope="col" class="px-6 py-3">
-                                                {{ __('Actions') }}
-                                                </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($smash_game->smash_objects as $object)
-                                                    <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
-                                                    <th scope="row" class="px-6 py-4">
-                                                    <img class="w-8" src="{{ $object->object_image }}" alt="{{ __('Object Image') }}" title="{{ __('Object Image') }}">
+                                <x-ui.forms.input-file
+                                    label="{{ __('Failed Image') }}"
+                                    dummy_img="/storage/dummy_assets/600x200.png"
+                                    name="failed_image"
+                                    :value="$smash_game->failed_image"
+                                />
+                                @if ($smash_game->exists)
+                                    <div id="smash_objects_container" class="py-6 mx-5 col-span-2">
+                                        <div class="flex justify-between">
+                                            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight mb-5">
+                                            {{ __('Objects') }}</h2>
+                                            <a href="{{ route('smashgameobjects.create', ['tenant' => tenant('id'), 'smash_game_id' => $smash_game]) }}"
+                                            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                                            {{ __('Create') }} {{ __('Object') }}
+                                            </a>
+                                        </div>
+                                        <div class="relative overflow-x-auto shadow-md rounded-lg">
+                                            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                                                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                                    <tr>
+                                                    <th scope="col" class="px-6 py-3">
+                                                    {{ __('Image') }}
                                                     </th>
-                                                    <td class="px-6 py-4">
-                                                    <a href="{{ route('smashgameobjects.edit', ['tenant' => tenant('id'), 'smashgameobject' => $object]) }}"
-                                                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline">{{ __('Edit') }}</a>
-                                                    </td>
+                                                    <th scope="col" class="px-6 py-3">
+                                                    {{ __('Actions') }}
+                                                    </th>
                                                     </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($smash_game->smash_objects as $object)
+                                                        <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
+                                                        <th scope="row" class="px-6 py-4">
+                                                        <img class="w-8" src="{{ $object->object_image }}" alt="{{ __('Object Image') }}" title="{{ __('Object Image') }}">
+                                                        </th>
+                                                        <td class="px-6 py-4">
+                                                        <a href="{{ route('smashgameobjects.edit', ['tenant' => tenant('id'), 'smashgameobject' => $object]) }}"
+                                                        class="font-medium text-blue-600 dark:text-blue-500 hover:underline">{{ __('Edit') }}</a>
+                                                        </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
-                                </div>
+                                @else
+                                    <div class="col-span-2 rounded-lg bg-blue-50 p-4  text-sm text-blue-700">
+                                        Guarda primero el Smash Game para poder
+                                        agregar los objetos.
+                                    </div>
+                                @endif
                             </div>
                         </div>
-
                     </div>
-                    @if (!is_null($smash_game->id))
-                        <div class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/3 mt-6">
-                            <div class="flex justify-between">
-                                <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight mb-5">
-                                {{ __('Award') }}
-                                </h2>
-                                @if (is_null($smash_game->award))
-                                    <a href="{{ route('v2awards.create', ['tenant' => tenant('id'), 'awardable_id' => $smash_game, 'awardable_type' => 'App\Models\SmashGame' ]) }}"
-                                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-                                    {{ __('Create') }} {{ __('Award') }}
-                                    </a>
-                                @endif
-
-                            </div>
-                            @if (!is_null($smash_game->award))
-                                <div class="relative overflow-x-auto shadow-md rounded-lg">
-                                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                                        <thead
-                                        class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                        <tr>
-                                        <th scope="col" class="px-6 py-3">
-                                        {{ __('Title') }}
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                        {{ __('Actions') }}
-                                        </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
-                                        <th scope="row" class="px-6 py-4">
-                                        {!!$smash_game->award->title!!}
-                                        </th>
-                                        <td class="px-6 py-4">
-                                        <a href="{{ route('v2awards.edit', ['tenant' => tenant('id'), 'v2award' => $smash_game->award]) }}"
-                                        class="font-medium text-blue-600 dark:text-blue-500 hover:underline">{{ __('Edit') }}</a>
-                                        </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        @endif
-                    </div>
-                @endif
+                    <x-admin.awards.inline-form :award="$smash_game->award ?? null" />
             </div>
             <div class="space-y-6 lg:col-span-4 2xl:col-span-3">
                 <div class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/3">
@@ -258,5 +227,6 @@ modalToggleBtn.click();
 }
 }
 </script>
+<x-footer.tinymce-config />
 @endsection
 
