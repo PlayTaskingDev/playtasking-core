@@ -91,43 +91,8 @@
                                 <x-ui.forms.input-number label="{{ __('Seconds') }}" name="seconds" placeholder="" :value="$memory_quiz->seconds" data-field="campaign.seconds" />
                                 <x-ui.forms.input-file label="{{ __('Failed Image') }}" dummy_img="/storage/dummy_assets/800x1180.png" name="failed_image" placeholder="" :value="$memory_quiz->failed_image" data-field="campaign.failed_image" />
                                 <x-ui.forms.input-file label="{{ __('Back Card Image') }}" dummy_img="/storage/dummy_assets/800x1180.png" name="back_card_image" placeholder="" :value="$memory_quiz->back_card_image" data-field="campaign.back_card_image" />
-                                <div id="cards_container" class="py-6 mx-5 col-span-2">
-                                    <div class="flex justify-between">
-                                        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight mb-5">
-                                        {{ __('Cards') }}</h2>
-                                        <a href="{{ route('memorygamecards.create', ['tenant' => tenant('id'), 'memory_quiz_id' => $memory_quiz->id]) }}"
-                                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-                                        {{ __('Create') }} {{ __('Card') }}
-                                        </a>
-                                    </div>
-                                    <div class="relative overflow-x-auto shadow-md rounded-lg">
-                                        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                                <tr>
-                                                <th scope="col" class="px-6 py-3">
-                                                {{ __('Image') }}
-                                                </th>
-                                                <th scope="col" class="px-6 py-3">
-                                                {{ __('Actions') }}
-                                                </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($memory_quiz->memory_cards as $card)
-                                                    <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
-                                                    <th scope="row" class="px-6 py-4">
-                                                    <img class="w-8" src="{{ $card->featured_image }}" alt="{{ __('Card Image') }}" title="{{ __('Card Image') }}">
-                                                    </th>
-                                                    <td class="px-6 py-4">
-                                                    <a href="{{ route('memorygamecards.edit', ['tenant' => tenant('id'), 'memorygamecard' => $card]) }}"
-                                                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline">{{ __('Edit') }}</a>
-                                                    </td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
+                                <x-admin.memory.cards-builder :cards="$memory_quiz->memory_cards"/>
+                                <x-admin.awards.inline-form :award="$memory_quiz->award ?? null" />
                             </div>
                         </div>
 
@@ -257,5 +222,6 @@ modalToggleBtn.click();
 }
 }
 </script>
+<x-footer.tinymce-config />
 @endsection
 

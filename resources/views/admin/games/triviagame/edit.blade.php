@@ -89,98 +89,64 @@
                                 <x-ui.forms.input-text label="{{ __('Banner URL (Image)') }}" name="game_banner_url" placeholder="" :value="$quiz->game_banner_url" data-field="campaign.game_banner_url" />
                                 <x-ui.forms.input-text label="{{ __('Video') }}" name="game_banner_video" placeholder="" :value="$quiz->game_banner_video" data-field="campaign.game_banner_video" />
 
-                                <h2 class="mt-6 text-lg col-span-2 font-semibold text-gray-800 dark:text-white/90">Trivia Game Settings</h2>
-                                <x-ui.forms.input-switch label="{{ __('Enable Chronometer') }}" name="enable_chronometer" value="1" switcher="{{ $quiz->enable_chronometer }}"/>
-                                <x-ui.forms.input-number label="{{ __('Seconds') }}" name="seconds" placeholder="" :value="$quiz->seconds" data-field="campaign.seconds" />
-                                <x-ui.forms.input-text cols="2" label="{{ __('Failed Response') }}" name="failed_response" placeholder="" :value="$quiz->failed_response" />
-                                <x-ui.forms.input-file label="{{ __('Failed Image') }}" dummy_img="/storage/dummy_assets/600x200.png" name="failed_image" placeholder="" :value="$quiz->failed_image" data-field="campaign.failed_image" />
-                                <x-ui.forms.input-file label="{{ __('Failed Image Out Time') }}" dummy_img="/storage/dummy_assets/600x200.png" name="failed_image_out_time" placeholder="" :value="$quiz->failed_image_out_time" data-field="campaign.failed_image_out_time" />
+                                <h2
+                                    class="mt-6 text-lg col-span-2
+                                        font-semibold text-gray-800
+                                        dark:text-white/90"
+                                >
+                                    Trivia Game Settings
+                                </h2>
 
-                                <div id="question_container" class="py-6 mx-5 col-span-2">
-                                    <div class="flex justify-between">
-                                        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight mb-5">
-                                        {{ __('Questions') }}</h2>
-                                        <a href="{{ route('triviagamequestions.create', ['tenant' => tenant('id'), 'quiz_id' => $quiz]) }}"
-                                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-                                        {{ __('Create') }} {{ __('Question') }}
-                                        </a>
-                                    </div>
-                                    <div class="relative overflow-x-auto shadow-md rounded-lg">
-                                        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                                <tr>
-                                                <th scope="col" class="px-6 py-3">
-                                                {{ __('Question Title') }}
-                                                </th>
-                                                <th scope="col" class="px-6 py-3">
-                                                {{ __('Actions') }}
-                                                </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($quiz->questions as $question)
-                                                    <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
-                                                    <th scope="row" class="px-6 py-4">
-                                                    {{ $question->title }}
-                                                    </th>
-                                                    <td class="px-6 py-4">
-                                                    <a href="{{ route('triviagamequestions.edit', ['tenant' => tenant('id'), 'triviagamequestion' => $question]) }}"
-                                                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline">{{ __('Edit') }}</a>
-                                                    </td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                <x-ui.forms.input-switch
+                                    label="{{ __('Enable Chronometer') }}"
+                                    name="enable_chronometer"
+                                    value="1"
+                                    switcher="{{ old('enable_chronometer', $quiz->enable_chronometer) }}"
+                                />
+
+                                <div
+                                    id="chronometer-seconds-container"
+                                    class="contents"
+                                >
+                                    <x-ui.forms.input-number
+                                        label="{{ __('Time limit in seconds') }}"val
+                                        name="seconds"
+                                        :value="$quiz->seconds"
+                                    />
                                 </div>
+
+                                <x-ui.forms.input-text
+                                    cols="2"
+                                    label="{{ __('Failed Response') }}"
+                                    name="failed_response"
+                                    :value="$quiz->failed_response"
+                                />
+
+                                <x-ui.forms.input-file
+                                    label="{{ __('Failed Image') }}"
+                                    dummy_img="/storage/dummy_assets/600x200.png"
+                                    name="failed_image"
+                                    :value="$quiz->failed_image"
+                                />
+
+                                <div
+                                    id="chronometer-failed-image-container"
+                                    class="contents"
+                                >
+                                    <x-ui.forms.input-file
+                                        label="{{ __('Failed Image Out Time') }}"
+                                        dummy_img="/storage/dummy_assets/600x200.png"
+                                        name="failed_image_out_time"
+                                        :value="$quiz->failed_image_out_time"
+                                    />
+                                </div>
+
+                                <x-admin.trivia.questions-builder :questions="$quiz->questions" />
                             </div>
                         </div>
 
                     </div>
-                    @if (!is_null($quiz->id))
-                        <div class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/3 mt-6">
-                            <div class="flex justify-between">
-                                <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight mb-5">
-                                {{ __('Award') }}
-                                </h2>
-                                @if (is_null($quiz->award))
-                                    <a href="{{ route('v2awards.create', ['tenant' => tenant('id'), 'awardable_id' => $quiz, 'awardable_type' => 'App\Models\Quiz' ]) }}"
-                                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-                                    {{ __('Create') }} {{ __('Award') }}
-                                    </a>
-                                @endif
-
-                            </div>
-                            @if (!is_null($quiz->award))
-                                <div class="relative overflow-x-auto shadow-md rounded-lg">
-                                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                                        <thead
-                                        class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                        <tr>
-                                        <th scope="col" class="px-6 py-3">
-                                        {{ __('Title') }}
-                                        </th>
-                                        <th scope="col" class="px-6 py-3">
-                                        {{ __('Actions') }}
-                                        </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
-                                        <th scope="row" class="px-6 py-4">
-                                        {!!$quiz->award->title!!}
-                                        </th>
-                                        <td class="px-6 py-4">
-                                        <a href="{{ route('v2awards.edit', ['tenant' => tenant('id'), 'v2award' => $quiz->award]) }}"
-                                        class="font-medium text-blue-600 dark:text-blue-500 hover:underline">{{ __('Edit') }}</a>
-                                        </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        @endif
-                    </div>
-                @endif
+                    <x-admin.awards.inline-form :award="$quiz->award ?? null" />
             </div>
             <div class="space-y-6 lg:col-span-4 2xl:col-span-3">
                 <div class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/3">
@@ -230,6 +196,51 @@ return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}
 }
 </script>   --}}
 <script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const chronometer =
+        document.querySelector(
+            '[name="enable_chronometer"]'
+        );
+
+    const secondsContainer =
+        document.getElementById(
+            'chronometer-seconds-container'
+        );
+
+    const failedImageContainer =
+        document.getElementById(
+            'chronometer-failed-image-container'
+        );
+
+    if (!chronometer) {
+        return;
+    }
+
+    function updateChronometerFields() {
+
+        const enabled =
+            chronometer.checked;
+
+        secondsContainer
+            ?.classList
+            .toggle('hidden', !enabled);
+
+        failedImageContainer
+            ?.classList
+            .toggle('hidden', !enabled);
+    }
+
+    chronometer.addEventListener(
+        'change',
+        updateChronometerFields
+    );
+
+    updateChronometerFields();
+
+});
+</script>
+<script>
 
 function setDateTimeFromPicker(target) {
 // Get the selected date from the datepicker
@@ -261,5 +272,6 @@ modalToggleBtn.click();
 }
 }
 </script>
+<x-footer.tinymce-config />
 @endsection
 

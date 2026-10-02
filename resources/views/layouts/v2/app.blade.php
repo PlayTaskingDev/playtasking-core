@@ -125,7 +125,7 @@
             @include('layouts.v2.app-header')
             <!-- app header end -->
             <div class="max-w-(--breakpoint-2xl) pt-6">
-                <div class="max-w-5xl mx-auto">
+                <div class="max-w-6xl mx-auto">
                 @yield('content')
                 </div>
             </div>

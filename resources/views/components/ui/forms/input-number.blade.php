@@ -1,4 +1,4 @@
-@props(['label','placeholder','name', 'value', 'cols' => 0, 'isvideo' => false ])
+@props(['label','placeholder' => '','name', 'value', 'cols' => 0, 'isvideo' => false ])
 <div class="col-span-{{ $cols }}">
     <label for="{{ $name }}" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
         {{ $label }}

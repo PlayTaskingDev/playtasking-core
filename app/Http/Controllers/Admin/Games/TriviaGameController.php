@@ -4,11 +4,15 @@ namespace App\Http\Controllers\Admin\Games;
 
 use App\Http\Controllers\Controller;
 use App\Models\Quiz;
-use Illuminate\Http\Request;
 use App\Http\Requests\Panel\SaveQuizRequest;
 use App\Models\Campaign;
 use App\Models\ContentType;
 use App\Traits\UploadImageTrait;
+use App\Services\Admin\TriviaQuestionService;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
+use App\Services\Admin\AwardService;
+use App\Services\Admin\AwardCodeService;
 
 class TriviaGameController extends Controller
 {
@@ -37,6 +41,14 @@ class TriviaGameController extends Controller
     public function create()
     {
         $quiz = new Quiz();
+        $quiz->setRelation(
+            'questions',
+            collect()
+        );
+        $quiz->setRelation(
+            'award',
+            null
+        );
         $campaigns = Campaign::all();
         $content_type = ContentType::where('system_name','games')->first();
         $time_slots = get_time_slots();
@@ -55,32 +67,113 @@ class TriviaGameController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(SaveQuizRequest $request)
-    {
-        $data = $request->all();
+    public function store(
+        SaveQuizRequest $request,
+        TriviaQuestionService $triviaQuestionService,
+        AwardService $awardService,
+        AwardCodeService $awardCodeService
+    ) {
+        $validated =
+            $request->validated();
 
-        if($request->file('featured_image')){
-            $data['featured_image'] = $this->uploadImage('gcs','quizzes',$request->file('featured_image'));
-        }
+        $quizData =
+            $this->prepareQuizData(
+                $request
+            );
 
-        if($request->file('featured_image_disabled')){
-            $data['featured_image_disabled'] = $this->uploadImage('gcs','quizzes',$request->file('featured_image_disabled'));
-        }
+        $awardData =
+            $this->getAwardData(
+                $request
+            );
 
-        if($request->file('failed_image')){
-            $data['failed_image'] = $this->uploadImage('gcs','quizzes',$request->file('failed_image'));
-        }
-        if($request->file('failed_image_out_time')){
-            $data['failed_image_out_time'] = $this->uploadImage('gcs','quizzes',$request->file('failed_image_out_time'));
-        }
+        $quiz = DB::transaction(
+            function () use (
+                $request,
+                $validated,
+                $quizData,
+                $awardData,
+                $triviaQuestionService,
+                $awardService,
+                $awardCodeService
+            ) {
 
-        if($request->file('game_banner')){
-            $data['game_banner'] = $this->uploadImage('gcs','quizzes',$request->file('game_banner'));
-        }
+                /*
+                * 1. Crear Trivia
+                */
+                $quiz = Quiz::create(
+                    $quizData
+                );
 
-        Quiz::create($data);
 
-        return redirect(route('triviagames.index', ['tenant' => tenant('id')]))->with('status', trans('Quiz saved successful'));
+                /*
+                * 2. Preguntas y respuestas
+                */
+                if (
+                    isset(
+                        $validated['questions']
+                    )
+                ) {
+                    $triviaQuestionService
+                        ->sync(
+                            $quiz,
+                            $validated['questions']
+                        );
+                }
+
+
+                /*
+                * 3. Premio
+                */
+                if ($awardData) {
+
+                    $award =
+                        $awardService->saveFor(
+                            $quiz,
+                            $awardData
+                        );
+
+
+                    /*
+                    * 4. Códigos
+                    */
+                    if (
+                        $request->boolean(
+                            'generate_award_codes'
+                        )
+                    ) {
+                        $awardCodeService
+                            ->generate(
+                                $award,
+                                (int) $request->input(
+                                    'award_codes_quantity'
+                                )
+                            );
+                    }
+                }
+
+
+                return $quiz;
+            }
+        );
+
+
+        return redirect()
+            ->route(
+                'triviagames.edit',
+                [
+                    'tenant' =>
+                        tenant('id'),
+
+                    'triviagame' =>
+                        $quiz,
+                ]
+            )
+            ->with(
+                'status',
+                trans(
+                    'Quiz saved successful'
+                )
+            );
     }
 
     /**
@@ -102,17 +195,39 @@ class TriviaGameController extends Controller
      */
     public function edit($id)
     {
-        $quiz = Quiz::findOrFail($id);
+        $quiz = Quiz::query()
+        ->with([
+            'campaign',
+
+            'questions.answers',
+
+            'award' => function ($query) {
+                $query->withCount([
+                    'codes_available',
+                    'codes_delivered',
+                ]);
+            },
+        ])
+        ->findOrFail($id);
+
         $campaigns = Campaign::all();
-        $content_type = ContentType::where('system_name','games')->first();
+
+        $content_type = ContentType::where(
+            'system_name',
+            'games'
+        )->first();
+
         $time_slots = get_time_slots();
 
-        return view('admin.games.triviagame.edit', [
-            'quiz'          => $quiz->load('questions','award','campaign'),
-            'campaigns'     => $campaigns,
-            'content_type'  => $content_type,
-            'time_slots'    => $time_slots
-        ]);
+        return view(
+            'admin.games.triviagame.edit',
+            [
+                'quiz' => $quiz,
+                'campaigns' => $campaigns,
+                'content_type' => $content_type,
+                'time_slots' => $time_slots,
+            ]
+        );
     }
 
     /**
@@ -122,46 +237,128 @@ class TriviaGameController extends Controller
      * @param  \App\Models\Quiz  $quiz
      * @return \Illuminate\Http\Response
      */
-    public function update($id, SaveQuizRequest $request)
-    {
-        $data = $request->all();
+    public function update(
+    $id,
+    SaveQuizRequest $request,
+    TriviaQuestionService $triviaQuestionService,
+    AwardService $awardService,
+        AwardCodeService $awardCodeService
+    ) {
+        $quiz = Quiz::findOrFail(
+            $id
+        );
 
-        if($request->file('featured_image')){
-            $data['featured_image'] = $this->uploadImage('gcs','quizzes',$request->file('featured_image'));
+        $validated =
+            $request->validated();
+
+        $quizData =
+            $this->prepareQuizData(
+                $request
+            );
+
+        $awardData =
+            $this->getAwardData(
+                $request
+            );
+
+
+        if (
+            $request->boolean(
+                'delete_image_holder_hidden'
+            )
+        ) {
+            $quizData['game_banner'] =
+                null;
         }
 
-        if($request->file('featured_image_disabled')){
-            $data['featured_image_disabled'] = $this->uploadImage('gcs','quizzes',$request->file('featured_image_disabled'));
-        }
 
-        if($request->file('failed_image')){
-            $data['failed_image'] = $this->uploadImage('gcs','quizzes',$request->file('failed_image'));
-        }
+        DB::transaction(
+            function () use (
+                $request,
+                $quiz,
+                $validated,
+                $quizData,
+                $awardData,
+                $triviaQuestionService,
+                $awardService,
+                $awardCodeService
+            ) {
 
-        if($request->file('failed_image_out_time')){
-            $data['failed_image_out_time'] = $this->uploadImage('gcs','quizzes',$request->file('failed_image_out_time'));
-        }
+                /*
+                * Trivia
+                */
+                $quiz->update(
+                    $quizData
+                );
 
-        if($request->file('game_banner')){
-            $data['game_banner'] = $this->uploadImage('gcs','quizzes',$request->file('game_banner'));
-        }
 
-        $quiz = Quiz::findOrFail($id);
-        if (isset(($data['delete_image_holder_hidden'])) && $data['delete_image_holder_hidden'] == true) {
-            $quiz->game_banner = null;
-        }
-        if( !$request->has('btn_border') ){
-            $data['btn_border'] = false;
-        }
+                /*
+                * Preguntas
+                */
+                if (
+                    isset(
+                        $validated['questions']
+                    )
+                ) {
+                    $triviaQuestionService
+                        ->sync(
+                            $quiz,
+                            $validated['questions']
+                        );
+                }
 
-        if( !$request->has('btn_shadow') ){
-            $data['btn_shadow'] = false;
-        }
 
-        $quiz->fill($data);
-        $quiz->save();
+                /*
+                * Premio
+                */
+                if ($awardData) {
 
-        return redirect(route('triviagames.index', ['tenant' => tenant('id')]))->with('status', trans('Quiz saved successful'));
+                    $award =
+                        $awardService->saveFor(
+                            $quiz,
+                            $awardData
+                        );
+
+
+                    /*
+                    * Generar códigos solamente
+                    * si se marcó explícitamente.
+                    */
+                    if (
+                        $request->boolean(
+                            'generate_award_codes'
+                        )
+                    ) {
+                        $awardCodeService
+                            ->generate(
+                                $award,
+                                (int) $request->input(
+                                    'award_codes_quantity'
+                                )
+                            );
+                    }
+                }
+            }
+        );
+
+
+        return redirect()
+            ->route(
+                'triviagames.edit',
+                [
+                    'tenant' =>
+                        tenant('id'),
+
+                    'triviagame' =>
+                        $quiz,
+                ]
+            )
+            ->with(
+                'status',
+                trans(
+                    'Quiz saved successful'
+                )
+            );
     }
 
     /**
@@ -200,5 +397,96 @@ class TriviaGameController extends Controller
         $quiz->delete();
 
         return redirect(route('triviagames.index', ['tenant' => tenant('id')]))->with('status', trans('Quiz deleted successful'));
+    }
+    private function prepareQuizData(
+        SaveQuizRequest $request
+    ): array {
+        $imageFields = [
+            'featured_image',
+            'featured_image_disabled',
+            'failed_image',
+            'failed_image_out_time',
+            'game_banner',
+        ];
+
+        $data = Arr::except(
+            $request->validated(),
+            array_merge(
+                $imageFields,
+                [
+                    'questions',
+
+                    'award_title',
+                    'award_content',
+
+                    'generate_award_codes',
+                    'award_codes_quantity',
+
+                    'delete_image_holder_hidden',
+                ]
+            )
+        );
+
+        foreach ($imageFields as $field) {
+
+            if (!$request->hasFile($field)) {
+                continue;
+            }
+
+            $data[$field] = $this->uploadImage(
+                'gcs',
+                'quizzes',
+                $request->file($field)
+            );
+        }
+
+        /*
+        * Los checkboxes que no vienen en el request
+        * significan false.
+        */
+        $chronometerEnabled =
+        $request->boolean(
+            'enable_chronometer'
+        );
+
+        $data['enable_chronometer'] =
+            $chronometerEnabled;
+
+        $data['seconds'] =
+            $chronometerEnabled
+                ? $request->input('seconds')
+                : null;
+
+        $data['btn_border'] =
+            $request->boolean('btn_border');
+
+        $data['btn_shadow'] =
+            $request->boolean('btn_shadow');
+
+        return $data;
+    }
+    private function getAwardData(
+        SaveQuizRequest $request
+    ): ?array {
+        $title = $request->input(
+            'award_title'
+        );
+
+        $content = $request->input(
+            'award_content'
+        );
+
+        if (
+            blank($title)
+            &&
+            blank($content)
+        ) {
+            return null;
+        }
+
+        return [
+            'title' => $title,
+            'content' => $content,
+        ];
     }
 }
