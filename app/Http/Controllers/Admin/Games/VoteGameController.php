@@ -87,7 +87,6 @@ class VoteGameController extends Controller
         $voteContest = VoteContest::findOrFail(
             $id
         );
-
         $data = $this->prepareVoteContestData(
             $request
         );

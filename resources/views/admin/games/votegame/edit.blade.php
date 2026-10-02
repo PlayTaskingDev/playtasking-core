@@ -85,7 +85,13 @@
                                 />
                                 <x-ui.forms.input-text label="{{ __('Title') }}" name="title" placeholder="" :value="$vote_contest->title" data-field="campaign.title" />
                                 <x-ui.forms.input-text label="{{ __('Description') }}" cols="2" name="description" placeholder="" :value="$vote_contest->description" data-field="campaign.description" />
-                                <x-ui.forms.input-switch label="{{ __('Show Ranking') }}" cols="2" name="show_ranking" placeholder="" :value="$vote_contest->show_ranking" data-field="campaign.show_ranking" />
+                                <x-ui.forms.input-switch
+                                    label="{{ __('Show Ranking') }}"
+                                    cols="2"
+                                    name="show_ranking"
+                                    value="1"
+                                    :switcher="$vote_contest->show_ranking"
+                                />
                                 <x-ui.forms.input-file label="{{ __('Image On') }}" dummy_img="/storage/dummy_assets/600x200.png" name="featured_image" placeholder="" :value="$vote_contest->featured_image" data-field="campaign.featured_image" />
                                 <x-ui.forms.input-file label="{{ __('Image Off') }}" dummy_img="/storage/dummy_assets/600x200.png" name="featured_image_disabled" placeholder="" :value="$vote_contest->featured_image_disabled" data-field="campaign.featured_image_disabled" />
                                 <h2 class="mt-6 text-lg col-span-2 font-semibold text-gray-800 dark:text-white/90">Top Banner Settings</h2>
@@ -123,9 +129,19 @@
                     <x-ui.forms.input-color label="{{ __('Gradient Button Background 1') }}" name="btn_background_color_1" placeholder="" :value="$vote_contest->btn_background_color_1" data-field="campaign.btn_background_color_1" />
                     <x-ui.forms.input-color label="{{ __('Gradient Button Background 2') }}" name="btn_background_color_2" placeholder="" :value="$vote_contest->btn_background_color_2" data-field="campaign.btn_background_color_2" />
                     <x-ui.forms.input-color label="{{ __('Button Border Color') }}" name="btn_border_color" placeholder="" :value="$vote_contest->btn_border_color" data-field="campaign.btn_border_color" />
-                    <x-ui.forms.input-switch label="{{ __('Has shadow') }}" name="btn_shadow" placeholder="" :value="$vote_contest->btn_shadow" data-field="campaign.btn_shadow" />
+                    <x-ui.forms.input-switch
+                        label="{{ __('Has shadow') }}"
+                        name="btn_shadow"
+                        value="1"
+                        :switcher="$vote_contest->btn_shadow"
+                    />
                     <x-ui.forms.input-text label="{{ __('Text Active') }}" name="btn_text_active" placeholder="" :value="$vote_contest->btn_text_active" data-field="campaign.btn_text_active" />
-                    <x-ui.forms.input-switch label="{{ __('Enable Button Shadow') }}" name="btn_enable_shadow" placeholder="" :value="$vote_contest->btn_enable_shadow" data-field="campaign.btn_enable_shadow" />
+                    <x-ui.forms.input-switch
+                        label="{{ __('Enable Button Shadow') }}"
+                        name="btn_enable_shadow"
+                        value="1"
+                        :switcher="$vote_contest->btn_enable_shadow"
+                    />
                     <x-ui.forms.input-text label="{{ __('Text Inactive') }}" name="btn_text_inactive" placeholder="" :value="$vote_contest->btn_text_inactive" data-field="campaign.btn_text_inactive" />
                 </div>
                 <div class="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/3">
