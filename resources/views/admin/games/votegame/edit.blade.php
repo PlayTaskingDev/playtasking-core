@@ -1,7 +1,7 @@
 @extends('layouts.v2.app')
 
 <x-slot name="title">
-    {{ !is_null($vote_contest->title) ? $vote_contest->title : trans('Create') . '' . trans('Click and Win game') }}
+    {{ !is_null($vote_contest->title) ? $vote_contest->title : trans('Create') . '' . trans('Vote Contest') }}
 </x-slot>
 <x-slot name="description">
     {{ $vote_contest->id == null ? '' : $vote_contest->description }}
@@ -15,7 +15,7 @@
     <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
         <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
             <h2 class="text-xl font-semibold text-gray-800 dark:text-white/90">
-            {{ $vote_contest->id == null ? trans('Create') : trans('Edit') }} {{ __('Click and Win game') }}
+            {{ $vote_contest->id == null ? trans('Create') : trans('Edit') }} {{ __('Vote Contest') }}
             </h2>
             <nav>
             <ol class="flex items-center gap-1.5">
@@ -28,7 +28,7 @@
                 </a>
                 </li>
                 <li class="text-sm text-gray-800 dark:text-white/90">
-                {{ !is_null($vote_contest->title) ? $vote_contest->title : trans('Create') . '' . trans('Aplazo game') }}
+                {{ !is_null($vote_contest->title) ? $vote_contest->title : trans('Create') . '' . trans('Vote Game') }}
                 </li>
             </ol>
             </nav>
@@ -75,7 +75,14 @@
                                 @endisset
                                 <input type="hidden" name="content_type_id" value="{{ $content_type->id }}">
                                 <h2 class="mt-6 text-lg col-span-2 font-semibold text-gray-800 dark:text-white/90">Game Details</h2>
-                                <x-ui.forms.input-select label="{{ __('Campaign') }}" :options="$campaigns" name="campaign_id" placeholder="" :value="$vote_contest->campaign->id" data-field="campaign.campaign_id" />
+                                <x-ui.forms.input-select
+                                    label="{{ __('Campaign') }}"
+                                    :options="$campaigns"
+                                    name="campaign_id"
+                                    placeholder=""
+                                    :value="$vote_contest->campaign_id"
+                                    data-field="campaign.campaign_id"
+                                />
                                 <x-ui.forms.input-text label="{{ __('Title') }}" name="title" placeholder="" :value="$vote_contest->title" data-field="campaign.title" />
                                 <x-ui.forms.input-text label="{{ __('Description') }}" cols="2" name="description" placeholder="" :value="$vote_contest->description" data-field="campaign.description" />
                                 <x-ui.forms.input-switch label="{{ __('Show Ranking') }}" cols="2" name="show_ranking" placeholder="" :value="$vote_contest->show_ranking" data-field="campaign.show_ranking" />
@@ -88,7 +95,15 @@
                                 <h2 class="mt-6 text-lg col-span-2 font-semibold text-gray-800 dark:text-white/90">Vote Game Settings</h2>
                                 <x-ui.forms.input-text label="{{ __('Slug') }}" name="slug" placeholder="" :value="$vote_contest->slug" data-field="campaign.slug" />
                                 <x-ui.forms.input-select label="{{ __('Asset type') }}" :options="$type_asset" name="asset_type" placeholder="" :value="$vote_contest->asset_type" data-field="campaign.asset_type" />
-                                <x-ui.forms.input-number label="{{ __('Asset size (Mb)') }}"  name="asset_kb_size" placeholder="" :value="$vote_contest->asset_kb_size" data-field="campaign.asset_kb_size" />
+                                <x-ui.forms.input-number
+                                    label="{{ __('Asset size (Mb)') }}"
+                                    name="asset_kb_size"
+                                    placeholder=""
+                                    :value="$vote_contest->id
+                                        ? $vote_contest->mb_size
+                                        : null"
+                                    data-field="campaign.asset_kb_size"
+                                />
                                 <x-ui.forms.input-number label="{{ __('Points per vote') }}"  name="points_per_vote" placeholder="" :value="$vote_contest->points_per_vote" data-field="campaign.points_per_vote" />
 
                             </div>

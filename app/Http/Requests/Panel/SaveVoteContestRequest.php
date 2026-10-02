@@ -42,8 +42,17 @@ class SaveVoteContestRequest extends FormRequest
             'gradient_1'        => ['required','string'],
             'gradient_2'        => ['required','string'],
             'asset_type'        => ['required','in:photo,video'],
-            'asset_kb_size'     => ['required','numeric'],
-            'points_per_vote'   => ['required','numeric'],
+            'asset_kb_size' => [
+                    'required',
+                    'numeric',
+                    'min:0.1',
+                ],
+
+                'points_per_vote' => [
+                    'required',
+                    'numeric',
+                    'min:0',
+                ],
             'delete_image_holder_hidden'  => ['nullable','boolean'],
             'game_banner'       => ['nullable','image:jpg,png,jpeg','max:600'],
             'game_banner_url'   => ['nullable','url'],
@@ -56,6 +65,10 @@ class SaveVoteContestRequest extends FormRequest
             'btn_text_inactive' => ['nullable','string'],
             'btn_shadow'        => ['nullable','boolean'],
             'btn_text_color'    => ['nullable','string'],
+            'btn_enable_shadow' => [
+                'nullable',
+                'boolean',
+            ],
         ];
     }
 }

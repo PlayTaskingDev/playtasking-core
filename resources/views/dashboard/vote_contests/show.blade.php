@@ -579,7 +579,7 @@
             const loadingText = document.querySelector('#loadingText');
 
             // Slect File Input 
-            const fileInput = document.querySelector('#ticket');
+            const fileInput = document.querySelector('#asset');
 
             // Select Preview Image
             const previewImage = document.querySelector('#previewImage');
