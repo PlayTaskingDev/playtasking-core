@@ -37,94 +37,153 @@ trait CampaignsTrait
         return Campaign::where([['active',true],['init_date','<',$now],['end_date','>',$now]])->firstOrFail();
     }
 
-    public function share_url_scrapping($post_url,$share_quiz)
+    public function share_url_scrapping($post_url, $share_quiz)
     {
         $host = parse_url($post_url, PHP_URL_HOST);
 
         switch ($host) {
             case 'l.facebook.com':
-                return Str::contains($post_url,parse_url($share_quiz->share_url, PHP_URL_HOST));
-                break;
+                return Str::contains(
+                    $post_url,
+                    parse_url($share_quiz->share_url, PHP_URL_HOST)
+                );
 
             case 'www.facebook.com':
-                if (Str::contains($post_url,'share/')) {
+                if (Str::contains($post_url, 'share/')) {
                     return true;
-                } else {
-                    return Str::contains($post_url,'posts');
                 }
-                break;
+
+                return Str::contains($post_url, 'posts');
 
             case 'web.facebook.com':
-                return Str::contains($post_url,'share/p');
-                break;
-            
+                return Str::contains($post_url, 'share/p');
+
             case 'x.com':
+            case 'www.x.com':
+            case 'twitter.com':
+            case 'www.twitter.com':
                 $selector = '#react-root';
                 $node = 'article';
                 break;
-            
+
             default:
                 return false;
         }
 
-      try {
+        // Chrome necesita un HOME escribible para www-data
+        putenv('HOME=' . env('CHROME_HOME', '/tmp/chrome-home'));
+        putenv(
+            'XDG_CONFIG_HOME=' .
+            env('CHROME_CONFIG_HOME', '/tmp/chrome-home/.config')
+        );
+        putenv(
+            'XDG_CACHE_HOME=' .
+            env('CHROME_CACHE_HOME', '/tmp/chrome-home/.cache')
+        );
+
+        // Evita los errores de DBus que vimos en el servidor headless
+        putenv('DBUS_SESSION_BUS_ADDRESS=/dev/null');
+
+        // Directorio independiente para esta ejecución
+        $chromeDataDir = '/tmp/chrome-data-' . uniqid();
+
+        try {
             $puppeteer = new Puppeteer([
                 'executable_path' => env('NODE_PATH'),
                 'read_timeout' => 60,
-                'log_node_console' => true,
-                'log_browser_console' => true,
             ]);
+
+            $user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) ' .
+                'AppleWebKit/537.36 (KHTML, like Gecko) ' .
+                'Chrome/124.0.0.0 Safari/537.36';
 
             $browser = $puppeteer->launch([
                 'headless' => true,
                 'executablePath' => env('CHROME_PATH'),
-                'dumpio' => true,
+
                 'args' => [
                     '--no-sandbox',
                     '--disable-setuid-sandbox',
                     '--disable-dev-shm-usage',
                     '--disable-gpu',
+
+                    '--disable-background-networking',
+                    '--disable-component-update',
+                    '--disable-sync',
+                    '--disable-default-apps',
+                    '--disable-extensions',
+
+                    '--no-first-run',
+                    '--no-default-browser-check',
+
+                    '--user-data-dir=' . $chromeDataDir,
+
+                    '--user-agent=' . $user_agent,
                 ],
             ]);
 
             if (!$browser) {
-                throw new \Exception('Puppeteer launch regresó null');
+                \Log::error('Puppeteer launch returned null', [
+                    'node' => env('NODE_PATH'),
+                    'chrome' => env('CHROME_PATH'),
+                ]);
+
+                return false;
             }
 
             $page = $browser->newPage();
 
-        } catch (\Throwable $e) {
+            $page->tryCatch->goto(
+                $post_url,
+                [
+                    'waitUntil' => 'networkidle0',
+                    'timeout' => 60000,
+                ]
+            );
 
-            \Log::error('PUPPETEER ERROR', [
-                'message' => $e->getMessage(),
-                'node' => env('NODE_PATH'),
-                'chrome' => env('CHROME_PATH'),
-                'trace' => $e->getTraceAsString(),
-            ]);
+            $page->waitForSelector(
+                $selector,
+                [
+                    'timeout' => 30000,
+                ]
+            );
 
-            return false;
-        }
-
-        try {
-            $page->tryCatch->goto($post_url, ['waitUntil' => 'networkidle0']);
-
-            $page->waitForSelector($selector);
-
-            $data = $page->evaluate(JsFunction::createWithBody('
-                const elements = document.querySelectorAll("'.$node.'");
-                return Array.from(elements).map(element => element.innerText);
-            '));
+            $data = $page->evaluate(
+                JsFunction::createWithBody('
+                    const elements = document.querySelectorAll("' . $node . '");
+                    return Array.from(elements).map(
+                        element => element.innerText
+                    );
+                ')
+            );
 
             $browser->close();
 
-            if (isset($data[0])) {
-                return Str::contains($data[0],$share_quiz->share_text);
-            } else {
+            if (!isset($data[0])) {
                 return false;
             }
-            
-        } catch (Node\Exception $exception) {
+
+            return Str::contains(
+                $data[0],
+                $share_quiz->share_text
+            );
+
+        } catch (\Throwable $exception) {
+
+            \Log::error('Puppeteer scraping error', [
+                'url' => $post_url,
+                'message' => $exception->getMessage(),
+            ]);
+
             return false;
+
+        } finally {
+            if (is_dir($chromeDataDir)) {
+                exec(
+                    'rm -rf ' .
+                    escapeshellarg($chromeDataDir)
+                );
+            }
         }
     }
 
