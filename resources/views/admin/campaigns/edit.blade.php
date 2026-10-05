@@ -77,9 +77,9 @@
                                 <x-ui.forms.input-text  label="{{ __('Slug') }}" name="slug" placeholder="Slug" :value="$campaign->slug" data-field="campaign.slug" />
                                 <x-ui.forms.input-text cols="2" label="{{ __('Description') }}" name="description" placeholder="" :value="$campaign->description" data-field="campaign.description" />
                                 <x-ui.forms.input-switch label="{{ __('Active') }}" name="active" value="1" data-field="campaign.active" :switcher="$campaign->active"/>
-                                <x-ui.forms.input-switch label="{{ __('Games') }}" name="games" :value="$game_content_type->id" data-field="has_coupons" :switcher="$has_games"/>
-                                <x-ui.forms.input-switch label="{{ __('Tickets') }}" name="tickets" :value="$tickets_content_type->id" data-field="has_games" :switcher="$has_tickets"/>
-                                <x-ui.forms.input-switch label="{{ __('Coupons') }}" name="coupons" :value="$coupons_content_type->id" data-field="has_tickets" :switcher="$has_coupons"/>
+                                <x-ui.forms.input-switch label="{{ __('Games') }}" name="games" value="1" data-field="has_coupons" :switcher="$has_games"/>
+                                <x-ui.forms.input-switch label="{{ __('Tickets') }}" name="tickets" value="1" data-field="has_games" :switcher="$has_tickets"/>
+                                <x-ui.forms.input-switch label="{{ __('Coupons') }}" name="coupons" value="1" data-field="has_tickets" :switcher="$has_coupons"/>
                                 <x-ui.forms.input-area-tinymce cols="2" label="{{ __('Instrucciones') }}" name="instructions" value="{!! $campaign->campaign_splash_page ? $campaign->campaign_splash_page->instructions : '' !!}" data-field="campaign.campaign_splash_page.instructions" />
                                 <x-ui.forms.input-file isimg="true" data-is-img="true" label="{{ __('Image') }}" name="featured_image_url" :value="$campaign->campaign_splash_page ? $campaign->campaign_splash_page->featured_image_url : ''"  placeholder="" data-field="campaign.campaign_splash_page.featured_image_url" />
                                 <x-ui.forms.input-text isvideo="true" data-is-video="true" label="{{ __('Video') }}" name="featured_video_url" placeholder="" :value="$campaign->campaign_splash_page ? $campaign->campaign_splash_page->featured_video_url : ''"  data-field="campaign.campaign_splash_page.featured_video_url" />

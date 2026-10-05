@@ -42,7 +42,6 @@ class CouponController extends Controller
     public function validation(ValidateCouponRequest $request)
     {
         $data = $request->validated();
-
         $campaign = $this->get_current_campaign();
         $now = Carbon::now()->toDateTimeString();
         $code = Code::with('award')->where([['campaign_id',$campaign->id],['active',true],['init_date','<',$now],['end_date','>',$now]])->first();

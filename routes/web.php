@@ -367,7 +367,7 @@ Route::group([
 
         // Game - Pennal Game
         Route::resource('penalgames',App\Http\Controllers\Admin\Games\PenalGameController::class);
-        Route::resource('clickwingames',App\Http\Controllers\Admin\Games\ClickWinGameController::class);
+        
         // Game - Share
         Route::resource('sharegames',App\Http\Controllers\Admin\Games\ShareGameController::class);
         // Game - Memory

@@ -42,7 +42,7 @@
                 />
             @endif
             <form id="form-campaign" method="POST" enctype="multipart/form-data"
-            action="{{ $share_quiz->id == null ? route('clickwingames.store', ['tenant' => tenant('id')]) : route('clickwingames.update', ['tenant' => tenant('id'), 'clickwingame' => $share_quiz]) }}">
+            action="{{ $share_quiz->id == null ? route('sharegames.store', ['tenant' => tenant('id')]) : route('sharegames.update', ['tenant' => tenant('id'), 'sharegame' => $share_quiz]) }}">
             <div class="mb-6 flex flex-col justify-between gap-6 rounded-2xl border border-gray-200 bg-white px-6 py-5 sm:flex-row sm:items-center dark:border-gray-800 dark:bg-white/3">
                 <div class="flex flex-col gap-2.5 divide-gray-300 sm:flex-row sm:divide-x dark:divide-gray-700">
                     <div class="flex items-center gap-2 sm:pr-3">
@@ -88,7 +88,9 @@
                                 <h2 class="mt-6 text-lg col-span-2 font-semibold text-gray-800 dark:text-white/90">Promo Information</h2>
                                 <x-ui.forms.input-text label="{{ __('Slug') }}" name="slug" placeholder="" :value="$share_quiz->slug" data-field="campaign.slug" />
                                 <x-ui.forms.input-text label="{{ __('Share URL') }}" name="share_url" placeholder="" :value="$share_quiz->share_url" data-field="campaign.share_url" />
-                                <x-ui.forms.input-text label="{{ __('Share Text') }}" name="share_text" placeholder="" :value="$share_quiz->share_text" data-field="campaign.share_text" /> <x-ui.forms.input-file label="{{ __('Image To Share') }}" dummy_img="/storage/dummy_assets/600x200.png" name="featured_image_url" placeholder="" :value="$share_quiz->featured_image_url" data-field="campaign.featured_image_url" />
+                                <x-ui.forms.input-text label="{{ __('Share Text') }}" name="share_text" placeholder="" :value="$share_quiz->share_text" data-field="campaign.share_text" /> 
+                                <x-ui.forms.input-file label="{{ __('Image To Share') }}" dummy_img="/storage/dummy_assets/600x200.png" name="featured_image_url" placeholder="" :value="$share_quiz->featured_image_url" data-field="campaign.featured_image_url" />
+                                <x-ui.forms.input-text label="{{ __('Video URL') }}" name="featured_video_url" placeholder="" :value="$share_quiz->featured_video_url" data-field="campaign.featured_video_url" />
 
                             </div>
                         </div>

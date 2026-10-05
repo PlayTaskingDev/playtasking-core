@@ -120,7 +120,6 @@ class ClickWinGameController extends Controller
     public function update($id,SaveClickWinRequest $request)
     {
         $data = $request->all();
-
         if($request->file('featured_image')){
             $data['featured_image'] = $this->uploadImage('gcs','click_wins',$request->file('featured_image'));
         }
