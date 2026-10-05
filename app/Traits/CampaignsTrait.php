@@ -62,30 +62,27 @@ trait CampaignsTrait
             case 'www.x.com':
             case 'twitter.com':
             case 'www.twitter.com':
-                $selector = '#react-root';
-                $node = 'article';
                 break;
 
             default:
                 return false;
         }
 
-        // Chrome necesita un HOME escribible para www-data
-        putenv('HOME=' . env('CHROME_HOME', '/tmp/chrome-home'));
+        $chromeHome = env('CHROME_HOME', '/tmp/chrome-home');
+        $chromeDataDir = '/tmp/chrome-data-' . uniqid();
+
+        putenv('HOME=' . $chromeHome);
         putenv(
             'XDG_CONFIG_HOME=' .
-            env('CHROME_CONFIG_HOME', '/tmp/chrome-home/.config')
+            env('CHROME_CONFIG_HOME', $chromeHome . '/.config')
         );
         putenv(
             'XDG_CACHE_HOME=' .
-            env('CHROME_CACHE_HOME', '/tmp/chrome-home/.cache')
+            env('CHROME_CACHE_HOME', $chromeHome . '/.cache')
         );
-
-        // Evita los errores de DBus que vimos en el servidor headless
         putenv('DBUS_SESSION_BUS_ADDRESS=/dev/null');
 
-        // Directorio independiente para esta ejecución
-        $chromeDataDir = '/tmp/chrome-data-' . uniqid();
+        $browser = null;
 
         try {
             $puppeteer = new Puppeteer([
@@ -93,7 +90,8 @@ trait CampaignsTrait
                 'read_timeout' => 60,
             ]);
 
-            $user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) ' .
+            $userAgent =
+                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) ' .
                 'AppleWebKit/537.36 (KHTML, like Gecko) ' .
                 'Chrome/124.0.0.0 Safari/537.36';
 
@@ -117,67 +115,102 @@ trait CampaignsTrait
                     '--no-default-browser-check',
 
                     '--user-data-dir=' . $chromeDataDir,
-
-                    '--user-agent=' . $user_agent,
+                    '--user-agent=' . $userAgent,
                 ],
             ]);
 
             if (!$browser) {
-                \Log::error('Puppeteer launch returned null', [
-                    'node' => env('NODE_PATH'),
-                    'chrome' => env('CHROME_PATH'),
-                ]);
+                \Log::error('Puppeteer launch returned null');
 
                 return false;
             }
 
             $page = $browser->newPage();
 
-            $page->tryCatch->goto(
-                $post_url,
-                [
-                    'waitUntil' => 'networkidle0',
-                    'timeout' => 60000,
-                ]
-            );
+            $page->setUserAgent($userAgent);
 
-            $page->waitForSelector(
-                $selector,
-                [
-                    'timeout' => 30000,
-                ]
-            );
+            $page->goto($post_url, [
+                'waitUntil' => 'domcontentloaded',
+                'timeout' => 60000,
+            ]);
 
-            $data = $page->evaluate(
+            // X carga bastante contenido después del DOM inicial.
+            sleep(5);
+
+            $pageText = $page->evaluate(
                 JsFunction::createWithBody('
-                    const elements = document.querySelectorAll("' . $node . '");
-                    return Array.from(elements).map(
-                        element => element.innerText
-                    );
+                    return document.body
+                        ? document.body.innerText
+                        : "";
                 ')
             );
 
-            $browser->close();
+            if (!$pageText) {
+                \Log::warning('X scraping sin contenido', [
+                    'url' => $post_url,
+                ]);
 
-            if (!isset($data[0])) {
+                return false;
+            }
+
+            // Útil mientras terminamos de afinar la validación.
+            \Log::info('X scraping response', [
+                'url' => $post_url,
+                'text' => mb_substr($pageText, 0, 5000),
+            ]);
+
+            /*
+            * Detectamos algunas respuestas comunes de X
+            * que significan que realmente no cargó el post.
+            */
+            $blockedTexts = [
+                'Something went wrong',
+                'Try reloading',
+                'Log in to X',
+                'Sign up for X',
+            ];
+
+            foreach ($blockedTexts as $blockedText) {
+                if (Str::contains($pageText, $blockedText)) {
+                    \Log::warning('X no permitió visualizar el post', [
+                        'url' => $post_url,
+                        'reason' => $blockedText,
+                    ]);
+
+                    return false;
+                }
+            }
+
+            $expectedText = trim($share_quiz->share_text);
+
+            if ($expectedText === '') {
                 return false;
             }
 
             return Str::contains(
-                $data[0],
-                $share_quiz->share_text
+                Str::lower($pageText),
+                Str::lower($expectedText)
             );
 
         } catch (\Throwable $exception) {
-
             \Log::error('Puppeteer scraping error', [
                 'url' => $post_url,
                 'message' => $exception->getMessage(),
+                'file' => $exception->getFile(),
+                'line' => $exception->getLine(),
             ]);
 
             return false;
 
         } finally {
+            try {
+                if ($browser) {
+                    $browser->close();
+                }
+            } catch (\Throwable $e) {
+                // Evitamos que un error al cerrar Chrome afecte la respuesta.
+            }
+
             if (is_dir($chromeDataDir)) {
                 exec(
                     'rm -rf ' .
