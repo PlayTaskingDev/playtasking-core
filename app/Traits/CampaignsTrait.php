@@ -71,16 +71,9 @@ trait CampaignsTrait
         $chromeHome = env('CHROME_HOME', '/tmp/chrome-home');
         $chromeDataDir = '/tmp/chrome-data-' . uniqid();
 
-        putenv('HOME=' . $chromeHome);
-        putenv(
-            'XDG_CONFIG_HOME=' .
-            env('CHROME_CONFIG_HOME', $chromeHome . '/.config')
-        );
-        putenv(
-            'XDG_CACHE_HOME=' .
-            env('CHROME_CACHE_HOME', $chromeHome . '/.cache')
-        );
-        putenv('DBUS_SESSION_BUS_ADDRESS=/dev/null');
+        putenv('HOME=/tmp/chrome-home');
+        putenv('XDG_CONFIG_HOME=/tmp/chrome-home/.config');
+        putenv('XDG_CACHE_HOME=/tmp/chrome-home/.cache');
 
         $browser = null;
 
@@ -88,42 +81,31 @@ trait CampaignsTrait
             $puppeteer = new Puppeteer([
                 'executable_path' => env('NODE_PATH'),
                 'read_timeout' => 60,
+                'log_node_console' => true,
             ]);
-
-            $userAgent =
-                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) ' .
-                'AppleWebKit/537.36 (KHTML, like Gecko) ' .
-                'Chrome/124.0.0.0 Safari/537.36';
 
             $browser = $puppeteer->launch([
                 'headless' => true,
                 'executablePath' => env('CHROME_PATH'),
-
                 'args' => [
                     '--no-sandbox',
-                    '--disable-setuid-sandbox',
                     '--disable-dev-shm-usage',
-                    '--disable-gpu',
-
-                    '--disable-background-networking',
-                    '--disable-component-update',
-                    '--disable-sync',
-                    '--disable-default-apps',
-                    '--disable-extensions',
-
-                    '--no-first-run',
-                    '--no-default-browser-check',
-
-                    '--user-data-dir=' . $chromeDataDir,
-                    '--user-agent=' . $userAgent,
                 ],
             ]);
 
-            if (!$browser) {
-                \Log::error('Puppeteer launch returned null');
+            dd($browser);
+        if (!$browser) {
+            \Log::error('Puppeteer launch returned null', [
+                'node' => env('NODE_PATH'),
+                'chrome' => env('CHROME_PATH'),
+                'home' => getenv('HOME'),
+                'xdg_config' => getenv('XDG_CONFIG_HOME'),
+                'xdg_cache' => getenv('XDG_CACHE_HOME'),
+                'chrome_data' => $chromeDataDir,
+            ]);
 
-                return false;
-            }
+            return false;
+        }
 
             $page = $browser->newPage();
 
