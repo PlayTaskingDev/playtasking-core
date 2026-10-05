@@ -67,29 +67,43 @@ trait CampaignsTrait
                 return false;
         }
 
-        $puppeteer = new Puppeteer([
-            'executable_path'   => env('NODE_PATH'),
-            'read_timeout'      => 10
-        ]);
+      try {
+            $puppeteer = new Puppeteer([
+                'executable_path' => env('NODE_PATH'),
+                'read_timeout' => 60,
+                'log_node_console' => true,
+                'log_browser_console' => true,
+            ]);
 
-        $user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36';
-
-        $browser = $puppeteer->launch(
-            [
-                'headless'          => env('APP_ENV') == 'production' ? 'true' : 'false',
-		        'executablePath' 	=> env('CHROME_PATH'),
-                    'args' => [
+            $browser = $puppeteer->launch([
+                'headless' => true,
+                'executablePath' => env('CHROME_PATH'),
+                'dumpio' => true,
+                'args' => [
                     '--no-sandbox',
                     '--disable-setuid-sandbox',
                     '--disable-dev-shm-usage',
-                    '--incognito',
-                    '--start-maximized',
-                    '--user-agent=' . $user_agent
-                ]
-            ]
-        );
+                    '--disable-gpu',
+                ],
+            ]);
 
-        $page = $browser->newPage();
+            if (!$browser) {
+                throw new \Exception('Puppeteer launch regresó null');
+            }
+
+            $page = $browser->newPage();
+
+        } catch (\Throwable $e) {
+
+            \Log::error('PUPPETEER ERROR', [
+                'message' => $e->getMessage(),
+                'node' => env('NODE_PATH'),
+                'chrome' => env('CHROME_PATH'),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return false;
+        }
 
         try {
             $page->tryCatch->goto($post_url, ['waitUntil' => 'networkidle0']);
