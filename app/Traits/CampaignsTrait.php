@@ -79,21 +79,42 @@ trait CampaignsTrait
 
         try {
             $puppeteer = new Puppeteer([
-                'executable_path' => env('NODE_PATH'),
-                'read_timeout' => 60,
-                'log_node_console' => true,
-            ]);
+            'executable_path' => env('NODE_PATH'),
+            'read_timeout' => 60,
 
-            $browser = $puppeteer->launch([
-                'headless' => true,
-                'executablePath' => env('CHROME_PATH'),
-                'args' => [
-                    '--no-sandbox',
-                    '--disable-dev-shm-usage',
-                ],
-            ]);
+            // IMPORTANTE para ver qué está pasando
+            'log_node_console' => true,
+            'log_browser_console' => true,
+        ]);
 
-            dd($browser);
+        $browser = $puppeteer->launch([
+            'headless' => true,
+            'executablePath' => env('CHROME_PATH'),
+
+            // Hace que Chrome mande stderr/stdout hacia Node
+            'dumpio' => true,
+
+            'timeout' => 60000,
+
+            'args' => [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-gpu',
+
+                '--disable-background-networking',
+                '--disable-component-update',
+                '--disable-sync',
+                '--disable-default-apps',
+                '--disable-extensions',
+
+                '--no-first-run',
+                '--no-default-browser-check',
+
+                '--user-data-dir=' . $chromeDataDir,
+            ],
+        ]);
+
         if (!$browser) {
             \Log::error('Puppeteer launch returned null', [
                 'node' => env('NODE_PATH'),
