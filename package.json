@@ -32,6 +32,7 @@
         "apexcharts": "^5.3.5",
         "flatpickr": "^4.6.13",
         "flowbite-datepicker": "^2.0.0",
+        "jodit": "^4.17.1",
         "jsvectormap": "^1.7.0",
         "prismjs": "^1.30.0",
         "simple-color-picker": "^1.0.5",

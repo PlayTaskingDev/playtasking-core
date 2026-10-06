@@ -6,7 +6,6 @@
             </div>
             <!-- Non editable -->
             <div class="py-6 home-register-screen">
-                
                 @if(get_app_setting('autologin') == true)
                     <form id="autologin-form" method="POST" action="{{ route('autologin', ['tenant' => tenant('id')]) }}">
                          @csrf

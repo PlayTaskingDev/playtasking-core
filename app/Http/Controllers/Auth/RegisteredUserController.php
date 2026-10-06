@@ -46,6 +46,10 @@ class RegisteredUserController extends Controller
         
         $extra_info = ["city" => $request->city]; 
 
+        if(!$request->validated()){
+            return redirect()->back()->withErrors($request->errors())->withInput();
+        }
+        
         $user = User::create([
             'name'              => $request->name,
             'email'             => $request->email,

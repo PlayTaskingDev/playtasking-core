@@ -5,10 +5,11 @@ import './custom';
 
 import Alpine from 'alpinejs';
 import ApexCharts from 'apexcharts';
-
 // flatpickr
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
+import JoditEditor from './JoditEditor';
+
 
 window.Alpine = Alpine;
 window.ApexCharts = ApexCharts;
@@ -20,13 +21,14 @@ import.meta.glob([
     '../fonts/**',
 ]);
 
+
 // Initialize components on DOM ready
 document.addEventListener('DOMContentLoaded', () => {
     // Map imports
     if (document.querySelector('#mapOne')) {
         import('./components/map').then(module => module.initMap());
     }
-
+    JoditEditor.initAll();
     // Chart imports
     if (document.querySelector('#chartOne')) {
         import('./components/chart/chart-1').then(module => module.initChartOne());
