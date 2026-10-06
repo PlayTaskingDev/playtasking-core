@@ -19,8 +19,8 @@ class Reports extends Controller
 
 
     //Total de usuarios registrados en la plataforma
-    public function getCountUsers(){
-        $count = User::count();
+    public function getCountUsers(String $dateFrom, String $dateTo){
+        $count = User::whereBetween('created_at', [$dateFrom, $dateTo])->count();
 
         return response()->json([
             'success' => true,
