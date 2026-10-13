@@ -12,31 +12,89 @@ use App\Models\Campaign;
 use App\Traits\CampaignsTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Builder;
 
 class Reports extends Controller
 {
     use CampaignsTrait;
 
 
-    //Total de usuarios registrados en la plataforma
-    public function getCountUsers(String $dateFrom, String $dateTo){
-        $count = User::whereBetween('created_at', [$dateFrom, $dateTo])->count();
+    private function getDateRange(Request $request): array
+    {
+        $request->validate([
+            'date_from' => ['nullable', 'date_format:Y-m-d'],
+            'date_to' => [
+                'nullable',
+                'date_format:Y-m-d',
+                'after_or_equal:date_from'
+            ],
+        ]);
+
+        $dateFrom = $request->filled('date_from')
+            ? Carbon::parse($request->date_from)->startOfDay()
+            : null;
+
+        $dateTo = $request->filled('date_to')
+            ? Carbon::parse($request->date_to)->endOfDay()
+            : null;
+
+        return [$dateFrom, $dateTo];
+    }
+    private function applyDateRange(
+        $query,
+        ?Carbon $dateFrom,
+        ?Carbon $dateTo,
+        string $column = 'created_at'
+    ) {
+        return $query
+            ->when(
+                $dateFrom,
+                fn ($query) =>
+                    $query->where($column, '>=', $dateFrom)
+            )
+            ->when(
+                $dateTo,
+                fn ($query) =>
+                    $query->where($column, '<=', $dateTo)
+            );
+    }
+
+    //1.- Total de usuarios registrados en la plataforma
+    public function getCountUsers(Request $request){
+        [$dateFrom, $dateTo] = $this->getDateRange($request);
+        $query = User::query();
+        $this->applyDateRange(
+            $query,
+            $dateFrom,
+            $dateTo
+        );
+        return response()->json([
+            'success' => true,
+            'users_count' => $query->count(),
+        ]);
+    }
+    //2.- Total de usuarios que han participado en al menos un juego
+    public function getTotalParticipatingUsers(Request $request){
+        [$dateFrom, $dateTo] = $this->getDateRange($request);
+
+        $query = UserInteraction::query();
+
+        $this->applyDateRange(
+            $query,
+            $dateFrom,
+            $dateTo
+        );
+
+        $total = $query
+            ->distinct('user_id')
+            ->count('user_id');
 
         return response()->json([
             'success' => true,
-            'users_count' => $count,
+            'total_participating_users' => $total,
         ]);
     }
-    //Total de usuarios que han participado en al menos un juego
-    public function getTotalParticipatingUsers(){
-        $totalParticipants = UserInteraction::distinct('user_id')->count('user_id');
-
-        return response()->json([
-            'success' => true,
-            'total_participating_users' => $totalParticipants,
-        ]);
-    }
-    //Conversión a porcentaje de los usuarios que participaron en al menos un juego
+    //3.- Conversión a porcentaje de los usuarios que participaron en al menos un juego
     /*
     Por ejemplo, si tienes:
     Usuarios registrados: 1,000
@@ -44,380 +102,763 @@ class Reports extends Controller
     Entonces la conversión sería:
     650 / 1,000 × 100 = 65%
      */
-    public function conversionRegisterToParticipate(){
-        $totalUsers = User::count();
-        $totalParticipants = UserInteraction::distinct('user_id')
+    public function conversionRegisterToParticipate(Request $request){
+        [$dateFrom, $dateTo] = $this->getDateRange($request);
+
+        /*
+        * Sin rango conservamos la lógica histórica.
+        */
+        if (!$dateFrom && !$dateTo) {
+
+            $registeredUsers = User::count();
+
+            $participatingUsers = UserInteraction::query()
+                ->distinct('user_id')
+                ->count('user_id');
+
+            $rate = $registeredUsers > 0
+                ? round(
+                    ($participatingUsers / $registeredUsers) * 100,
+                    2
+                )
+                : 0;
+
+            return response()->json([
+                'success' => true,
+                'conversion_rate' => $rate . '%',
+            ]);
+        }
+
+        /*
+        * Usuarios registrados dentro del periodo.
+        */
+        $registeredQuery = User::query();
+
+        $this->applyDateRange(
+            $registeredQuery,
+            $dateFrom,
+            $dateTo
+        );
+
+        $registeredIds = $registeredQuery->pluck('id');
+
+        $registeredUsers = $registeredIds->count();
+
+        /*
+        * De esos usuarios, ¿cuántos participaron
+        * dentro del mismo periodo?
+        */
+        $participatingQuery = UserInteraction::query()
+            ->whereIn('user_id', $registeredIds);
+
+        $this->applyDateRange(
+            $participatingQuery,
+            $dateFrom,
+            $dateTo
+        );
+
+        $participatingUsers = $participatingQuery
+            ->distinct('user_id')
             ->count('user_id');
-        $conversionRate = $totalUsers > 0
-            ? round(($totalParticipants / $totalUsers) * 100, 2)
+
+        $rate = $registeredUsers > 0
+            ? round(
+                ($participatingUsers / $registeredUsers) * 100,
+                2
+            )
             : 0;
 
         return response()->json([
             'success' => true,
-            'conversion_rate' => $conversionRate . '%',
+            'registered_users' => $registeredUsers,
+            'participating_users' => $participatingUsers,
+            'conversion_rate' => $rate . '%',
         ]);
     }
-    //Total de interacciones realizadas por todos los usuarios
-    public function totalInteractions(){
-        $totalInteractions = UserInteraction::count();
+    //4.- Total de interacciones realizadas por todos los usuarios
+    public function totalInteractions(Request $request)
+    {
+        [$dateFrom, $dateTo] = $this->getDateRange($request);
+
+        $query = UserInteraction::query();
+
+        $this->applyDateRange(
+            $query,
+            $dateFrom,
+            $dateTo
+        );
 
         return response()->json([
             'success' => true,
-            'total_interactions' => $totalInteractions,
+            'total_interactions' => $query->count(),
         ]);
     }
 
-    //Cada usuario que participo realizo en promedio 'X' interacciones
-    public function totalInteractionsAverage(){
-        $totalInteractions = UserInteraction::count();
-        $totalParticipants = UserInteraction::distinct('user_id')
+    //5. Cada usuario que participo realizo en promedio 'X' interacciones
+    public function totalInteractionsAverage(Request $request)
+    {
+        [$dateFrom, $dateTo] = $this->getDateRange($request);
+
+        $query = UserInteraction::query();
+
+        $this->applyDateRange(
+            $query,
+            $dateFrom,
+            $dateTo
+        );
+
+        $totalInteractions = (clone $query)->count();
+
+        $totalParticipants = (clone $query)
+            ->distinct('user_id')
             ->count('user_id');
-        $averageInteractionsPerUser = $totalParticipants > 0
-            ? round($totalInteractions / $totalParticipants, 2)
+
+        $average = $totalParticipants > 0
+            ? round(
+                $totalInteractions / $totalParticipants,
+                2
+            )
             : 0;
+
         return response()->json([
             'success' => true,
-            'average_interactions' => $averageInteractionsPerUser,
+            'average_interactions' => $average,
         ]);
     }
 
-    //Total de juegos utilizados por los usuarios
-    public function totalUsedGames(){
-        $totalGamesUsed = UserInteraction::distinct('model_id')->count('model_id');
+    //6. Total de juegos utilizados por los usuarios
+    public function totalUsedGames(Request $request)
+    {
+        [$dateFrom, $dateTo] = $this->getDateRange($request);
+
+        $query = UserInteraction::query();
+
+        $this->applyDateRange(
+            $query,
+            $dateFrom,
+            $dateTo
+        );
 
         return response()->json([
             'success' => true,
-            'total_used_games' => $totalGamesUsed,
+            'total_used_games' =>
+                $query->distinct('model_id')->count('model_id'),
         ]);
     }
-    //El juego más utilizado por los usuarios
-    public function totalMostUsedGames(){
-        $mostUsedGame = UserInteraction::select(
-            'model_id',
-            'model_title',
-            DB::raw('COUNT(*) as total_interactions')
-        )
-        ->groupBy('model_id', 'model_title')
-        ->orderByDesc('total_interactions')
-        ->first();
+    //7. El juego más utilizado por los usuarios
+    public function totalMostUsedGames(Request $request)
+    {
+        [$dateFrom, $dateTo] = $this->getDateRange($request);
+
+        $query = UserInteraction::query();
+
+        $this->applyDateRange(
+            $query,
+            $dateFrom,
+            $dateTo
+        );
+
+        $game = $query
+            ->select(
+                'model_id',
+                'model_title'
+            )
+            ->selectRaw('COUNT(*) as total_interactions')
+            ->groupBy('model_id', 'model_title')
+            ->orderByDesc('total_interactions')
+            ->first();
 
         return response()->json([
             'success' => true,
-            'most_used_game' => $mostUsedGame,
+            'most_used_game' => $game,
         ]);
     }
     //Total de interacciones por juego
-    public function interactionsByGame(){
-        $interactionsByGame = UserInteraction::select(
-            'model_id',
-            'model_title',
-            DB::raw('COUNT(*) as total_interactions')
-        )
-        ->groupBy('model_id', 'model_title')
-        ->orderByDesc('total_interactions')
-        ->get();
+    public function interactionsByGame(Request $request)
+    {
+        [$dateFrom, $dateTo] = $this->getDateRange($request);
+
+        $query = UserInteraction::query();
+
+        $this->applyDateRange(
+            $query,
+            $dateFrom,
+            $dateTo
+        );
+
+        $data = $query
+            ->select(
+                'model_id',
+                'model_title'
+            )
+            ->selectRaw('COUNT(*) as total_interactions')
+            ->groupBy('model_id', 'model_title')
+            ->orderByDesc('total_interactions')
+            ->get();
 
         return response()->json([
             'success' => true,
-            'interactions_by_game' => $interactionsByGame,
+            'interactions_by_game' => $data,
         ]);
     }
 
     //Total de usuarios únicos por juego, siempre deberá ser 1 en total_users, ya que un usuario no puede interactuar más de una vez con un mismo juego
-    public function uniqueUsersByGame()
+    public function uniqueUsersByGame(Request $request)
     {
-        $uniqueUsersByGame = UserInteraction::select(
-            'model_id',
-            'model_title',
-            DB::raw('COUNT(DISTINCT user_id) as total_users')
-        )
-        ->groupBy('model_id', 'model_title')
-        ->orderByDesc('total_users')
-        ->get();
+        [$dateFrom, $dateTo] = $this->getDateRange($request);
+
+        $query = UserInteraction::query();
+
+        $this->applyDateRange(
+            $query,
+            $dateFrom,
+            $dateTo
+        );
+
+        $data = $query
+            ->select(
+                'model_id',
+                'model_title'
+            )
+            ->selectRaw(
+                'COUNT(DISTINCT user_id) as total_users'
+            )
+            ->groupBy('model_id', 'model_title')
+            ->orderByDesc('total_users')
+            ->get();
 
         return response()->json([
             'success' => true,
-            'unique_users_by_game' => $uniqueUsersByGame,
+            'unique_users_by_game' => $data,
         ]);
     }
 
     //total de premios ganados por los usuarios
-    public function totalAwardsWon(){
-        $totalAwards = UserInteraction::where('hit', true)->count();
+    public function totalAwardsWon(Request $request)
+    {
+        [$dateFrom, $dateTo] = $this->getDateRange($request);
+
+        $query = UserInteraction::query()
+            ->where('hit', 1);
+
+        $this->applyDateRange(
+            $query,
+            $dateFrom,
+            $dateTo
+        );
+
         return response()->json([
             'success' => true,
-            'total_awards_won' => $totalAwards,
+            'total_awards_won' => $query->count(),
         ]);
     }
 
     //total de premios no ganados por los usuarios, es decir, aquellos que participaron pero no obtuvieron ningún premio
-    public function totalParticipantsWithoutAward(){
-       $totalWithoutAward = UserInteraction::where('hit', 0)->count();
+    public function totalParticipantsWithoutAward(Request $request)
+    {
+        [$dateFrom, $dateTo] = $this->getDateRange($request);
+
+        $query = UserInteraction::query()
+            ->where('hit', 0);
+
+        $this->applyDateRange(
+            $query,
+            $dateFrom,
+            $dateTo
+        );
+
         return response()->json([
             'success' => true,
-            'total_participants_without_award' => $totalWithoutAward,
+            'total_participants_without_award' =>
+                $query->count(),
         ]);
     }
 
     //total en porcentaje de premios ganados por los usuarios, es decir, aquellos que participaron y ganaron premio
-    public function conversionParticipantsWithAward(){
-        $totalInteractions = UserInteraction::count();
-        $totalAwards = UserInteraction::where('hit', 1)->count();
-        $awardRate = $totalInteractions > 0
-            ? round(($totalAwards / $totalInteractions) * 100, 2)
+    public function conversionParticipantsWithAward(Request $request)
+    {
+        [$dateFrom, $dateTo] = $this->getDateRange($request);
+
+        $query = UserInteraction::query();
+
+        $this->applyDateRange(
+            $query,
+            $dateFrom,
+            $dateTo
+        );
+
+        $total = (clone $query)->count();
+
+        $awards = (clone $query)
+            ->where('hit', 1)
+            ->count();
+
+        $rate = $total > 0
+            ? round(($awards / $total) * 100, 2)
             : 0;
+
         return response()->json([
             'success' => true,
-            'conversion_rate' => $awardRate . '%',
+            'conversion_rate' => $rate . '%',
         ]);
     }
 
     //Tiempo promedio de resolución por juego, es decir, el tiempo promedio que tarda un usuario en completar un juego desde que inicia hasta que termina
-    public function averageResolutionTimePerGame(){
-        $averageTimeByGame = UserInteraction::select(
-            'model_id',
-            'model_title'
-        )
-        ->selectRaw('
-            ROUND(
-                AVG(
-                    TIMESTAMPDIFF(
-                        MICROSECOND,
-                        hit_created_at,
-                        hit_updated_at
-                    ) / 1000000
-                ),
-                2
-            ) as average_seconds
-        ')
-        ->whereNotNull('hit_created_at')
-        ->whereNotNull('hit_updated_at')
-        ->whereColumn('hit_updated_at', '>', 'hit_created_at')
-        ->groupBy('model_id', 'model_title')
-        ->get();
+    public function averageResolutionTimePerGame(Request $request)
+    {
+        [$dateFrom, $dateTo] = $this->getDateRange($request);
+
+        $query = UserInteraction::query();
+
+        $this->applyDateRange(
+            $query,
+            $dateFrom,
+            $dateTo
+        );
+
+        $data = $query
+            ->select(
+                'model_id',
+                'model_title'
+            )
+            ->selectRaw('
+                ROUND(
+                    AVG(
+                        TIMESTAMPDIFF(
+                            MICROSECOND,
+                            hit_created_at,
+                            hit_updated_at
+                        ) / 1000000
+                    ),
+                    2
+                ) as average_seconds
+            ')
+            ->whereNotNull('hit_created_at')
+            ->whereNotNull('hit_updated_at')
+            ->whereColumn(
+                'hit_updated_at',
+                '>',
+                'hit_created_at'
+            )
+            ->groupBy(
+                'model_id',
+                'model_title'
+            )
+            ->get();
 
         return response()->json([
             'success' => true,
-            'average_resolution_time_per_game' => $averageTimeByGame,
+            'average_resolution_time_per_game' => $data,
         ]);
     }
 
     //Tiempo minimo de resolución por juego, es decir, el tiempo minimo que tarda un usuario en completar un juego desde que inicia hasta que termina
-    public function minimumResolutionTimePerGame(){
-        $minimumTimeByGame = UserInteraction::select(
-            'model_id',
-            'model_title'
-        )
-        ->selectRaw('
-            ROUND(
-                MIN(
-                    TIMESTAMPDIFF(
-                        MICROSECOND,
-                        hit_created_at,
-                        hit_updated_at
-                    ) / 1000000
-                ),
-                2
-            ) as minimum_seconds
-        ')
-        ->whereNotNull('hit_created_at')
-        ->whereNotNull('hit_updated_at')
-        ->whereColumn('hit_updated_at', '>', 'hit_created_at')
-        ->groupBy('model_id', 'model_title')
-        ->get();
+    public function minimumResolutionTimePerGame(Request $request){
+        [$dateFrom, $dateTo] = $this->getDateRange($request);
+
+        $query = UserInteraction::query();
+
+        $this->applyDateRange(
+            $query,
+            $dateFrom,
+            $dateTo
+        );
+
+        $data = $query
+            ->select(
+                'model_id',
+                'model_title'
+            )
+            ->selectRaw('
+                    ROUND(
+                        MIN(
+                            TIMESTAMPDIFF(
+                                MICROSECOND,
+                                hit_created_at,
+                                hit_updated_at
+                            ) / 1000000
+                        ),
+                        2
+                    ) as minimum_seconds
+                ')
+            ->whereNotNull('hit_created_at')
+            ->whereNotNull('hit_updated_at')
+            ->whereColumn(
+                'hit_updated_at',
+                '>',
+                'hit_created_at'
+            )
+            ->groupBy(
+                'model_id',
+                'model_title'
+            )
+            ->get();
 
         return response()->json([
             'success' => true,
-            'minimum_resolution_time_per_game' => $minimumTimeByGame,
+            'minimum_resolution_time_per_game' => $data,
         ]);
     }
 
     //Tiempo maximo de resolución por juego, es decir, el tiempo maximo que tarda un usuario en completar un juego desde que inicia hasta que termina
-    public function maximumResolutionTimePerGame(){
-        $maximumTimeByGame = UserInteraction::select(
-            'model_id',
-            'model_title'
-        )
-        ->selectRaw('
-            ROUND(
-                MAX(
-                    TIMESTAMPDIFF(
-                        MICROSECOND,
-                        hit_created_at,
-                        hit_updated_at
-                    ) / 1000000
-                ),
-                2
-            ) as maximum_seconds
-        ')
-        ->whereNotNull('hit_created_at')
-        ->whereNotNull('hit_updated_at')
-        ->whereColumn('hit_updated_at', '>', 'hit_created_at')
-        ->groupBy('model_id', 'model_title')
-        ->get();
+    public function maximumResolutionTimePerGame(Request $request){
+        [$dateFrom, $dateTo] = $this->getDateRange($request);
+
+        $query = UserInteraction::query();
+
+        $this->applyDateRange(
+            $query,
+            $dateFrom,
+            $dateTo
+        );
+
+        $data = $query
+            ->select(
+                'model_id',
+                'model_title'
+            )
+            ->selectRaw('
+                    ROUND(
+                        MAX(
+                            TIMESTAMPDIFF(
+                                MICROSECOND,
+                                hit_created_at,
+                                hit_updated_at
+                            ) / 1000000
+                        ),
+                        2
+                    ) as maximum_seconds
+                ')
+            ->whereNotNull('hit_created_at')
+            ->whereNotNull('hit_updated_at')
+            ->whereColumn(
+                'hit_updated_at',
+                '>',
+                'hit_created_at'
+            )
+            ->groupBy(
+                'model_id',
+                'model_title'
+            )
+            ->get();
 
         return response()->json([
             'success' => true,
-            'maximum_resolution_time_per_game' => $maximumTimeByGame,
+            'maximum_resolution_time_per_game' => $data,
         ]);
     }
     //El juego menos utilizado por los usuarios
-    public function leastUsedGame(){
-        $leastUsedGame = UserInteraction::query()
-        ->select(
-            'model_id',
-            'model_title'
-        )
-        ->selectRaw('COUNT(*) as total_interactions')
-        ->groupBy('model_id', 'model_title')
-        ->orderBy('total_interactions')
-        ->first();
+    public function leastUsedGame(Request $request)
+    {
+        [$dateFrom, $dateTo] = $this->getDateRange($request);
+
+        $query = UserInteraction::query();
+
+        $this->applyDateRange(
+            $query,
+            $dateFrom,
+            $dateTo
+        );
+
+        $game = $query
+            ->select(
+                'model_id',
+                'model_title'
+            )
+            ->selectRaw('COUNT(*) as total_interactions')
+            ->groupBy('model_id', 'model_title')
+            ->orderBy('total_interactions')
+            ->first();
 
         return response()->json([
             'success' => true,
-            'least_used_game' => $leastUsedGame,
+            'least_used_game' => $game,
         ]);
     }
     // A que hora promedio se registran los usuarios, es decir, el promedio de la hora en que los usuarios se registran en la plataforma
-    public function averageRegistrationTime(){
-        $averageRegistrationTime = User::query()
-        ->selectRaw('
-            SEC_TO_TIME(
-                AVG(
-                    TIME_TO_SEC(TIME(created_at))
-                )
-            ) as average_registration_time
-        ')
-        ->value('average_registration_time');
+   public function averageRegistrationTime(Request $request)
+    {
+        [$dateFrom, $dateTo] = $this->getDateRange($request);
+
+        $query = User::query();
+
+        $this->applyDateRange(
+            $query,
+            $dateFrom,
+            $dateTo
+        );
+
+        $average = $query
+            ->selectRaw('
+                SEC_TO_TIME(
+                    AVG(
+                        TIME_TO_SEC(
+                            TIME(created_at)
+                        )
+                    )
+                ) as average_time
+            ')
+            ->value('average_time');
+
         return response()->json([
             'success' => true,
-            'average_registration_time' => $averageRegistrationTime,
+            'average_registration_time' => $average,
         ]);
     }
     //Hora con mayor cantidad de registros
-    public function peakRegistrationHour(){
-        $peakRegistrationHour = User::query()
-        ->selectRaw('HOUR(created_at) as hour')
-        ->selectRaw('COUNT(*) as total_registrations')
-        ->groupByRaw('HOUR(created_at)')
-        ->orderByDesc('total_registrations')
-        ->first();
+    public function peakRegistrationHour(Request $request)
+    {
+        [$dateFrom, $dateTo] = $this->getDateRange($request);
+
+        $query = User::query();
+
+        $this->applyDateRange(
+            $query,
+            $dateFrom,
+            $dateTo
+        );
+
+        $result = $query
+            ->selectRaw('HOUR(created_at) as hour')
+            ->selectRaw('COUNT(*) as total_registrations')
+            ->groupByRaw('HOUR(created_at)')
+            ->orderByDesc('total_registrations')
+            ->first();
+
         return response()->json([
             'success' => true,
-            'peak_registration_hour' => $peakRegistrationHour,
+            'peak_registration_hour' => $result,
         ]);
     }
     //Hora con mayor cantidad de interacciones
-    public function peakInteractionHour(){
-        $peakInteractionHour = UserInteraction::query()
-        ->selectRaw('HOUR(created_at) as hour')
-        ->selectRaw('COUNT(*) as total_interactions')
-        ->groupByRaw('HOUR(created_at)')
-        ->orderByDesc('total_interactions')
-        ->first();
+    public function peakInteractionHour(Request $request)
+    {
+        [$dateFrom, $dateTo] = $this->getDateRange($request);
+
+        $query = UserInteraction::query();
+
+        $this->applyDateRange(
+            $query,
+            $dateFrom,
+            $dateTo
+        );
+
+        $result = $query
+            ->selectRaw('HOUR(created_at) as hour')
+            ->selectRaw('COUNT(*) as total_interactions')
+            ->groupByRaw('HOUR(created_at)')
+            ->orderByDesc('total_interactions')
+            ->first();
 
         return response()->json([
             'success' => true,
-            'peak_interaction_hour' => $peakInteractionHour,
+            'peak_interaction_hour' => $result,
         ]);
     }
     //Registros por hora
-    public function registrationsByHour(){
-        $registrationsByHour = User::query()
-        ->selectRaw('HOUR(created_at) as hour')
-        ->selectRaw('COUNT(*) as total_registrations')
-        ->groupByRaw('HOUR(created_at)')
-        ->orderByRaw('HOUR(created_at)')
-        ->get();
+    public function registrationsByHour(Request $request)
+    {
+        [$dateFrom, $dateTo] = $this->getDateRange($request);
+
+        $query = User::query();
+
+        $this->applyDateRange(
+            $query,
+            $dateFrom,
+            $dateTo
+        );
+
+        $data = $query
+            ->selectRaw('HOUR(created_at) as hour')
+            ->selectRaw('COUNT(*) as total_registrations')
+            ->groupByRaw('HOUR(created_at)')
+            ->orderBy('hour')
+            ->get();
 
         return response()->json([
             'success' => true,
-            'registrations_by_hour' => $registrationsByHour,
+            'registrations_by_hour' => $data,
         ]);
     }
-    //Interacciones por hora
-    public function interactionsByHour(){
-        $interactionsByHour = UserInteraction::query()
-        ->selectRaw('HOUR(created_at) as hour')
-        ->selectRaw('COUNT(*) as total_interactions')
-        ->groupByRaw('HOUR(created_at)')
-        ->orderByRaw('HOUR(created_at)')
-        ->get();
+    //Interacciones por hora y minuto, es decir, el total de interacciones realizadas por los usuarios en cada hora y minuto del día
+    public function interactionsByHour(Request $request)
+    {
+        [$dateFrom, $dateTo] = $this->getDateRange($request);
+
+        $query = UserInteraction::query();
+
+        $this->applyDateRange(
+            $query,
+            $dateFrom,
+            $dateTo
+        );
+
+        $data = $query
+            ->selectRaw("
+                DATE_FORMAT(created_at, '%H:%i') as time
+            ")
+            ->selectRaw('COUNT(*) as total_interactions')
+            ->groupByRaw("
+                DATE_FORMAT(created_at, '%H:%i')
+            ")
+            ->orderBy('time')
+            ->get();
 
         return response()->json([
             'success' => true,
-            'interactions_by_hour' => $interactionsByHour,
+            'interactions_by_hour' => $data,
         ]);
     }
     //Registros por día
-    public function registrationsByDay(){
-        $registrationsByDay = User::query()
-        ->selectRaw('DATE(created_at) as date')
-        ->selectRaw('COUNT(*) as total_registrations')
-        ->groupByRaw('DATE(created_at)')
-        ->orderByRaw('DATE(created_at)')
-        ->get();
+    public function registrationsByDay(Request $request)
+    {
+        [$dateFrom, $dateTo] = $this->getDateRange($request);
+
+        $query = User::query();
+
+        $this->applyDateRange(
+            $query,
+            $dateFrom,
+            $dateTo
+        );
+
+        $data = $query
+            ->selectRaw('DATE(created_at) as date')
+            ->selectRaw('COUNT(*) as total_registrations')
+            ->groupByRaw('DATE(created_at)')
+            ->orderBy('date')
+            ->paginate(30);
 
         return response()->json([
             'success' => true,
-            'registrations_by_day' => $registrationsByDay,
+            'registrations_by_day' => $data,
         ]);
     }
     //Interacciones por día
-    public function interactionsByDay(){
-        $interactionsByDay = UserInteraction::query()
-        ->selectRaw('DATE(created_at) as date')
-        ->selectRaw('COUNT(*) as total_interactions')
-        ->groupByRaw('DATE(created_at)')
-        ->orderByRaw('DATE(created_at)')
-        ->get();
+    public function interactionsByDay(Request $request)
+    {
+        [$dateFrom, $dateTo] = $this->getDateRange($request);
+
+        $query = UserInteraction::query();
+
+        $this->applyDateRange(
+            $query,
+            $dateFrom,
+            $dateTo
+        );
+
+        $data = $query
+            ->selectRaw('DATE(created_at) as date')
+            ->selectRaw('COUNT(*) as total_interactions')
+            ->groupByRaw('DATE(created_at)')
+            ->orderBy('date')
+            ->paginate(30);
 
         return response()->json([
             'success' => true,
-            'interactions_by_day' => $interactionsByDay,
+            'interactions_by_day' => $data,
         ]);
     }
     //Día de la semana con mayor actividad
-    public function mostActiveWeekday(){
-        $mostActiveWeekday = UserInteraction::query()
-        ->selectRaw('DAYOFWEEK(created_at) as weekday_number')
-        ->selectRaw('DAYNAME(created_at) as weekday')
-        ->selectRaw('COUNT(*) as total_interactions')
-        ->groupByRaw('DAYOFWEEK(created_at), DAYNAME(created_at)')
-        ->orderByDesc('total_interactions')
-        ->first();
+    public function mostActiveWeekday(Request $request)
+    {
+        [$dateFrom, $dateTo] = $this->getDateRange($request);
+
+        $query = UserInteraction::query();
+
+        $this->applyDateRange(
+            $query,
+            $dateFrom,
+            $dateTo
+        );
+
+        $result = $query
+            ->selectRaw(
+                'DAYOFWEEK(created_at) as weekday_number'
+            )
+            ->selectRaw(
+                'DAYNAME(created_at) as weekday'
+            )
+            ->selectRaw(
+                'COUNT(*) as total_interactions'
+            )
+            ->groupByRaw('
+                DAYOFWEEK(created_at),
+                DAYNAME(created_at)
+            ')
+            ->orderByDesc('total_interactions')
+            ->first();
 
         return response()->json([
             'success' => true,
-            'most_active_weekday' => $mostActiveWeekday,
+            'most_active_weekday' => $result,
         ]);
     }
     // Nuevos usuarios registrados en el último mes, es decir, los usuarios que se registraron en la plataforma en los últimos 30 días
-    public function newUsersMonth(){
-        $newUsers = User::query()
-        ->whereYear('created_at', now()->year)
-        ->whereMonth('created_at', now()->month)
-        ->count();
+    public function newUsersMonth(Request $request)
+    {
+        [$dateFrom, $dateTo] = $this->getDateRange($request);
+
+        $query = User::query();
+
+        if ($dateFrom || $dateTo) {
+
+            $this->applyDateRange(
+                $query,
+                $dateFrom,
+                $dateTo
+            );
+
+        } else {
+
+            $query
+                ->whereYear(
+                    'created_at',
+                    now()->year
+                )
+                ->whereMonth(
+                    'created_at',
+                    now()->month
+                );
+        }
 
         return response()->json([
             'success' => true,
-            'new_users_month' => $newUsers,
+            'new_users' => $query->count(),
         ]);
     }
     //Registros por semana
-    public function registrationsByWeek(){
-        $registrationsByWeek = User::query()
-        ->selectRaw('YEAR(created_at) as year')
-        ->selectRaw('WEEK(created_at, 1) as week')
-        ->selectRaw('COUNT(*) as total_registrations')
-        ->groupByRaw('YEAR(created_at), WEEK(created_at, 1)')
-        ->orderByRaw('YEAR(created_at)')
-        ->orderByRaw('WEEK(created_at, 1)')
-        ->get();
+    public function registrationsByWeek(Request $request)
+    {
+        [$dateFrom, $dateTo] = $this->getDateRange($request);
+
+        $query = User::query();
+
+        $this->applyDateRange(
+            $query,
+            $dateFrom,
+            $dateTo
+        );
+
+        $data = $query
+            ->selectRaw("
+                DATE(
+                    DATE_SUB(
+                        created_at,
+                        INTERVAL WEEKDAY(created_at) DAY
+                    )
+                ) as week_start
+            ")
+            ->selectRaw(
+                'COUNT(*) as total_registrations'
+            )
+            ->groupBy('week_start')
+            ->orderBy('week_start')
+            ->paginate(30);
 
         return response()->json([
             'success' => true,
-            'registrations_by_week' => $registrationsByWeek,
+            'registrations_by_week' => $data,
         ]);
     }
     //Esta métrica sí necesita comparar dos periodos.La forma más natural sería: Mes actual contra mes anterior.

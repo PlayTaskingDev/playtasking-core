@@ -7,7 +7,6 @@ use App\Http\Requests\Panel\SaveCampaignRequest;
 use App\Models\CampaignSplashPage;
 use App\Models\Campaign;
 use App\Models\ContentType;
-use Illuminate\Http\Request;
 use App\Traits\UploadImageTrait;
 
 class CampaignsController extends Controller
@@ -64,21 +63,10 @@ class CampaignsController extends Controller
     public function store(SaveCampaignRequest $request)
     {
         $data = $request->validated();
-
         $campaign = Campaign::create($data);
 
 
-        if( $request->has('games') ){
-            $campaign->content_types()->attach($data['games']);
-        }
-
-        if( $request->has('tickets') ){
-            $campaign->content_types()->attach($data['tickets']);
-        }
-
-        if( $request->has('coupons') ){
-            $campaign->content_types()->attach($data['coupons']);
-        }
+        $this->syncContentTypes($campaign, $data);
 
         if($request->file('featured_image_url')){
             $data['featured_image_url'] = $this->uploadImage('gcs','campaign_splash_pages',$request->file('featured_image_url'));
@@ -166,8 +154,8 @@ class CampaignsController extends Controller
 
         $campaign = Campaign::findorFail($id);
         $campaignSplashPage = $campaign->campaign_splash_page;
-        $this->syncContentTypes($campaign, $request, $data);
-
+        
+        $this->syncContentTypes($campaign, $data);
         
         if($request->file('featured_image_url')){
             $data['featured_image_url'] = $this->uploadImage('gcs','campaign_splash_pages',$request->file('featured_image_url'));
@@ -216,14 +204,12 @@ class CampaignsController extends Controller
      * Synchronize content types with campaign based on request parameters
      *
      * @param  Campaign  $campaign
-     * @param  Request   $request
      * @param  array     $data
      * @return void
      */
-    private function syncContentTypes(Campaign $campaign, Request $request, array $data): void
+    private function syncContentTypes(Campaign $campaign, array $data): void
     {
         $contentTypeConfigs = ['games', 'tickets', 'coupons'];
-
         foreach ($contentTypeConfigs as $typeKey) {
             $contentType = ContentType::where('system_name', $typeKey)->first();
 
@@ -231,16 +217,10 @@ class CampaignsController extends Controller
                 continue;
             }
 
-            if ($request->has($typeKey)) {
-                // Attach if not already attached
-                if (!$campaign->content_types->contains($contentType->id)) {
-                    $campaign->content_types()->attach($contentType->id);
-                }
+            if (filter_var($data[$typeKey] ?? false, FILTER_VALIDATE_BOOLEAN)) {
+                $campaign->content_types()->syncWithoutDetaching([$contentType->id]);
             } else {
-                // Detach if currently attached
-                if ($campaign->content_types->contains($contentType->id)) {
-                    $campaign->content_types()->detach($contentType->id);
-                }
+                $campaign->content_types()->detach($contentType->id);
             }
         }
     }
