@@ -153,13 +153,13 @@
                             </a>
                         </div>
                     </form>
-                    </section>
                     @else
                     <div class="text-center">
                         {!! get_app_setting('terms_text') !!}
                         {!! get_app_setting('privacy_text') !!}
                     </div>
                     @endif
+                    </section>
                 @endif
             </div>
         </div>
