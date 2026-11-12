@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class UserInteraction extends Model
 {
@@ -36,6 +37,12 @@ class UserInteraction extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+    public function triviaResponses(): HasMany
+    {
+        return $this->hasMany(
+            TriviaResponse::class
+        );
     }
 
 }
