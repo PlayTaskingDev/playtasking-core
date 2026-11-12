@@ -1,0 +1,48 @@
+/* Participant login only. Campaign wallpaper and navigation stay in guest layout. */
+.pt-login-page {
+  --pt-login-accent: #171725;
+  --pt-login-accent-text: #ffffff;
+  min-height: calc(100svh - 72px);
+  display: grid;
+  place-items: center;
+  padding: clamp(24px, 5vw, 64px) 16px;
+}
+.pt-login-card {
+  width: min(100%, 460px);
+  padding: clamp(24px, 5vw, 38px);
+  border-radius: 24px;
+  background: #ffffff;
+  color: #202033;
+  border: 1px solid rgba(255,255,255,.84);
+  box-shadow: 0 24px 65px rgba(15,23,42,.18), 0 5px 18px rgba(15,23,42,.08);
+  isolation: isolate;
+}
+.pt-login-heading { text-align: center; margin-bottom: 26px; }
+.pt-login-title { color: #171725; font-size: clamp(1.75rem, 5vw, 2.1rem); font-weight: 800; letter-spacing: -.035em; line-height: 1.2; }
+.pt-login-subtitle { color: #667085; font-size: .9rem; margin-top: 10px; line-height: 1.6; }
+.pt-login-social { display: grid; gap: 10px; margin-bottom: 20px; }
+.pt-login-social-link { display: flex; justify-content: center; align-items: center; gap: 12px; min-height: 48px; padding: 10px 16px; border: 1px solid #d0d5dd; border-radius: 12px; color: #202033; font-weight: 650; background: #fff; text-decoration: none; transition: background .18s, border-color .18s; }
+.pt-login-social-link:hover { background: #f9fafb; border-color: #98a2b3; }
+.pt-login-social-link img { width: 22px; height: 22px; object-fit: contain; }
+.pt-login-divider { display: flex; align-items: center; gap: 12px; margin: 16px 0 22px; color: #667085; font-size: .8rem; }
+.pt-login-divider:before, .pt-login-divider:after { content:""; height: 1px; background: #e4e7ec; flex: 1; }
+.pt-login-field { margin-bottom: 18px; }
+.pt-login-label { display: block; margin-bottom: 8px; font-size: .85rem; font-weight: 700; color: #344054; }
+.pt-login-input { display: block; box-sizing: border-box; width: 100%; height: 50px; padding: 0 15px; border: 1px solid #d0d5dd; border-radius: 12px; background: #f9fafb; color: #101828; font: inherit; transition: border-color .18s, box-shadow .18s, background .18s; }
+.pt-login-input:hover { border-color: #98a2b3; }
+.pt-login-input:focus { background: #fff; border-color: #667085; box-shadow: 0 0 0 4px rgba(102,112,133,.15); outline: none; }
+.pt-login-input[aria-invalid="true"] { border-color: #b42318; }
+.pt-login-error { margin-top: 7px; font-size: .8rem; line-height: 1.4; color: #b42318; }
+.pt-login-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; margin: 3px 0 22px; }
+.pt-login-remember { display: inline-flex; align-items: center; gap: 9px; font-size: .85rem; font-weight: 500; color: #475467; cursor: pointer; }
+.pt-login-remember input { height: 17px; width: 17px; border-radius: 5px; accent-color: var(--pt-login-accent); }
+.pt-login-link { font-size: .84rem; font-weight: 700; color: #344054; text-decoration: underline; text-underline-offset: 3px; }
+.pt-login-link:hover { color: #101828; }
+.pt-login-submit { width: 100%; display: flex; align-items: center; justify-content: center; gap: 12px; min-height: 52px; border-radius: 13px; padding: 12px 20px; background: var(--pt-login-accent); color: var(--pt-login-accent-text); font: inherit; font-weight: 750; border: 1px solid transparent; cursor: pointer; transition: transform .18s, box-shadow .18s, filter .18s; }
+.pt-login-submit:hover { transform: translateY(-1px); box-shadow: 0 9px 21px rgba(16,24,40,.17); filter: brightness(1.08); }
+.pt-login-submit:active { transform: translateY(0); }
+.pt-login-register { margin-top: 24px; padding-top: 20px; text-align: center; border-top: 1px solid #eaecf0; color: #667085; font-size: .86rem; }
+.pt-login-register .pt-login-link { margin-left: 5px; }
+.pt-login-card :is(a,button,input):focus-visible { outline: 3px solid #667085; outline-offset: 3px; }
+@media (max-width: 480px) { .pt-login-page { min-height: calc(100svh - 64px); padding: 22px 12px 36px; } .pt-login-card { border-radius: 20px; } }
+@media (prefers-reduced-motion: reduce) { .pt-login-card *, .pt-login-card *:before, .pt-login-card *:after { transition: none !important; } }
