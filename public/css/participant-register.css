@@ -1,0 +1,67 @@
+/* Registration on welcome page only; retains personalized vertical banner and background. */
+.home-register-screen .pt-register-card {
+  width: 100%;
+  margin: 0 auto;
+  padding: clamp(24px, 5vw, 36px);
+  border-radius: 24px;
+  background: #fff;
+  border: 1px solid rgba(255,255,255,.9);
+  color: #202033;
+  box-shadow: 0 22px 56px rgba(16,24,40,.17), 0 5px 16px rgba(16,24,40,.08);
+}
+.home-register-screen .pt-register-title {
+  margin: 0; color: #171725; font-size: clamp(1.65rem, 5vw, 2rem);
+  line-height: 1.2; font-weight: 800; letter-spacing: -.035em; font-style: normal;
+}
+.home-register-screen .pt-register-subtitle {
+  color: #667085; font-size: .85rem; line-height: 1.6; margin: 9px 0 24px;
+}
+.home-register-screen #register-form label:not(.js-password-label) {
+  color: #344054; font-size: .84rem; font-weight: 700; line-height: 1.5;
+}
+.home-register-screen #register-form input:not([type="checkbox"]):not([type="hidden"]) {
+  box-sizing: border-box; width: 100%; min-height: 49px; padding: 10px 14px;
+  border-radius: 12px; background: #f9fafb; border: 1px solid #d0d5dd;
+  color: #101828; font: inherit; font-size: .9rem;
+  transition: background .2s, border-color .2s, box-shadow .2s;
+}
+.home-register-screen #register-form input:not([type="checkbox"]):not([type="hidden"]):focus {
+  background: #fff; outline: none; border-color: #667085;
+  box-shadow: 0 0 0 4px rgba(102,112,133,.15);
+}
+.home-register-screen #register-form input[type="checkbox"] {
+  accent-color: #344054; width: 17px; height: 17px; flex-shrink: 0;
+}
+.home-register-screen #register-form fieldset { border-top: 1px solid #eaecf0; padding-top: 20px; }
+.home-register-screen #register-form fieldset label { font-weight: 500; color: #475467; }
+.home-register-screen #register-form fieldset a,
+.home-register-screen .pt-register-link,
+.home-register-screen .pt-register-signin {
+  color: #344054; text-decoration: underline; text-underline-offset: 3px; font-weight: 700;
+}
+.home-register-screen .pt-register-signin { font-size: .85rem; }
+.home-register-screen .pt-register-submit {
+  width: 100%; min-height: 52px; padding: 12px 16px; border-radius: 13px;
+  box-shadow: 0 6px 16px rgba(16,24,40,.13);
+  transition: transform .2s, box-shadow .2s;
+}
+.home-register-screen .pt-register-submit:hover {
+  transform: translateY(-1px); box-shadow: 0 9px 24px rgba(16,24,40,.18);
+}
+.home-register-screen .pt-register-card .js-password-label {
+  border-radius: 8px; padding: 5px 9px; background: #e4e7ec; color: #344054;
+  font-size: .75rem; font-weight: 600;
+}
+.home-register-screen .pt-register-card .btn-faceboock,
+.home-register-screen .pt-register-card .btn-google { border-radius: 12px; }
+.home-register-screen .pt-register-card .divisor .text-white { color: #667085; }
+.home-register-screen .pt-register-card .term-list { color: #344054; }
+.home-register-screen .pt-register-card :is(a,button,input):focus-visible {
+  outline: 3px solid #667085; outline-offset: 3px;
+}
+@media (max-width: 480px) {
+  .home-register-screen .pt-register-card { padding: 22px 18px; border-radius: 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-register-screen .pt-register-card * { transition: none !important; }
+}
