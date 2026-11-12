@@ -1,3 +1,7 @@
+@section('header_scripts')
+    <link rel="stylesheet" href="{{ asset('css/participant-register.css') }}">
+@endsection
+
 <x-guest-layout>
       <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0">
         <div class="w-full md:mt-0 sm:max-w-md xl:p-0">
@@ -13,9 +17,11 @@
                         <button class="button-autologin" role="button">Comenzar</button>
                     </form>
                 @else
+                    <section class="pt-register-card" aria-label="Registro de participantes">
                     <div class="bienvenida-login text-center">
                         @if (get_app_setting('app_active'))
-                        <h3 class="text-3xl text-white text-center my-6 font-bold italic">Regístrate</h3>
+                        <h3 class="pt-register-title">Regístrate</h3>
+                        <p class="pt-register-subtitle">Crea tu cuenta para comenzar a participar.</p>
                         @endif
                         @if (get_app_setting('social_login_active') == true)
                             <a href="{{ route('auth.facebook', ['tenant' => tenant('id')]) }}" class="btn-faceboock py-4 block w-full text-center my-4">
@@ -108,7 +114,7 @@
                             <x-text-input id="members_number" class="block mt-1 w-full mb-3" type="text" name="members_number"
                                 :value="old('members_number')" required  />
                             <x-input-error :messages="$errors->get('members_number')" class="mt-2" />
-                            <a class="members_number_url underline text-sm text-white font-bold dark:text-gray-400 hover:text-white dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
+                            <a class="members_number_url pt-register-link"
                                 href="{{ get_app_setting('members_url') }}" target="_blank" rel="noopener noreferrer nofollow">
                                 {{ get_app_setting('members_legend') }}
                             </a> 
@@ -136,17 +142,18 @@
                         </div>
 
                         <div class="flex items-center justify-center mt-4">
-                            <x-primary-button class="w-full text-center">
+                            <x-primary-button class="w-full text-center pt-register-submit">
                                 {{ __('Register') }}
                             </x-primary-button>
                         </div>
                         <div class="text-center mt-6">
-                            <a class="underline text-white font-bold dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 already-registered"
+                            <a class="pt-register-signin already-registered"
                                 href="{{ route('login', ['tenant' => tenant('id')]) }}">
                                 {{ __('Already registered?') }}
                             </a>
                         </div>
                     </form>
+                    </section>
                     @else
                     <div class="text-center">
                         {!! get_app_setting('terms_text') !!}
@@ -161,7 +168,7 @@
         <script>
             const passwordToggle = document.querySelector('.js-password-toggle')
 
-            passwordToggle.addEventListener('change', function() {
+            passwordToggle?.addEventListener('change', function() {
                 const password = document.querySelector('.js-password'),
                     passwordLabel = document.querySelector('.js-password-label')
 
